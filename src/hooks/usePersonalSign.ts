@@ -1,20 +1,16 @@
-import type { Web3Provider } from "@ethersproject/providers"
-import { useWeb3React } from "@web3-react/core"
 import useSWRImmtable from "swr/immutable"
+import { useAccount, useSignMessage } from "wagmi"
 import useToast from "./useToast"
 
-const sign = async (_, library, account): Promise<string> =>
-  library
-    .getSigner(account)
-    .signMessage("Please sign this message to verify your address")
-
 const usePersonalSign = (shouldShowErrorToast = false) => {
-  const { library, account } = useWeb3React<Web3Provider>()
+  const [{ data: accountData }] = useAccount()
+  const [, signMessage] = useSignMessage()
   const toast = useToast()
 
   const { data, mutate, isValidating, error } = useSWRImmtable(
-    ["sign", library, account],
-    sign,
+    ["sign", accountData],
+    () =>
+      signMessage({ message: "Please sign this message to verify your address" }),
     {
       revalidateOnMount: false,
       shouldRetryOnError: false,
@@ -23,7 +19,7 @@ const usePersonalSign = (shouldShowErrorToast = false) => {
 
   const removeError = () => mutate((_) => _, false)
 
-  const callbackWithSign = (callback: Function) => async () => {
+  const callbackWithSign = (callback: () => void) => async () => {
     removeError()
     if (!data) {
       const newData = await mutate()

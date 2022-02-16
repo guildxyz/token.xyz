@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react"
-import useBlockNumber from "./useBlockNumber"
+import { useBlockNumber } from "wagmi"
 
 const useKeepSWRDataLiveAsBlocksArrive = <SWRDataType>(
   mutate: () => Promise<SWRDataType>
@@ -12,7 +12,7 @@ const useKeepSWRDataLiveAsBlocksArrive = <SWRDataType>(
   })
 
   // then, whenever a new block arrives, trigger a mutation
-  const blockNumber = useBlockNumber()
+  const [{ data: blockNumber }] = useBlockNumber()
 
   useEffect(() => {
     mutateRef.current()

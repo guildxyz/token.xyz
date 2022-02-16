@@ -10,5 +10,4 @@ For steps on local deployment, development, and code contribution, please see [C
   - SWR for server and blockchain state (fetching and caching)
   - XState for complex flows
 - Web3 stuff:
-  - ethers.js
-  - web3-react for connection management
+  - wagmi for connection management
