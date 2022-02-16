@@ -1,26 +1,28 @@
-import { useWeb3React } from "@web3-react/core"
 import { injected } from "connectors"
 import { useEffect, useState } from "react"
+import { useAccount, useConnect } from "wagmi"
 
 const useEagerConnect = (): boolean => {
-  const { activate, active } = useWeb3React()
+  const [, connect] = useConnect()
+  const [{ data: accountData }] = useAccount()
 
   const [tried, setTried] = useState(false)
 
   useEffect(() => {
     injected
       .isAuthorized()
-      .then((isAuthirozed) => isAuthirozed && activate(injected, undefined, true))
+      .then((isAuthirozed) => isAuthirozed && connect(injected))
+
       .catch(() => setTried(true))
       .finally(() => setTried(true))
-  }, [activate])
+  }, [connect])
 
   // if the connection worked, wait until we get confirmation of that to flip the flag
   useEffect(() => {
-    if (!tried && active) {
+    if (!tried && accountData?.address) {
       setTried(true)
     }
-  }, [tried, active])
+  }, [tried, accountData?.address])
 
   return tried
 }

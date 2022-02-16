@@ -1,30 +1,32 @@
 import { HStack, Text, useDisclosure } from "@chakra-ui/react"
-import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { LinkBreak, SignIn } from "phosphor-react"
 import { useContext } from "react"
 import shortenHex from "utils/shortenHex"
+import { useAccount, useConnect, useNetwork } from "wagmi"
 import AccountButton from "./components/AccountButton"
 import AccountModal from "./components/AccountModal"
 import Identicon from "./components/Identicon"
-import useENSName from "./hooks/useENSName"
 
 const Account = (): JSX.Element => {
-  const { error, account, chainId } = useWeb3React()
+  const [{ loading }] = useConnect()
+  const [{ data: networkData }] = useNetwork()
+  const [{ data: accountData }] = useAccount({
+    fetchEns: true,
+  })
   const { openWalletSelectorModal, triedEager, openNetworkModal } =
     useContext(Web3Connection)
-  const ENSName = useENSName(account)
   const {
     isOpen: isAccountModalOpen,
     onOpen: onAccountModalOpen,
     onClose: onAccountModalClose,
   } = useDisclosure()
 
-  if (typeof window === "undefined") {
+  if (loading) {
     return <AccountButton isLoading>Connect to a wallet</AccountButton>
   }
 
-  if (error instanceof UnsupportedChainIdError) {
+  if (networkData?.chain?.unsupported) {
     return (
       <AccountButton
         leftIcon={<LinkBreak />}
@@ -35,7 +37,8 @@ const Account = (): JSX.Element => {
       </AccountButton>
     )
   }
-  if (!account) {
+
+  if (!accountData?.address) {
     return (
       <AccountButton
         leftIcon={<SignIn />}
@@ -46,14 +49,15 @@ const Account = (): JSX.Element => {
       </AccountButton>
     )
   }
+
   return (
     <>
       <AccountButton onClick={onAccountModalOpen}>
         <HStack spacing={3}>
           <Text as="span" fontSize="md" fontWeight="semibold">
-            {ENSName || `${shortenHex(account, 3)}`}
+            {accountData?.ens?.name || `${shortenHex(accountData?.address, 3)}`}
           </Text>
-          <Identicon address={account} size={28} />
+          <Identicon address={accountData?.address} size={28} />
         </HStack>
       </AccountButton>
 

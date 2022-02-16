@@ -1,12 +1,8 @@
 import { useDisclosure } from "@chakra-ui/react"
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { AbstractConnector } from "@web3-react/abstract-connector"
-import { useWeb3React } from "@web3-react/core"
 import NetworkModal from "components/common/Layout/components/Account/components/NetworkModal/NetworkModal"
-import { createContext, PropsWithChildren, useEffect, useState } from "react"
+import { createContext, PropsWithChildren } from "react"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useEagerConnect from "./hooks/useEagerConnect"
-import useInactiveListener from "./hooks/useInactiveListener"
 
 const Web3Connection = createContext({
   isWalletSelectorModalOpen: false,
@@ -21,7 +17,6 @@ const Web3Connection = createContext({
 const Web3ConnectionManager = ({
   children,
 }: PropsWithChildren<any>): JSX.Element => {
-  const { connector } = useWeb3React()
   const {
     isOpen: isWalletSelectorModalOpen,
     onOpen: openWalletSelectorModal,
@@ -33,19 +28,8 @@ const Web3ConnectionManager = ({
     onClose: closeNetworkModal,
   } = useDisclosure()
 
-  // handle logic to recognize the connector currently being activated
-  const [activatingConnector, setActivatingConnector] = useState<AbstractConnector>()
-  useEffect(() => {
-    if (activatingConnector && activatingConnector === connector) {
-      setActivatingConnector(undefined)
-    }
-  }, [activatingConnector, connector])
-
-  // try to eagerly connect to an injected provider, if it exists and has granted access already
+  // // try to eagerly connect to an injected provider, if it exists and has granted access already
   const triedEager = useEagerConnect()
-
-  // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
-  useInactiveListener(!triedEager || !!activatingConnector)
 
   return (
     <Web3Connection.Provider
@@ -62,8 +46,6 @@ const Web3ConnectionManager = ({
       {children}
       <WalletSelectorModal
         {...{
-          activatingConnector,
-          setActivatingConnector,
           isModalOpen: isWalletSelectorModalOpen,
           openModal: openWalletSelectorModal,
           closeModal: closeWalletSelectorModal,

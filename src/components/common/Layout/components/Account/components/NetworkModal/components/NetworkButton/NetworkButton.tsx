@@ -1,30 +1,26 @@
 import { Box, Button, Img, Tooltip } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
-import { Chains, RPC } from "connectors"
+import { iconUrls } from "connectors"
+import { Chain, useNetwork } from "wagmi"
 
 type Props = {
-  chain: string
+  chain: Chain
   requestNetworkChange: () => void
 }
 
 const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
-  const { chainId } = useWeb3React()
+  const [{ data }] = useNetwork()
 
-  const isCurrentChain = Chains[chain] === chainId
+  const isCurrentChain = chain.id === data.chain.id
 
   return (
     <Tooltip
       isDisabled={!isCurrentChain}
-      label={`${RPC[chain].chainName} is currently selected`}
+      label={`${chain.name} is currently selected`}
     >
       <Box>
         <Button
           rightIcon={
-            <Img
-              src={RPC[chain].iconUrls[0]}
-              boxSize="6"
-              alt={`${RPC[chain].chainName} logo`}
-            />
+            <Img src={iconUrls[chain.id]} boxSize="6" alt={`${chain.name} logo`} />
           }
           border={isCurrentChain && "2px"}
           borderColor="primary.500"
@@ -34,7 +30,7 @@ const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
           size="xl"
           justifyContent="space-between"
         >
-          {RPC[chain].chainName}
+          {chain.name}
         </Button>
       </Box>
     </Tooltip>

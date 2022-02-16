@@ -1,25 +1,35 @@
-import { Button, Img } from "@chakra-ui/react"
+import { Box, Button, Img } from "@chakra-ui/react"
 
 type Props = {
+  id: string
   name: string
   onClick: () => void
-  iconUrl: string
   disabled: boolean
   isActive: boolean
   isLoading: boolean
 }
 
 const ConnectorButton = ({
+  id,
   name,
   onClick,
-  iconUrl,
   disabled,
   isActive,
   isLoading,
 }: Props): JSX.Element => (
   <Button
     onClick={onClick}
-    rightIcon={<Img src={`/walletLogos/${iconUrl}`} h="5" alt={`${name} logo`} />}
+    rightIcon={
+      <Box boxSize={6}>
+        <Img
+          src={`/walletLogos/${id}.svg`}
+          w="full"
+          h="full"
+          objectFit="contain"
+          alt={`${name} logo`}
+        />
+      </Box>
+    }
     disabled={disabled}
     isLoading={isLoading}
     spinnerPlacement="end"

@@ -1,17 +1,13 @@
-import type { ExternalProvider, JsonRpcFetchFunc } from "@ethersproject/providers"
-import { Web3Provider } from "@ethersproject/providers"
-import { Web3ReactProvider } from "@web3-react/core"
 import Chakra from "components/_app/Chakra"
 import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import { connectors } from "connectors"
 import "focus-visible/dist/focus-visible"
 import type { AppProps } from "next/app"
 import { IconContext } from "phosphor-react"
 import { SWRConfig } from "swr"
 import "theme/custom-scrollbar.css"
 import fetcher from "utils/fetcher"
-
-const getLibrary = (provider: ExternalProvider | JsonRpcFetchFunc) =>
-  new Web3Provider(provider)
+import { WagmiProvider } from "wagmi"
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => (
   <Chakra cookies={pageProps.cookies}>
@@ -24,11 +20,11 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => (
       }}
     >
       <SWRConfig value={{ fetcher }}>
-        <Web3ReactProvider getLibrary={getLibrary}>
+        <WagmiProvider autoConnect connectors={connectors}>
           <Web3ConnectionManager>
             <Component {...pageProps} />
           </Web3ConnectionManager>
-        </Web3ReactProvider>
+        </WagmiProvider>
       </SWRConfig>
     </IconContext.Provider>
   </Chakra>
