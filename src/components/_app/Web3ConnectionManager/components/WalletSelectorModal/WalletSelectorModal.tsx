@@ -33,7 +33,11 @@ const WalletSelectorModal = ({
   const [{ data: accountData }] = useAccount()
   const [{ data: networkData }] = useNetwork()
 
-  const handleConnect = (connector) => connect(connector).then(() => closeModal())
+  const handleConnect = (connector) =>
+    connect(connector).then(({ error }) => {
+      if (error) return
+      closeModal()
+    })
 
   useEffect(() => {
     if (networkData?.chain?.unsupported) {
