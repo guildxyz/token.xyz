@@ -57,10 +57,6 @@ const Layout = ({
         bgColor={
           colorMode === "light" ? "gray.100" : "var(--chakra-colors-gray-800)"
         }
-        bgGradient={`linear(${
-          colorMode === "light" ? "white" : "var(--chakra-colors-gray-800)"
-        } 0px, var(--chakra-colors-primary-100) 700px)`}
-        bgBlendMode={colorMode === "light" ? "normal" : "color"}
         minHeight="100vh"
       >
         <Flex w="full" justifyContent="space-between" alignItems="center" p="2">
