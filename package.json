@@ -22,7 +22,7 @@
     "@metamask/onboarding": "^1.0.1",
     "@xstate/react": "^2.0.0",
     "focus-visible": "^5.2.0",
-    "framer-motion": "^6.2.6",
+    "framer-motion": "^5.6.0",
     "next": "^12.0.10",
     "phosphor-react": "^1.4.0",
     "react": "^17.0.2",
