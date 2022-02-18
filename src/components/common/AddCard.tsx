@@ -31,7 +31,7 @@ const AddCard = ({ text, link, onClick }: Props): JSX.Element => {
       cursor="pointer"
       onClick={onClick}
     >
-      <Stack direction="row" spacing={{ base: 5, sm: 10 }} alignItems="center">
+      <Stack direction="row" spacing={5} alignItems="center">
         <Icon
           as={Plus}
           boxSize={8}

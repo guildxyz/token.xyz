@@ -17,7 +17,7 @@ const TokenIssuancePreview = (): JSX.Element => {
   return (
     <VStack alignItems="start" spacing={1} fontSize="sm">
       <Text as="span" fontWeight="bold">
-        {tokenTicker ? `$${tokenTicker}` : "No ticker"}
+        {tokenTicker ? `$${tokenTicker} token` : "No ticker"}
       </Text>
       <Tag size="sm">
         Supply: {!isNaN(initialSupply) && Number(initialSupply).toLocaleString("en")}
