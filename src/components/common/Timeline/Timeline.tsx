@@ -3,10 +3,12 @@ import { Children, cloneElement, PropsWithChildren } from "react"
 
 type Props = {
   activeItem: number
+  setActive?: (i?: number) => void
 }
 
 const Timeline = ({
   activeItem,
+  setActive,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const childrenArray = Children.toArray(children) as Array<JSX.Element>
@@ -17,6 +19,7 @@ const Timeline = ({
         ?.filter((child) => child.type?.name === "TimelineItem")
         .map((child, index) =>
           cloneElement(child, {
+            onClick: setActive ? () => setActive(index) : undefined,
             active: index <= activeItem,
             completed: index < activeItem,
           })

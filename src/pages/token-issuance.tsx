@@ -35,7 +35,7 @@ const STEPS: Array<{
 const Page = (): JSX.Element => {
   const [{ data: accountData }] = useAccount()
   const methods = useForm({ mode: "all" })
-  const { next, prev, activeItem } = useTimeline()
+  const { next, prev, activeItem, setActive } = useTimeline()
 
   return (
     <Layout title="Token issuance">
@@ -65,7 +65,7 @@ const Page = (): JSX.Element => {
               </Flex>
             </Flex>
 
-            <Timeline activeItem={activeItem}>
+            <Timeline activeItem={activeItem} setActive={setActive}>
               {STEPS.map(({ title, icon, preview }) => (
                 <TimelineItem key={title} title={title} icon={icon}>
                   {preview}

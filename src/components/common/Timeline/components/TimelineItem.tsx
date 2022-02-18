@@ -13,6 +13,7 @@ type Props = {
   completed?: boolean
   icon?: JSX.Element
   title: string
+  onClick?: () => void
 }
 
 const TimelineItem = ({
@@ -20,6 +21,7 @@ const TimelineItem = ({
   completed,
   icon,
   title,
+  onClick,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const borderColor = useColorModeValue("gray.200", "gray.700")
@@ -51,7 +53,13 @@ const TimelineItem = ({
         >
           {icon}
         </Circle>
-        <Text as="span" fontWeight="bold" fontSize="lg">
+        <Text
+          as="span"
+          fontWeight="bold"
+          fontSize="lg"
+          cursor="pointer"
+          onClick={onClick}
+        >
           {title}
         </Text>
       </HStack>

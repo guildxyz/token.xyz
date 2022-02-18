@@ -9,9 +9,9 @@ const useTimeline = (initialItem = 0) => {
 
   const reset = () => setActiveItem(initialItem)
 
-  const setItem = (item: number) => setActiveItem(item)
+  const setActive = (item: number) => setActiveItem(item)
 
-  return { next, prev, reset, setItem, activeItem }
+  return { next, prev, reset, setActive, activeItem }
 }
 
 export default useTimeline
