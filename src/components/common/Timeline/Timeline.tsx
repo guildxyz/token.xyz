@@ -19,6 +19,7 @@ const Timeline = ({
         ?.filter((child) => child.type?.name === "TimelineItem")
         .map((child, index) =>
           cloneElement(child, {
+            ...child.props,
             onClick: setActive ? () => setActive(index) : undefined,
             active: index <= activeItem,
             completed: index < activeItem,

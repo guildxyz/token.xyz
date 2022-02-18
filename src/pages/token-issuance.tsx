@@ -8,7 +8,7 @@ import DeployForm from "components/token-issuance/DeployForm"
 import DistributionForm from "components/token-issuance/DistributionForm"
 import TokenIssuanceForm from "components/token-issuance/TokenIssuanceForm"
 import TokenIssuancePreview from "components/token-issuance/TokenIssuancePreview"
-import { Coin } from "phosphor-react"
+import { ChartLine, Coin } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useAccount } from "wagmi"
 
@@ -26,6 +26,7 @@ const STEPS: Array<{
   },
   {
     title: "Distribution (optional)",
+    icon: <Icon as={ChartLine} />,
     content: <DistributionForm />,
     preview: "Distribution preview",
   },

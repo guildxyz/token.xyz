@@ -6,7 +6,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { PropsWithChildren } from "react"
+import { KeyboardEventHandler, PropsWithChildren } from "react"
 
 type Props = {
   active?: boolean
@@ -25,6 +25,10 @@ const TimelineItem = ({
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const borderColor = useColorModeValue("gray.200", "gray.700")
+
+  const handleTitleKeyDown: KeyboardEventHandler = (event) => {
+    if (event.code === "Enter") onClick()
+  }
 
   return (
     <Stack
@@ -59,6 +63,14 @@ const TimelineItem = ({
           fontSize="lg"
           cursor="pointer"
           onClick={onClick}
+          tabIndex={0}
+          _focus={{
+            outline: "none",
+          }}
+          _focusVisible={{
+            textDecoration: "underline",
+          }}
+          onKeyDown={handleTitleKeyDown}
         >
           {title}
         </Text>
