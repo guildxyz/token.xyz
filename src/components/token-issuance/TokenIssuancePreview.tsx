@@ -10,12 +10,12 @@ const TokenIssuancePreview = (): JSX.Element => {
   if (!tokenTicker && !initialSupply) return null
 
   return (
-    <VStack alignItems="start" spacing={0.5}>
+    <VStack alignItems="start" spacing={0.5} fontSize="sm">
       <Text as="span" fontWeight="bold">
         {tokenTicker ? `$${tokenTicker}` : "No ticker"}
       </Text>
-      <Text as="span" color="gray" fontSize="sm">
-        Supply: {Number(initialSupply).toLocaleString("en")}
+      <Text as="span" color="gray">
+        Initial supply: {Number(initialSupply).toLocaleString("en")}
       </Text>
     </VStack>
   )

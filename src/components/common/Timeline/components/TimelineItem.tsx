@@ -32,8 +32,8 @@ const TimelineItem = ({
       _before={{
         content: "''",
         position: "absolute",
-        top: 6,
-        left: 2.5,
+        top: 8,
+        left: 3.5,
         width: 1,
         height: "full",
         bgColor: completed ? "primary.500" : borderColor,
@@ -44,18 +44,19 @@ const TimelineItem = ({
     >
       <HStack>
         <Circle
-          size={6}
+          size={8}
           borderWidth={4}
           borderColor={active ? "primary.500" : borderColor}
+          bgColor={icon ? (active ? "primary.500" : borderColor) : "transparent"}
         >
           {icon}
         </Circle>
-        <Text as="span" fontWeight="bold">
+        <Text as="span" fontWeight="bold" fontSize="lg">
           {title}
         </Text>
       </HStack>
 
-      <Box pl={8} pb={6}>
+      <Box pl={10} pb={6}>
         {children}
       </Box>
     </Stack>

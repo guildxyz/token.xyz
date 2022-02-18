@@ -7,6 +7,7 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Select,
   Text,
   Tooltip,
   VStack,
@@ -14,24 +15,29 @@ import {
 import FormSection from "components/common/FormSection"
 import { Question } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
-import InflationaryModelPicker from "./components/InflationaryModelPicker"
+import shortenHex from "utils/shortenHex"
+import { useAccount } from "wagmi"
 
 const TokenIssuanceForm = (): JSX.Element => {
+  const [{ data: accountData }] = useAccount()
+
   const {
     register,
     formState: { errors },
   } = useFormContext()
+
   return (
     <VStack spacing={8} alignItems="start" w="max-content">
       <FormSection title="General data">
         <HStack spacing={4} alignItems="start">
-          <Circle size={10} bgColor="gray.700">
+          <Circle size={12} bgColor="gray.700">
             <Text as="span" color="gray" fontSize="xs">
               img
             </Text>
           </Circle>
           <FormControl isInvalid={errors?.tokenName} w="max-content">
             <Input
+              size="lg"
               {...register("tokenName", { required: "This field is required!" })}
               placeholder="Token name"
             />
@@ -40,13 +46,14 @@ const TokenIssuanceForm = (): JSX.Element => {
           <FormControl isInvalid={errors?.tokenTicker} w="max-content">
             <InputGroup w="max-content">
               <Input
+                size="lg"
                 {...register("tokenTicker", { required: "This field is required!" })}
                 placeholder="Ticker"
                 maxW={36}
               />
-              <InputRightElement>
+              <InputRightElement h="full" alignItems="center">
                 <Tooltip label="A ticker means a short symbol for your token, used by exchanges.">
-                  <Icon as={Question} color="gray" />
+                  <Icon as={Question} color="gray" boxSize={5} />
                 </Tooltip>
               </InputRightElement>
             </InputGroup>
@@ -56,6 +63,7 @@ const TokenIssuanceForm = (): JSX.Element => {
 
         <FormControl isInvalid={errors?.initialSupply} w="full">
           <Input
+            size="lg"
             {...register("initialSupply", { required: "This field is required!" })}
             placeholder="Initial supply"
           />
@@ -63,7 +71,37 @@ const TokenIssuanceForm = (): JSX.Element => {
         </FormControl>
       </FormSection>
 
-      <FormSection title="Inflationary model">
+      <FormSection title="Transfer ownership">
+        <FormControl isInvalid={errors?.transferOwnershipTo}>
+          <InputGroup>
+            <Input
+              size="lg"
+              {...register("transferOwnershipTo")}
+              placeholder={shortenHex(accountData?.address)}
+            />
+            <InputRightElement h="full" alignItems="center">
+              <Tooltip label="TODO">
+                <Icon as={Question} color="gray" boxSize={5} />
+              </Tooltip>
+            </InputRightElement>
+          </InputGroup>
+          <FormErrorMessage>{errors?.transferOwnershipTo?.message}</FormErrorMessage>
+        </FormControl>
+      </FormSection>
+
+      <FormSection title="Chain">
+        <Select {...register("chain")} size="lg" maxW="48" defaultValue="ETHEREUM">
+          <option value="ETHEREUM">Ethereum</option>
+          <option value="POLYGON" disabled>
+            Polygon (soon)
+          </option>
+          <option value="BSC" disabled>
+            BSC (soon)
+          </option>
+        </Select>
+      </FormSection>
+
+      {/* <FormSection title="Inflationary model">
         <FormControl isInvalid={errors?.inflationaryModel}>
           <InflationaryModelPicker />
           <FormErrorMessage>{errors?.inflationaryModel?.message}</FormErrorMessage>
@@ -72,6 +110,7 @@ const TokenIssuanceForm = (): JSX.Element => {
         <FormControl isInvalid={errors?.maxSupply} w="full">
           <InputGroup>
             <Input
+              size="lg"
               {...register("maxSupply", { required: "This field is required!" })}
               placeholder="Max supply"
             />
@@ -83,7 +122,7 @@ const TokenIssuanceForm = (): JSX.Element => {
           </InputGroup>
           <FormErrorMessage>{errors?.maxSupply?.message}</FormErrorMessage>
         </FormControl>
-      </FormSection>
+      </FormSection> */}
     </VStack>
   )
 }

@@ -29,7 +29,7 @@ const InflationaryModelPicker = (): JSX.Element => {
   return (
     <FormControl>
       <HStack
-        borderRadius="lg"
+        borderRadius="xl"
         bg={colorMode === "light" ? "white" : "blackAlpha.300"}
         spacing="0"
         border="1px"
@@ -40,11 +40,11 @@ const InflationaryModelPicker = (): JSX.Element => {
           <Button
             key={model.value}
             w="full"
-            h={10}
+            h={12}
             borderRadius="none"
             variant="ghost"
-            _first={{ borderTopLeftRadius: "lg", borderBottomLeftRadius: "lg" }}
-            _last={{ borderTopRightRadius: "lg", borderBottomRightRadius: "lg" }}
+            _first={{ borderTopLeftRadius: "xl", borderBottomLeftRadius: "xl" }}
+            _last={{ borderTopRightRadius: "xl", borderBottomRightRadius: "xl" }}
           >
             {model.label}
           </Button>
