@@ -7,12 +7,12 @@ const TokenIssuancePreview = (): JSX.Element => {
   const tokenTicker = useWatch({ control, name: "tokenTicker" })
   const initialSupply = useWatch({ control, name: "initialSupply" })
 
-  if (!tokenTicker || !initialSupply) return null
+  if (!tokenTicker && !initialSupply) return null
 
   return (
-    <VStack alignItems="start" pl={3} spacing={0.5}>
+    <VStack alignItems="start" spacing={0.5}>
       <Text as="span" fontWeight="bold">
-        ${tokenTicker}
+        {tokenTicker ? `$${tokenTicker}` : "No ticker"}
       </Text>
       <Text as="span" color="gray" fontSize="sm">
         Supply: {Number(initialSupply).toLocaleString("en")}

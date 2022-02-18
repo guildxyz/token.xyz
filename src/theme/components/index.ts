@@ -1,4 +1,3 @@
-import { StepsStyleConfig as Steps } from "chakra-ui-steps"
 import Alert from "./alert"
 import Button from "./button"
 import Input from "./input"
@@ -25,6 +24,5 @@ const components = {
   Text,
   Textarea,
   Tooltip,
-  Steps,
 }
 export default components

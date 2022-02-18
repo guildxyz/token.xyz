@@ -1,45 +1,45 @@
 import { Button, Flex, SimpleGrid } from "@chakra-ui/react"
-import { Step, Steps, useSteps } from "chakra-ui-steps"
 import Layout from "components/common/Layout"
+import Timeline from "components/common/Timeline"
+import TimelineItem from "components/common/Timeline/components/TimelineItem"
+import useTimeline from "components/common/Timeline/hooks/useTimeline"
 import DeployForm from "components/token-issuance/DeployForm"
 import DistributionForm from "components/token-issuance/DistributionForm"
 import TokenIssuanceForm from "components/token-issuance/TokenIssuanceForm"
 import TokenIssuancePreview from "components/token-issuance/TokenIssuancePreview"
 import { FormProvider, useForm } from "react-hook-form"
 
-const STEPS: Array<{ label: string; content: JSX.Element; preview: any }> = [
+const STEPS: Array<{ title: string; content: JSX.Element; preview: any }> = [
   {
-    label: "Token Issuance",
+    title: "Token Issuance",
     content: <TokenIssuanceForm />,
     preview: <TokenIssuancePreview />,
   },
   {
-    label: "Distribution (optional)",
+    title: "Distribution (optional)",
     content: <DistributionForm />,
     preview: "Distribution preview",
   },
-  { label: "Deploy", content: <DeployForm />, preview: "Deploy preview" },
+  { title: "Deploy", content: <DeployForm />, preview: "Deploy preview" },
 ]
 
 const Page = (): JSX.Element => {
   const methods = useForm({ mode: "all" })
 
-  const { nextStep, prevStep, activeStep } = useSteps({
-    initialStep: 0,
-  })
+  const { next, prev, activeItem } = useTimeline()
 
   return (
     <Layout title="Token issuance">
       <FormProvider {...methods}>
         <SimpleGrid gridTemplateColumns="2fr 1fr" gap={8}>
           <Flex minH="60vh" direction="column">
-            {STEPS[activeStep].content}
+            {STEPS[activeItem]?.content}
 
             <Flex mt="auto" width="100%" justify="flex-end">
               <Button
-                isDisabled={activeStep === 0}
+                isDisabled={activeItem === 0}
                 mr={4}
-                onClick={prevStep}
+                onClick={prev}
                 size="sm"
                 variant="ghost"
               >
@@ -47,21 +47,21 @@ const Page = (): JSX.Element => {
               </Button>
               <Button
                 size="sm"
-                onClick={activeStep === STEPS.length ? undefined : nextStep}
-                isDisabled={activeStep === STEPS.length}
+                onClick={activeItem === STEPS.length - 1 ? undefined : next}
+                isDisabled={activeItem === STEPS.length}
               >
-                {activeStep >= STEPS.length - 1 ? "Finish" : "Next"}
+                {activeItem >= STEPS.length - 1 ? "Finish" : "Next"}
               </Button>
             </Flex>
           </Flex>
 
-          <Steps activeStep={activeStep} colorScheme="cyan" orientation="vertical">
-            {STEPS.map(({ label, preview }) => (
-              <Step key={label} label={label}>
+          <Timeline activeItem={activeItem}>
+            {STEPS.map(({ title, preview }) => (
+              <TimelineItem key={title} title={title}>
                 {preview}
-              </Step>
+              </TimelineItem>
             ))}
-          </Steps>
+          </Timeline>
         </SimpleGrid>
       </FormProvider>
     </Layout>
