@@ -2,11 +2,15 @@ import {
   Button,
   FormControl,
   FormErrorMessage,
+  GridItem,
   Input,
   SimpleGrid,
+  Tag,
+  Text,
 } from "@chakra-ui/react"
 import { useFormContext } from "react-hook-form"
-import FormCard from "./FormCard"
+import FormCard from "../FormCard"
+import VestingTypePicker from "./components/VestingTypePicker"
 
 type Props = {
   index: number
@@ -36,6 +40,19 @@ const AllocationFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
         <Button colorScheme="primary" h={10}>
           Upload .csv
         </Button>
+
+        <GridItem colSpan={2}>
+          <VestingTypePicker index={index} />
+        </GridItem>
+
+        <GridItem colSpan={2}>
+          <Tag>
+            Estimated gas cost:
+            <Text as="b" ml={1}>
+              0.44 ETH
+            </Text>
+          </Tag>
+        </GridItem>
       </SimpleGrid>
     </FormCard>
   )
