@@ -8,7 +8,7 @@ import DeployForm from "components/token-issuance/DeployForm"
 import DistributionForm from "components/token-issuance/DistributionForm"
 import TokenIssuanceForm from "components/token-issuance/TokenIssuanceForm"
 import TokenIssuancePreview from "components/token-issuance/TokenIssuancePreview"
-import { ChartLine, Coin } from "phosphor-react"
+import { ChartLine, Coin, CurrencyEth } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
 import { useAccount } from "wagmi"
 
@@ -30,7 +30,12 @@ const STEPS: Array<{
     content: <DistributionForm />,
     preview: "Distribution preview",
   },
-  { title: "Deploy", content: <DeployForm />, preview: "Deploy preview" },
+  {
+    title: "Deploy",
+    icon: <Icon as={CurrencyEth} />,
+    content: <DeployForm />,
+    preview: "Deploy preview",
+  },
 ]
 
 const Page = (): JSX.Element => {
@@ -39,7 +44,7 @@ const Page = (): JSX.Element => {
   const { next, prev, activeItem, setActive } = useTimeline()
 
   return (
-    <Layout title="Token issuance">
+    <Layout title={accountData?.address ? STEPS[activeItem].title : "Token.xyz"}>
       {accountData?.address ? (
         <FormProvider {...methods}>
           <SimpleGrid gridTemplateColumns="2fr 1fr" gap={8}>

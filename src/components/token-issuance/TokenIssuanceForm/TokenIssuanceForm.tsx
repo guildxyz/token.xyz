@@ -8,9 +8,9 @@ import {
   InputGroup,
   InputRightElement,
   Select,
+  Stack,
   Text,
   Tooltip,
-  VStack,
 } from "@chakra-ui/react"
 import FormSection from "components/common/FormSection"
 import { Question } from "phosphor-react"
@@ -27,7 +27,7 @@ const TokenIssuanceForm = (): JSX.Element => {
   } = useFormContext()
 
   return (
-    <VStack spacing={8} alignItems="start" w="max-content">
+    <Stack spacing={8} w="max-content">
       <FormSection title="General data">
         <HStack spacing={4} alignItems="start">
           <Circle size={12} bgColor="gray.700">
@@ -123,7 +123,7 @@ const TokenIssuanceForm = (): JSX.Element => {
           <FormErrorMessage>{errors?.maxSupply?.message}</FormErrorMessage>
         </FormControl>
       </FormSection> */}
-    </VStack>
+    </Stack>
   )
 }
 
