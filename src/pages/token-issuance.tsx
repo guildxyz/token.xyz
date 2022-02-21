@@ -48,7 +48,7 @@ const Page = (): JSX.Element => {
   const methods = useForm({ mode: "all" })
 
   return (
-    <Layout title="Token issuance">
+    <Layout title="Token.xyz">
       {accountData?.address ? (
         <FormProvider {...methods}>
           <TimelineProvider steps={STEPS}>

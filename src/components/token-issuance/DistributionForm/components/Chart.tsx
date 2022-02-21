@@ -80,18 +80,20 @@ const Chart = (): JSX.Element => {
 
               // Linear vesting
               if (allocationData.vestingType === "LINEAR_VESTING")
-                return (
+                return Math.round(
                   (allocationData.allocationAddressesAmounts
                     ?.map((data) => parseFloat(data.amount))
                     ?.reduce((a, b) => a + b, 0) /
                     vestingPeriod) *
-                  multiplier(i)
+                    multiplier(i)
                 )
 
               // No vesting
-              return allocationData.allocationAddressesAmounts
-                ?.map((data) => parseFloat(data.amount))
-                ?.reduce((a, b) => a + b, 0)
+              return Math.round(
+                allocationData.allocationAddressesAmounts
+                  ?.map((data) => parseFloat(data.amount))
+                  ?.reduce((a, b) => a + b, 0)
+              )
             }),
 
           // allocationData.allocationAddressesAmounts?.map(
