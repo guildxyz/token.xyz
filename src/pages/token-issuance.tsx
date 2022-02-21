@@ -1,23 +1,26 @@
-import { Button, Flex, Icon, SimpleGrid, Text } from "@chakra-ui/react"
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  Flex,
+  Icon,
+  SimpleGrid,
+} from "@chakra-ui/react"
 import DynamicDevTool from "components/common/DynamicDevTool"
 import Layout from "components/common/Layout"
 import Timeline from "components/common/Timeline"
-import TimelineItem from "components/common/Timeline/components/TimelineItem"
-import useTimeline from "components/common/Timeline/hooks/useTimeline"
+import { TimelineProvider } from "components/common/Timeline/components/TImelineContext"
+import CurrentForm from "components/token-issuance/CurrentForm"
 import DeployForm from "components/token-issuance/DeployForm"
 import DistributionForm from "components/token-issuance/DistributionForm"
 import TokenIssuanceForm from "components/token-issuance/TokenIssuanceForm"
 import TokenIssuancePreview from "components/token-issuance/TokenIssuancePreview"
 import { ChartLine, Coin, CurrencyEth } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
+import { TimelineSteps } from "types"
 import { useAccount } from "wagmi"
 
-const STEPS: Array<{
-  title: string
-  icon?: JSX.Element
-  content: JSX.Element
-  preview: any
-}> = [
+const STEPS: TimelineSteps = [
   {
     title: "Token Issuance",
     icon: <Icon as={Coin} />,
@@ -41,49 +44,30 @@ const STEPS: Array<{
 const Page = (): JSX.Element => {
   const [{ data: accountData }] = useAccount()
   const methods = useForm({ mode: "all" })
-  const { next, prev, activeItem, setActive } = useTimeline()
 
   return (
-    <Layout title={accountData?.address ? STEPS[activeItem].title : "Token.xyz"}>
+    <Layout title="Token issuance">
       {accountData?.address ? (
         <FormProvider {...methods}>
-          <SimpleGrid gridTemplateColumns="2fr 1fr" gap={8}>
-            <Flex minH="60vh" direction="column">
-              {STEPS[activeItem]?.content}
-
-              <Flex mt="auto" width="100%" justify="flex-end">
-                <Button
-                  isDisabled={activeItem === 0}
-                  mr={4}
-                  onClick={prev}
-                  size="sm"
-                  variant="ghost"
-                >
-                  Prev
-                </Button>
-                <Button
-                  size="sm"
-                  onClick={activeItem === STEPS.length - 1 ? undefined : next}
-                  isDisabled={activeItem === STEPS.length}
-                >
-                  {activeItem >= STEPS.length - 1 ? "Finish" : "Next"}
-                </Button>
+          <TimelineProvider steps={STEPS}>
+            <SimpleGrid gridTemplateColumns="2fr 1fr" gap={8}>
+              <Flex minH="60vh" direction="column">
+                <CurrentForm />
               </Flex>
-            </Flex>
 
-            <Timeline activeItem={activeItem} setActive={setActive}>
-              {STEPS.map(({ title, icon, preview }) => (
-                <TimelineItem key={title} title={title} icon={icon}>
-                  {preview}
-                </TimelineItem>
-              ))}
-            </Timeline>
-          </SimpleGrid>
+              <Timeline />
+            </SimpleGrid>
+          </TimelineProvider>
 
           <DynamicDevTool control={methods.control} />
         </FormProvider>
       ) : (
-        <Text>EYYYO, log in pls!</Text>
+        <Alert status="error">
+          <AlertIcon />
+          <AlertDescription>
+            Please connect your wallet in order to continue!
+          </AlertDescription>
+        </Alert>
       )}
     </Layout>
   )

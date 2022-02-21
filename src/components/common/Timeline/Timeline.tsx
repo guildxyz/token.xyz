@@ -1,30 +1,24 @@
 import { Box } from "@chakra-ui/react"
-import { Children, cloneElement, PropsWithChildren } from "react"
+import { useTimeline } from "./components/TImelineContext"
+import TimelineItem from "./components/TimelineItem"
 
-type Props = {
-  activeItem: number
-  setActive?: (i?: number) => void
-}
-
-const Timeline = ({
-  activeItem,
-  setActive,
-  children,
-}: PropsWithChildren<Props>): JSX.Element => {
-  const childrenArray = Children.toArray(children) as Array<JSX.Element>
+const Timeline = (): JSX.Element => {
+  const { steps, activeItem, setActive } = useTimeline()
 
   return (
     <Box>
-      {childrenArray
-        ?.filter((child) => child.type?.name === "TimelineItem")
-        .map((child, index) =>
-          cloneElement(child, {
-            ...child.props,
-            onClick: setActive ? () => setActive(index) : undefined,
-            active: index <= activeItem,
-            completed: index < activeItem,
-          })
-        )}
+      {steps?.map((step, index) => (
+        <TimelineItem
+          key={step.title}
+          title={step.title}
+          icon={step.icon}
+          onClick={() => setActive(index)}
+          active={index <= activeItem}
+          completed={index < activeItem}
+        >
+          {step.preview}
+        </TimelineItem>
+      ))}
     </Box>
   )
 }

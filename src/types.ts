@@ -11,4 +11,11 @@ type Token = {
   decimals: number
 }
 
-export type { WalletError, Rest, Token }
+type TimelineSteps = Array<{
+  title: string
+  icon?: JSX.Element
+  content: JSX.Element
+  preview: any
+}>
+
+export type { WalletError, Rest, Token, TimelineSteps }

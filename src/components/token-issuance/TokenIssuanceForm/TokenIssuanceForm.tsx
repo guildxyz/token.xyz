@@ -1,5 +1,7 @@
 import {
+  Button,
   Circle,
+  Flex,
   FormControl,
   FormErrorMessage,
   HStack,
@@ -13,6 +15,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react"
 import FormSection from "components/common/FormSection"
+import { useTimeline } from "components/common/Timeline/components/TImelineContext"
 import { Question } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
 import shortenHex from "utils/shortenHex"
@@ -21,10 +24,21 @@ import { useAccount } from "wagmi"
 const TokenIssuanceForm = (): JSX.Element => {
   const [{ data: accountData }] = useAccount()
 
+  const { next } = useTimeline()
+
   const {
     register,
+    getValues,
     formState: { errors },
   } = useFormContext()
+
+  const isNextButtonDisabled = () =>
+    !getValues("tokenName") ||
+    !getValues("tokenTicker") ||
+    !getValues("initialSupply") ||
+    errors.tokenName ||
+    errors.tokenTicker ||
+    errors.initialSupply
 
   return (
     <Stack spacing={8} w="max-content">
@@ -100,6 +114,16 @@ const TokenIssuanceForm = (): JSX.Element => {
           </option>
         </Select>
       </FormSection>
+
+      <Flex mt="auto" width="100%" justifyContent="end">
+        <Button
+          onClick={next}
+          colorScheme="primary"
+          isDisabled={isNextButtonDisabled()}
+        >
+          Continue to Distribution
+        </Button>
+      </Flex>
 
       {/* <FormSection title="Inflationary model">
         <FormControl isInvalid={errors?.inflationaryModel}>
