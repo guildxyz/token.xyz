@@ -1,4 +1,4 @@
-import { SimpleGrid, Stack } from "@chakra-ui/react"
+import { Box, SimpleGrid, Stack, Tooltip } from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
 import { useFieldArray } from "react-hook-form"
 import AllocationFormCard from "./components/AllocationFormCard"
@@ -19,7 +19,11 @@ const DistributionForm = (): JSX.Element => {
 
       <SimpleGrid gridTemplateColumns="repeat(3, 1fr)" gap={4}>
         <AddCard text="Claiming" onClick={() => append({})} />
-        <AddCard text="Distribution" onClick={() => append({})} />
+        <Tooltip label="Coming soon">
+          <Box>
+            <AddCard text="Distribution" />
+          </Box>
+        </Tooltip>
       </SimpleGrid>
     </Stack>
   )
