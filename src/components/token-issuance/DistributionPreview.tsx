@@ -1,3 +1,5 @@
-const DistributionPreview = (): JSX.Element => <>Distribution preview... (chart)</>
+import Chart from "./DistributionForm/components/Chart"
+
+const DistributionPreview = (): JSX.Element => <Chart />
 
 export default DistributionPreview

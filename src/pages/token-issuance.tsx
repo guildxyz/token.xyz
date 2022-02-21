@@ -2,6 +2,7 @@ import {
   Alert,
   AlertDescription,
   AlertIcon,
+  Box,
   Flex,
   Icon,
   SimpleGrid,
@@ -56,7 +57,14 @@ const Page = (): JSX.Element => {
                 <CurrentForm />
               </Flex>
 
-              <Timeline />
+              <Box>
+                <Timeline
+                  sx={{
+                    position: "sticky",
+                    top: "1rem",
+                  }}
+                />
+              </Box>
             </SimpleGrid>
           </TimelineProvider>
 

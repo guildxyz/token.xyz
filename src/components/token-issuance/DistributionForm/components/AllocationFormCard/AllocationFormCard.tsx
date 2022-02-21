@@ -76,7 +76,7 @@ const AllocationFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
     <FormCard title="Allocation" onRemove={onRemove}>
       <SimpleGrid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
         <FormControl
-          isInvalid={errors?.distributionData?.index?.allocationName}
+          isInvalid={errors?.distributionData?.[index]?.allocationName}
           w="full"
         >
           <Input
@@ -86,11 +86,14 @@ const AllocationFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
             placeholder="Name"
           />
           <FormErrorMessage>
-            {errors?.distributionData?.index?.allocationName?.message}
+            {errors?.distributionData?.[index]?.allocationName?.message}
           </FormErrorMessage>
         </FormControl>
 
-        <FormControl position="relative">
+        <FormControl
+          position="relative"
+          isInvalid={errors?.distributionData?.[index]?.allocationCsv}
+        >
           <HStack>
             <Button
               colorScheme="primary"
@@ -128,7 +131,7 @@ const AllocationFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
             onChange={onFileInputChange}
           />
           <FormErrorMessage>
-            {errors?.distributionData?.index?.allocationCsv?.message}
+            {errors?.distributionData?.[index]?.allocationCsv?.message}
           </FormErrorMessage>
         </FormControl>
 

@@ -17,7 +17,6 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
         <Input
           {...register(`distributionData.${index}.vestingPeriod`, {
             required: "This field is required!",
-            shouldUnregister: true,
           })}
           placeholder="Vesting period"
         />
@@ -30,7 +29,6 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
         <Input
           {...register(`distributionData.${index}.cliff`, {
             required: "This field is required!",
-            shouldUnregister: true,
           })}
           placeholder="Cliff"
         />
