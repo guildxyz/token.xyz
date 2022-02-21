@@ -4,12 +4,12 @@ import {
   Flex,
   FormControl,
   FormErrorMessage,
-  HStack,
   Icon,
   Input,
   InputGroup,
   InputRightElement,
   Select,
+  SimpleGrid,
   Stack,
   Text,
   Tooltip,
@@ -41,15 +41,15 @@ const TokenIssuanceForm = (): JSX.Element => {
     errors.initialSupply
 
   return (
-    <Stack spacing={8} w="max-content">
+    <Stack spacing={8}>
       <FormSection title="General data">
-        <HStack spacing={4} alignItems="start">
+        <SimpleGrid w="full" gridTemplateColumns="3rem 2fr 1fr" gap={4}>
           <Circle size={12} bgColor="gray.700">
             <Text as="span" color="gray" fontSize="xs">
               img
             </Text>
           </Circle>
-          <FormControl isInvalid={errors?.tokenName} w="max-content">
+          <FormControl isInvalid={errors?.tokenName}>
             <Input
               size="lg"
               {...register("tokenName", { required: "This field is required!" })}
@@ -57,13 +57,12 @@ const TokenIssuanceForm = (): JSX.Element => {
             />
             <FormErrorMessage>{errors?.tokenName?.message}</FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={errors?.tokenTicker} w="max-content">
-            <InputGroup w="max-content">
+          <FormControl isInvalid={errors?.tokenTicker}>
+            <InputGroup>
               <Input
                 size="lg"
                 {...register("tokenTicker", { required: "This field is required!" })}
                 placeholder="Ticker"
-                maxW={36}
               />
               <InputRightElement h="full" alignItems="center">
                 <Tooltip label="A ticker means a short symbol for your token, used by exchanges.">
@@ -73,7 +72,7 @@ const TokenIssuanceForm = (): JSX.Element => {
             </InputGroup>
             <FormErrorMessage>{errors?.tokenTicker?.message}</FormErrorMessage>
           </FormControl>
-        </HStack>
+        </SimpleGrid>
 
         <FormControl isInvalid={errors?.initialSupply} w="full">
           <Input
