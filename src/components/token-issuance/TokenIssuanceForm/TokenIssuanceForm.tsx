@@ -17,7 +17,7 @@ import {
 import FormSection from "components/common/FormSection"
 import { useTimeline } from "components/common/Timeline/components/TImelineContext"
 import { Question } from "phosphor-react"
-import { useFormContext } from "react-hook-form"
+import { Controller, useFormContext } from "react-hook-form"
 import shortenHex from "utils/shortenHex"
 import { useAccount } from "wagmi"
 
@@ -27,6 +27,7 @@ const TokenIssuanceForm = (): JSX.Element => {
   const { next } = useTimeline()
 
   const {
+    control,
     register,
     getValues,
     formState: { errors },
@@ -103,15 +104,29 @@ const TokenIssuanceForm = (): JSX.Element => {
       </FormSection>
 
       <FormSection title="Chain">
-        <Select {...register("chain")} size="lg" maxW="48" defaultValue="ETHEREUM">
-          <option value="ETHEREUM">Ethereum</option>
-          <option value="POLYGON" disabled>
-            Polygon (soon)
-          </option>
-          <option value="BSC" disabled>
-            BSC (soon)
-          </option>
-        </Select>
+        <Controller
+          control={control}
+          name="chain"
+          defaultValue="ETHEREUM"
+          render={({ field: { ref, value, onChange, onBlur } }) => (
+            <Select
+              ref={ref}
+              value={value}
+              onChange={onChange}
+              onBlur={onBlur}
+              size="lg"
+              maxW="48"
+            >
+              <option value="ETHEREUM">Ethereum</option>
+              <option value="POLYGON" disabled>
+                Polygon (soon)
+              </option>
+              <option value="BSC" disabled>
+                BSC (soon)
+              </option>
+            </Select>
+          )}
+        />
       </FormSection>
 
       <Flex mt="auto" width="100%" justifyContent="end">

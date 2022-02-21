@@ -104,6 +104,8 @@ const Chart = (): JSX.Element => {
     }
   }, [distributionData])
 
+  if (!distributionData?.length) return null
+
   return (
     <Line
       options={{

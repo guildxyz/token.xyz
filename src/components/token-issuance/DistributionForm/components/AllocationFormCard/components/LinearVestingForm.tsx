@@ -1,5 +1,17 @@
-import { FormControl, FormErrorMessage, Input, SimpleGrid } from "@chakra-ui/react"
-import { useFormContext } from "react-hook-form"
+import {
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  InputGroup,
+  InputRightAddon,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  SimpleGrid,
+} from "@chakra-ui/react"
+import { Controller, useFormContext } from "react-hook-form"
 
 type Props = {
   index: number
@@ -7,6 +19,7 @@ type Props = {
 
 const LinearVestingForm = ({ index }: Props): JSX.Element => {
   const {
+    control,
     register,
     formState: { errors },
   } = useFormContext()
@@ -14,24 +27,74 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
   return (
     <SimpleGrid gridTemplateColumns="repeat(2, 1fr)" gap={4} px={5} pb={4}>
       <FormControl isInvalid={errors?.distributionData?.[index]?.vestingPeriod}>
-        <Input
-          {...register(`distributionData.${index}.vestingPeriod`, {
-            required: "This field is required!",
-          })}
-          placeholder="Vesting period"
-        />
+        <FormLabel>Vesting</FormLabel>
+        <InputGroup>
+          <Controller
+            control={control}
+            name={`distributionData.${index}.vestingPeriod`}
+            rules={{
+              required: "This field is required!",
+              min: {
+                value: 0,
+                message: "Vesting must be positive",
+              },
+            }}
+            defaultValue={0}
+            render={({ field: { ref, value, onChange, onBlur } }) => (
+              <NumberInput
+                ref={ref}
+                value={value}
+                onChange={onChange}
+                onBlur={onBlur}
+                min={0}
+              >
+                <NumberInputField borderRightRadius={0} />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            )}
+          />
+          <InputRightAddon bgColor="whiteAlpha.50">months</InputRightAddon>
+        </InputGroup>
         <FormErrorMessage>
           {errors?.distributionData?.[index]?.vestingPeriod?.message}
         </FormErrorMessage>
       </FormControl>
 
       <FormControl isInvalid={errors?.distributionData?.[index]?.cliff}>
-        <Input
-          {...register(`distributionData.${index}.cliff`, {
-            required: "This field is required!",
-          })}
-          placeholder="Cliff"
-        />
+        <FormLabel>Cliff</FormLabel>
+        <InputGroup>
+          <Controller
+            control={control}
+            name={`distributionData.${index}.cliff`}
+            rules={{
+              required: "This field is required!",
+              min: {
+                value: 0,
+                message: "Cliff must be positive",
+              },
+            }}
+            defaultValue={0}
+            render={({ field: { ref, value, onChange, onBlur } }) => (
+              <NumberInput
+                ref={ref}
+                value={value}
+                onChange={onChange}
+                onBlur={onBlur}
+                min={0}
+              >
+                <NumberInputField borderRightRadius={0} />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            )}
+          />
+          <InputRightAddon bgColor="whiteAlpha.50">months</InputRightAddon>
+        </InputGroup>
         <FormErrorMessage>
           {errors?.distributionData?.[index]?.cliff?.message}
         </FormErrorMessage>

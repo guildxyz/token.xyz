@@ -1,4 +1,5 @@
 import { Tag, Text, VStack } from "@chakra-ui/react"
+import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import shortenHex from "utils/shortenHex"
 import { useAccount } from "wagmi"
@@ -11,6 +12,10 @@ const TokenIssuancePreview = (): JSX.Element => {
   const initialSupply = useWatch({ control, name: "initialSupply" })
   const transferOwnershipTo = useWatch({ control, name: "transferOwnershipTo" })
   const chain = useWatch({ control, name: "chain" })
+
+  useEffect(() => {
+    console.log("chain changed", chain)
+  }, [chain])
 
   if (!tokenTicker && !initialSupply) return null
 
