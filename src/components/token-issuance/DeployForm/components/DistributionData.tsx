@@ -34,44 +34,47 @@ const DistributionData = (): JSX.Element => {
     () =>
       distributionData
         ?.map((allocationData) => allocationData.allocationAddressesAmounts)
-        ?.reduce((arr1, arr2) => arr1.concat(arr2), []),
+        ?.reduce((arr1, arr2) => arr1.concat(arr2), [])
+        ?.filter((item) => !!item),
     [distributionData]
   )
 
   return (
     <>
       <SimpleGrid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
-        {addressList?.length ? (
-          <Stack>
-            <Heading as="h3" mb={2} fontFamily="display" fontSize="lg">
-              Distribution data
-            </Heading>
-            <Box borderWidth={1} borderRadius="xl" overflow="hidden">
-              <Table variant="simple" size="sm">
-                <Thead>
-                  <Tr>
-                    <Th>Address</Th>
-                    <Th isNumeric>Amount</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {addressList.slice(0, 3).map((row) => (
-                    <Tr key={`${row.address}-${row.amount}`}>
-                      <Td>{shortenHex(row.address, 3)}</Td>
-                      <Td isNumeric>{row.amount}</Td>
+        <Stack>
+          <Heading as="h3" mb={2} fontFamily="display" fontSize="lg">
+            Distribution data
+          </Heading>
+          {addressList?.length ? (
+            <>
+              <Box borderWidth={1} borderRadius="xl" overflow="hidden">
+                <Table variant="simple" size="sm">
+                  <Thead>
+                    <Tr>
+                      <Th>Address</Th>
+                      <Th isNumeric>Amount</Th>
                     </Tr>
-                  ))}
-                </Tbody>
-              </Table>
-            </Box>
+                  </Thead>
+                  <Tbody>
+                    {addressList.slice(0, 3).map((row) => (
+                      <Tr key={`${row.address}-${row.amount}`}>
+                        <Td>{shortenHex(row.address, 3)}</Td>
+                        <Td isNumeric>{row.amount}</Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </Box>
 
-            <Button size="sm" w="full" onClick={onOpen}>
-              View all addresses
-            </Button>
-          </Stack>
-        ) : (
-          <Text>No distribution data</Text>
-        )}
+              <Button size="sm" w="full" onClick={onOpen}>
+                View all addresses
+              </Button>
+            </>
+          ) : (
+            <Text>No distribution data</Text>
+          )}
+        </Stack>
 
         <Stack maxW="full">
           <Heading as="h3" mb={2} fontFamily="display" fontSize="lg">
@@ -95,7 +98,7 @@ const DistributionData = (): JSX.Element => {
                 </Tr>
               </Thead>
               <Tbody>
-                {addressList.map((row) => (
+                {addressList?.map((row) => (
                   <Tr key={`${row.address}-${row.amount}`}>
                     <Td>
                       <pre>{row.address}</pre>

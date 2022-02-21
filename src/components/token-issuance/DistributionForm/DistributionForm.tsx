@@ -1,8 +1,7 @@
 import { Box, Button, Flex, SimpleGrid, Stack, Tooltip } from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
-import Card from "components/common/Card"
 import { useTimeline } from "components/common/Timeline/components/TImelineContext"
-import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
+import { useFieldArray, useFormContext } from "react-hook-form"
 import AllocationFormCard from "./components/AllocationFormCard"
 import Chart from "./components/Chart"
 
@@ -12,15 +11,9 @@ const DistributionForm = (): JSX.Element => {
   const { control } = useFormContext()
   const { fields, append, remove } = useFieldArray({ name: "distributionData" })
 
-  const distributionData = useWatch({ name: "distributionData", control })
-
   return (
     <Stack spacing={8} w="full">
-      {distributionData?.length && (
-        <Card px={{ base: 5, sm: 6 }} py={7}>
-          <Chart />
-        </Card>
-      )}
+      <Chart />
 
       {fields.map((field, index) => (
         <AllocationFormCard

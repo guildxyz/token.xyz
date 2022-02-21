@@ -43,23 +43,45 @@ const CHART_COLORS: Array<{ bg: string; border: string }> = [
 const Chart = (): JSX.Element => {
   const { control, getValues } = useFormContext()
 
+  const initialSupply = useWatch({ control, name: "initialSupply" })
   const distributionData = useWatch({ name: "distributionData", control })
 
   const dynamicChartData = useMemo(() => {
-    const longestVestingPeriod = distributionData?.length
-      ? Math.max(
-          ...distributionData.map(
-            (allocationData) => parseInt(allocationData.vestingPeriod) || 1
+    const distributedSupply = distributionData?.length
+      ? distributionData
+          ?.map((allocationData) =>
+            allocationData.allocationAddressesAmounts?.map((data) => data.amount)
           )
-        )
-      : 1
+          ?.reduce((arr1, arr2) => [...arr1, arr2])
+          ?.map((value) => parseInt(value))
+          ?.reduce((a, b) => a + b, 0)
+      : 0
+
+    const longestVestingPeriod =
+      distributionData?.length && distributionData[0].vestingPeriod
+        ? Math.max(
+            ...distributionData.map((allocationData) =>
+              parseInt(allocationData.vestingPeriod)
+            )
+          )
+        : 12
 
     return {
       // Get the longest vesting period, and just create an array of that length
       labels: Array(longestVestingPeriod)
         .fill(0)
         .map((_, index) => index),
-      datasets:
+      datasets: [
+        {
+          label: "Token owner",
+          data: Array(longestVestingPeriod).fill(
+            parseInt(initialSupply) - distributedSupply
+          ),
+          borderColor: "#fefefe",
+          backgroundColor: "rgba(255, 255, 255, 0.2)",
+          fill: "origin",
+        },
+      ].concat(
         distributionData?.map((allocationData, index) => ({
           label: getValues(`distributionData.${index}.allocationName`),
           // TODO: replace the const 5 with a dynamic value...
@@ -102,9 +124,10 @@ const Chart = (): JSX.Element => {
           borderColor: CHART_COLORS[index].border,
           backgroundColor: CHART_COLORS[index].bg,
           fill: "origin",
-        })) || [],
+        })) || []
+      ),
     }
-  }, [distributionData])
+  }, [initialSupply, distributionData])
 
   if (!distributionData?.length) return null
 
@@ -120,6 +143,7 @@ const Chart = (): JSX.Element => {
         },
         scales: {
           y: {
+            min: 0,
             stacked: true,
           },
         },
