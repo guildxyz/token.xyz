@@ -13,6 +13,7 @@ import { TimelineProvider } from "components/common/Timeline/components/TImeline
 import CurrentForm from "components/token-issuance/CurrentForm"
 import DeployForm from "components/token-issuance/DeployForm"
 import DistributionForm from "components/token-issuance/DistributionForm"
+import DistributionPreview from "components/token-issuance/DistributionPreview"
 import TokenIssuanceForm from "components/token-issuance/TokenIssuanceForm"
 import TokenIssuancePreview from "components/token-issuance/TokenIssuancePreview"
 import { ChartLine, Coin, CurrencyEth } from "phosphor-react"
@@ -31,7 +32,7 @@ const STEPS: TimelineSteps = [
     title: "Distribution (optional)",
     icon: <Icon as={ChartLine} />,
     content: <DistributionForm />,
-    preview: "Distribution preview",
+    preview: <DistributionPreview />,
   },
   {
     title: "Deploy",
