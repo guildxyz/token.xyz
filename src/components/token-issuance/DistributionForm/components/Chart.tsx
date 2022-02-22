@@ -24,7 +24,24 @@ ChartJS.register(
   Filler
 )
 
-// TODO: generate colors dynamically
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+]
+
+const getMonthName = (index: number) => MONTHS[(index + new Date().getMonth()) % 12]
+
+// TODO: generate colors dynamicall
 const CHART_COLORS: Array<{ bg: string; border: string }> = [
   {
     bg: "rgba(239, 68, 68, 0.2)",
@@ -63,7 +80,8 @@ const Chart = (): JSX.Element => {
         ? Math.max(
             ...distributionData.map((allocationData) =>
               parseInt(allocationData.vestingPeriod)
-            )
+            ),
+            12
           )
         : 12
 
@@ -71,7 +89,7 @@ const Chart = (): JSX.Element => {
       // Get the longest vesting period, and just create an array of that length
       labels: Array(longestVestingPeriod)
         .fill(0)
-        .map((_, index) => index),
+        .map((_, index) => getMonthName(index)),
       datasets: [
         {
           label: "Token owner",
@@ -118,10 +136,6 @@ const Chart = (): JSX.Element => {
                   ?.reduce((a, b) => a + b, 0)
               )
             }),
-
-          // allocationData.allocationAddressesAmounts?.map(
-          //   ({ amount }) => (amount / 5) * (index + 1)
-          // ),
           borderColor: CHART_COLORS[index].border,
           backgroundColor: CHART_COLORS[index].bg,
           fill: "origin",
@@ -129,8 +143,6 @@ const Chart = (): JSX.Element => {
       ),
     }
   }, [initialSupply, distributionData])
-
-  console.log("dynamicChartData", dynamicChartData)
 
   return (
     <Line
