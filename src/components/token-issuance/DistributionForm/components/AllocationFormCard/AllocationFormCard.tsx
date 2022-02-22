@@ -18,6 +18,8 @@ import { useFormContext, useWatch } from "react-hook-form"
 import FormCard from "../FormCard"
 import VestingTypePicker from "./components/VestingTypePicker"
 
+const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
+
 type Props = {
   index: number
   field: Record<string, any> // TODO: better types
@@ -31,6 +33,8 @@ const AllocationFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
     control,
     register,
     setValue,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useFormContext()
 
@@ -53,16 +57,35 @@ const AllocationFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
     setIsParseLoading(true)
     parse(file, {
       complete: (results) => {
-        if (results.errors.length) return
+        clearErrors(`distributionData.${index}.allocationCsv`)
         setIsParseLoading(false)
+        if (results.errors.length) {
+          setError(`distributionData.${index}.allocationCsv`, {
+            message: "Could not parse CSV",
+            type: "validate",
+          })
+          return
+        }
+
+        // If we could parse the CSV, check if the data is actually valid
+        if (
+          !results.data.every(
+            ([address, amount]) =>
+              ADDRESS_REGEX.test(address) && typeof parseInt(amount) === "number"
+          )
+        ) {
+          setError(`distributionData.${index}.allocationCsv`, {
+            message: "Invalid data in CSV",
+            type: "validate",
+          })
+          return
+        }
+
         setValue(
           `distributionData.${index}.allocationAddressesAmounts`,
           results.data.map(([address, amount]) => ({ address, amount }))
         )
       },
-      // error: (error) => {
-      //   console.log("an error occurred", error)
-      // },
     })
   }
 
@@ -70,6 +93,7 @@ const AllocationFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
     if (!fileInputRef?.current) return
     fileInputRef.current.value = null
     setValue(`distributionData.${index}.allocationAddressesAmounts`, null)
+    clearErrors(`distributionData.${index}.allocationCsv`)
   }
 
   return (
