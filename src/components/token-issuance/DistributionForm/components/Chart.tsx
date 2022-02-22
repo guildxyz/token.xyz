@@ -57,10 +57,9 @@ const Chart = (): JSX.Element => {
           ?.reduce((a, b) => a + b, 0)
       : 0
 
-    console.log("distributedSupply", distributedSupply)
-
     const longestVestingPeriod =
-      distributionData?.length && distributionData[0].vestingPeriod
+      distributionData?.length &&
+      typeof distributionData[0].vestingPeriod === "number"
         ? Math.max(
             ...distributionData.map((allocationData) =>
               parseInt(allocationData.vestingPeriod)
