@@ -13,7 +13,7 @@ import {
   Stack,
   Tooltip,
 } from "@chakra-ui/react"
-import { useTimeline } from "components/common/Timeline/components/TImelineContext"
+import { useTimeline } from "components/common/Timeline/components/TimelineContext"
 import FormSection from "components/forms/FormSection"
 import { ImageSquare, Question } from "phosphor-react"
 import { Controller, useFormContext } from "react-hook-form"

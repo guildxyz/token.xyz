@@ -1,6 +1,6 @@
 import { Heading, HStack, Icon, IconButton } from "@chakra-ui/react"
 import Meta from "components/common/Meta"
-import { useTimeline } from "components/common/Timeline/components/TImelineContext"
+import { useTimeline } from "components/common/Timeline/components/TimelineContext"
 import { ArrowLeft } from "phosphor-react"
 
 const DynamicPageTitle = (): JSX.Element => {

@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react"
 import { Rest } from "types"
-import { useTimeline } from "./components/TImelineContext"
+import { useTimeline } from "./components/TimelineContext"
 import TimelineItem from "./components/TimelineItem"
 
 const Timeline = (props: Rest): JSX.Element => {

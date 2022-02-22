@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
 import Timeline from "components/common/Timeline"
-import { TimelineProvider } from "components/common/Timeline/components/TImelineContext"
+import { TimelineProvider } from "components/common/Timeline/components/TimelineContext"
 import DynamicDevTool from "components/forms/DynamicDevTool"
 import CurrentForm from "components/token-issuance/CurrentForm"
 import DeployForm from "components/token-issuance/DeployForm"

@@ -1,6 +1,6 @@
 import { Box, Button, Flex, SimpleGrid, Stack, Tooltip } from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
-import { useTimeline } from "components/common/Timeline/components/TImelineContext"
+import { useTimeline } from "components/common/Timeline/components/TimelineContext"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import AllocationFormCard from "./components/AllocationFormCard"
 import Chart from "./components/Chart"

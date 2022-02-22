@@ -1,4 +1,4 @@
-import { useTimeline } from "components/common/Timeline/components/TImelineContext"
+import { useTimeline } from "components/common/Timeline/components/TimelineContext"
 
 const CurrentForm = (): JSX.Element => {
   const { steps, activeItem } = useTimeline()
