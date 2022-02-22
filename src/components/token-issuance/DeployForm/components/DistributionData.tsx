@@ -90,24 +90,26 @@ const DistributionData = (): JSX.Element => {
           <ModalHeader>Eligible addresses</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Table size="sm" variant="simple">
-              <Thead>
-                <Tr>
-                  <Th>Address</Th>
-                  <Th isNumeric>Amount</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {addressList?.map((row, i) => (
-                  <Tr key={`${i}-${row.address}`}>
-                    <Td>
-                      <pre>{row.address}</pre>
-                    </Td>
-                    <Td isNumeric>{row.amount}</Td>
+            <Box maxH="50vh" overflowY="auto" className="custom-scrollbar">
+              <Table size="sm" variant="simple">
+                <Thead>
+                  <Tr>
+                    <Th>Address</Th>
+                    <Th isNumeric>Amount</Th>
                   </Tr>
-                ))}
-              </Tbody>
-            </Table>
+                </Thead>
+                <Tbody>
+                  {addressList?.map((row, i) => (
+                    <Tr key={`${i}-${row.address}`}>
+                      <Td>
+                        <pre>{row.address}</pre>
+                      </Td>
+                      <Td isNumeric>{row.amount}</Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </Box>
           </ModalBody>
         </ModalContent>
       </Modal>
