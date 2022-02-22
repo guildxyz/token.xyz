@@ -26,7 +26,12 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
 
   return (
     <SimpleGrid gridTemplateColumns="repeat(2, 1fr)" gap={4} px={5} pb={4}>
-      <FormControl isInvalid={errors?.distributionData?.[index]?.vestingPeriod}>
+      <FormControl
+        isInvalid={errors?.distributionData?.[index]?.vestingPeriod}
+        isRequired={
+          getValues(`distributionData.${index}.vestingType`) === "LINEAR_VESTING"
+        }
+      >
         <FormLabel>Vesting</FormLabel>
         <InputGroup>
           <Controller
@@ -65,7 +70,12 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
         </FormErrorMessage>
       </FormControl>
 
-      <FormControl isInvalid={errors?.distributionData?.[index]?.cliff}>
+      <FormControl
+        isInvalid={errors?.distributionData?.[index]?.cliff}
+        isRequired={
+          getValues(`distributionData.${index}.vestingType`) === "LINEAR_VESTING"
+        }
+      >
         <FormLabel>Cliff</FormLabel>
         <InputGroup>
           <Controller

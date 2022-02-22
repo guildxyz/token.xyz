@@ -1,6 +1,7 @@
 import {
   FormControl,
   FormErrorMessage,
+  FormLabel,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -19,7 +20,11 @@ const MaxSupplyForm = (): JSX.Element => {
 
   return (
     <SimpleGrid gridTemplateColumns="repeat(2, 1fr)" gap={4} px={5} pb={4}>
-      <FormControl isInvalid={errors?.initialSupply}>
+      <FormControl
+        isInvalid={errors?.initialSupply}
+        isRequired={getValues("inflationaryModel") !== "UNLIMITED"}
+      >
+        <FormLabel>Initial supply</FormLabel>
         <Controller
           control={control}
           name="initialSupply"
@@ -52,7 +57,11 @@ const MaxSupplyForm = (): JSX.Element => {
         <FormErrorMessage>{errors?.initialSupply?.message}</FormErrorMessage>
       </FormControl>
 
-      <FormControl isInvalid={errors?.maxSupply}>
+      <FormControl
+        isInvalid={errors?.maxSupply}
+        isRequired={getValues("inflationaryModel") !== "UNLIMITED"}
+      >
+        <FormLabel>Max supply</FormLabel>
         <Controller
           control={control}
           name="maxSupply"
