@@ -19,14 +19,12 @@ const InfoMenu = () => {
       <MenuButton
         as={IconButton}
         aria-label="Agora logo"
-        rounded="full"
+        isRound
         variant="ghost"
         h="10"
-      >
-        <Icon width="1.2em" height="1.2em" as={Info} />
-      </MenuButton>
-      {/* have to set zIndex, otherwise the search bar's icon lays over it */}
-      <MenuList border="none" shadow="md" zIndex="3">
+        icon={<Icon width="1.2em" height="1.2em" as={Info} />}
+      />
+      <MenuList border="none" shadow="md">
         <MenuGroup
           title={
             (

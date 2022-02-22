@@ -15,6 +15,7 @@ import CurrentForm from "components/token-issuance/CurrentForm"
 import DeployForm from "components/token-issuance/DeployForm"
 import DistributionForm from "components/token-issuance/DistributionForm"
 import DistributionPreview from "components/token-issuance/DistributionPreview"
+import DynamicPageTitle from "components/token-issuance/DynamicPageTitle"
 import TokenIssuanceForm from "components/token-issuance/TokenIssuanceForm"
 import TokenIssuancePreview from "components/token-issuance/TokenIssuancePreview"
 import { ChartLine, Coin, CurrencyEth } from "phosphor-react"
@@ -30,7 +31,7 @@ const STEPS: TimelineSteps = [
     preview: <TokenIssuancePreview />,
   },
   {
-    title: "Distribution (optional)",
+    title: "Distribution",
     icon: <Icon as={ChartLine} />,
     content: <DistributionForm />,
     preview: <DistributionPreview />,
@@ -48,10 +49,12 @@ const Page = (): JSX.Element => {
   const methods = useForm({ mode: "all" })
 
   return (
-    <Layout title="Token.xyz">
+    <Layout>
       {accountData?.address ? (
         <FormProvider {...methods}>
           <TimelineProvider steps={STEPS}>
+            <DynamicPageTitle />
+
             <SimpleGrid gridTemplateColumns="2fr 1fr" gap={8}>
               <Flex minH="60vh" direction="column">
                 <CurrentForm />

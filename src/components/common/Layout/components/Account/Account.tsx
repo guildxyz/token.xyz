@@ -1,4 +1,4 @@
-import { HStack, Text, useDisclosure } from "@chakra-ui/react"
+import { HStack, Text, useBreakpointValue, useDisclosure } from "@chakra-ui/react"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { LinkBreak, SignIn } from "phosphor-react"
 import { useContext } from "react"
@@ -22,8 +22,13 @@ const Account = (): JSX.Element => {
     onClose: onAccountModalClose,
   } = useDisclosure()
 
+  const buttonLabel = useBreakpointValue({
+    base: "Connect",
+    md: "Connect to a wallet",
+  })
+
   if (loading) {
-    return <AccountButton isLoading>Connect to a wallet</AccountButton>
+    return <AccountButton isLoading>{buttonLabel}</AccountButton>
   }
 
   if (networkData?.chain?.unsupported) {
@@ -45,7 +50,7 @@ const Account = (): JSX.Element => {
         isLoading={!triedEager}
         onClick={openWalletSelectorModal}
       >
-        Connect to a wallet
+        {buttonLabel}
       </AccountButton>
     )
   }
