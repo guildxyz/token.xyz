@@ -98,8 +98,8 @@ const DistributionData = (): JSX.Element => {
                 </Tr>
               </Thead>
               <Tbody>
-                {addressList?.map((row) => (
-                  <Tr key={`${row.address}-${row.amount}`}>
+                {addressList?.map((row, i) => (
+                  <Tr key={`${i}-${row.address}`}>
                     <Td>
                       <pre>{row.address}</pre>
                     </Td>
