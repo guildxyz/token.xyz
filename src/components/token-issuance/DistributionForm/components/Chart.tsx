@@ -57,6 +57,8 @@ const Chart = (): JSX.Element => {
           ?.reduce((a, b) => a + b, 0)
       : 0
 
+    console.log("distributedSupply", distributedSupply)
+
     const longestVestingPeriod =
       distributionData?.length && distributionData[0].vestingPeriod
         ? Math.max(
@@ -75,7 +77,7 @@ const Chart = (): JSX.Element => {
         {
           label: "Token owner",
           data: Array(longestVestingPeriod).fill(
-            parseInt(initialSupply) - distributedSupply
+            parseInt(initialSupply) - parseInt(distributedSupply || 0)
           ),
           borderColor: "#fefefe",
           backgroundColor: "rgba(255, 255, 255, 0.2)",
@@ -96,8 +98,8 @@ const Chart = (): JSX.Element => {
               const multiplier = (num: number) =>
                 cliff > 0 && num < cliff
                   ? 0
-                  : num > vestingPeriod
-                  ? vestingPeriod + 1
+                  : num >= vestingPeriod
+                  ? vestingPeriod
                   : num + 1
 
               // Linear vesting
@@ -129,7 +131,7 @@ const Chart = (): JSX.Element => {
     }
   }, [initialSupply, distributionData])
 
-  if (!distributionData?.length) return null
+  console.log("dynamicChartData", dynamicChartData)
 
   return (
     <Line

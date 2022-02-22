@@ -1,7 +1,8 @@
 import { Box, Button, Flex, SimpleGrid, Stack, Tooltip } from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
 import { useTimeline } from "components/common/Timeline/components/TimelineContext"
-import { useFieldArray, useFormContext } from "react-hook-form"
+import { useMemo } from "react"
+import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
 import AllocationFormCard from "./components/AllocationFormCard"
 import Chart from "./components/Chart"
 
@@ -10,6 +11,15 @@ const DistributionForm = (): JSX.Element => {
 
   const { control } = useFormContext()
   const { fields, append, remove } = useFieldArray({ name: "distributionData" })
+
+  const distributionData = useWatch({ control, name: "distributionData" })
+
+  const isNextButtonDisabled = useMemo(() => {
+    if (!distributionData) return false
+    return !distributionData.every(
+      (allocationData) => !!(allocationData.allocationAddressesAmounts?.length > 0)
+    )
+  }, [distributionData])
 
   return (
     <Stack spacing={8} w="full">
@@ -37,7 +47,7 @@ const DistributionForm = (): JSX.Element => {
         <Button
           onClick={next}
           colorScheme="primary"
-          // isDisabled={isNextButtonDisabled()}
+          isDisabled={isNextButtonDisabled}
         >
           Continue to Deploy
         </Button>

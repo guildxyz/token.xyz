@@ -46,7 +46,7 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                 message: "Vesting must be positive",
               },
             }}
-            defaultValue={0}
+            defaultValue={12}
             render={({ field: { ref, value, onChange, onBlur } }) => (
               <NumberInput
                 ref={ref}
