@@ -110,7 +110,7 @@ const TokenIssuanceForm = (): JSX.Element => {
         <Controller
           control={control}
           name="chain"
-          defaultValue="ETHEREUM"
+          defaultValue="GOERLI"
           render={({ field: { ref, value, onChange, onBlur } }) => (
             <Select
               ref={ref}
@@ -120,6 +120,7 @@ const TokenIssuanceForm = (): JSX.Element => {
               size="lg"
               maxW="48"
             >
+              <option value="GOERLI">Görli</option>
               <option value="ETHEREUM">Ethereum</option>
               <option value="POLYGON" disabled>
                 Polygon (soon)
