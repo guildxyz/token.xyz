@@ -20,6 +20,7 @@ type Props = {
 const LinearVestingForm = ({ index }: Props): JSX.Element => {
   const {
     control,
+    getValues,
     formState: { errors },
   } = useFormContext()
 
@@ -32,7 +33,9 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
             control={control}
             name={`distributionData.${index}.vestingPeriod`}
             rules={{
-              required: "This field is required!",
+              required:
+                getValues(`distributionData.${index}.vestingType`) ===
+                  "LINEAR_VESTING" && "This field is required!",
               min: {
                 value: 0,
                 message: "Vesting must be positive",
@@ -69,7 +72,9 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
             control={control}
             name={`distributionData.${index}.cliff`}
             rules={{
-              required: "This field is required!",
+              required:
+                getValues(`distributionData.${index}.vestingType`) ===
+                  "LINEAR_VESTING" && "This field is required!",
               min: {
                 value: 0,
                 message: "Cliff must be positive",
