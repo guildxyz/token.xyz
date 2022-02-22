@@ -19,6 +19,7 @@ import { ImageSquare, Question } from "phosphor-react"
 import { Controller, useFormContext } from "react-hook-form"
 import shortenHex from "utils/shortenHex"
 import { useAccount } from "wagmi"
+import InflationaryModelPicker from "./components/InflationaryModelPicker"
 
 const TokenIssuanceForm = (): JSX.Element => {
   const [{ data: accountData }] = useAccount()
@@ -35,10 +36,10 @@ const TokenIssuanceForm = (): JSX.Element => {
   const isNextButtonDisabled = () =>
     !getValues("tokenName") ||
     !getValues("tokenTicker") ||
-    !getValues("initialSupply") ||
     errors.tokenName ||
     errors.tokenTicker ||
-    errors.initialSupply
+    errors.initialSupply ||
+    errors.maxSupply
 
   return (
     <Stack spacing={8}>
@@ -81,15 +82,10 @@ const TokenIssuanceForm = (): JSX.Element => {
             <FormErrorMessage>{errors?.tokenTicker?.message}</FormErrorMessage>
           </FormControl>
         </SimpleGrid>
+      </FormSection>
 
-        <FormControl isInvalid={errors?.initialSupply} w="full">
-          <Input
-            size="lg"
-            {...register("initialSupply", { required: "This field is required!" })}
-            placeholder="Initial supply"
-          />
-          <FormErrorMessage>{errors?.initialSupply?.message}</FormErrorMessage>
-        </FormControl>
+      <FormSection title="Inflationary model">
+        <InflationaryModelPicker />
       </FormSection>
 
       <FormSection title="Transfer ownership">
@@ -145,29 +141,6 @@ const TokenIssuanceForm = (): JSX.Element => {
           Continue to Distribution
         </Button>
       </Flex>
-
-      {/* <FormSection title="Inflationary model">
-        <FormControl isInvalid={errors?.inflationaryModel}>
-          <InflationaryModelPicker />
-          <FormErrorMessage>{errors?.inflationaryModel?.message}</FormErrorMessage>
-        </FormControl>
-
-        <FormControl isInvalid={errors?.maxSupply} w="full">
-          <InputGroup>
-            <Input
-              size="lg"
-              {...register("maxSupply", { required: "This field is required!" })}
-              placeholder="Max supply"
-            />
-            <InputRightElement>
-              <Tooltip label="Fully diluted token supply">
-                <Icon as={Question} color="gray" />
-              </Tooltip>
-            </InputRightElement>
-          </InputGroup>
-          <FormErrorMessage>{errors?.maxSupply?.message}</FormErrorMessage>
-        </FormControl>
-      </FormSection> */}
     </Stack>
   )
 }

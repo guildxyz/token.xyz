@@ -1,56 +1,92 @@
-import {
-  Button,
-  FormControl,
-  HStack,
-  StackDivider,
-  useColorMode,
-} from "@chakra-ui/react"
-import { useFormContext } from "react-hook-form"
+import { StackDivider, useColorMode, useRadioGroup, VStack } from "@chakra-ui/react"
+import { useEffect } from "react"
+import { useController, useFormContext, useWatch } from "react-hook-form"
+import FixedSupplyForm from "./components/FixedSupplyForm"
+import InflationaryModelOption from "./components/InflationaryModelOption"
+import MaxSupplyForm from "./components/MaxSupplyForm"
 
-const INFLATIONARY_MODELS: Array<{ label: string; value: string }> = [
+const OPTIONS: Array<{
+  value: string
+  title: string
+  description?: string
+  disabled: boolean | string
+  children?: JSX.Element
+}> = [
   {
-    label: "Fixed Supply",
     value: "FIXED",
+    title: "Fixed Supply",
+    description: "Description...",
+    disabled: false,
+    children: <FixedSupplyForm />,
   },
   {
-    label: "Max Supply",
     value: "MAX",
+    title: "Max Supply",
+    description: "Description...",
+    disabled: false,
+    children: <MaxSupplyForm />,
   },
   {
-    label: "Unlimited",
     value: "UNLIMITED",
+    title: "Unlimited",
+    disabled: false,
+    description: "Description...",
+    children: null,
   },
 ]
 
 const InflationaryModelPicker = (): JSX.Element => {
+  const { control, setValue, clearErrors, trigger } = useFormContext()
+
+  const { field } = useController({
+    control,
+    name: "inflationaryModel",
+    rules: { required: "You must pick a realm for your guild" },
+  })
+
+  const { getRootProps, getRadioProps } = useRadioGroup({
+    name: "inflationaryModel",
+    onChange: field.onChange,
+    value: field.value,
+    defaultValue: "FIXED",
+  })
+
+  const group = getRootProps()
   const { colorMode } = useColorMode()
-  const { control } = useFormContext()
+
+  const inflationaryModel = useWatch({ control, name: "inflationaryModel" })
+
+  useEffect(() => {
+    if (inflationaryModel !== "UNLIMITED") {
+      trigger(["initialSupply", "maxSupply"])
+      return
+    }
+
+    setValue("initialSupply", 0)
+    setValue("maxSupply", 0)
+    clearErrors(["initialSupply", "maxSupply"])
+  }, [inflationaryModel])
 
   return (
-    <FormControl>
-      <HStack
-        borderRadius="xl"
-        bg={colorMode === "light" ? "white" : "blackAlpha.300"}
-        spacing="0"
-        border="1px"
-        borderColor={colorMode === "light" ? "blackAlpha.300" : "whiteAlpha.300"}
-        divider={<StackDivider />}
-      >
-        {INFLATIONARY_MODELS.map((model) => (
-          <Button
-            key={model.value}
-            w="full"
-            h={12}
-            borderRadius="none"
-            variant="ghost"
-            _first={{ borderTopLeftRadius: "xl", borderBottomLeftRadius: "xl" }}
-            _last={{ borderTopRightRadius: "xl", borderBottomRightRadius: "xl" }}
-          >
-            {model.label}
-          </Button>
-        ))}
-      </HStack>
-    </FormControl>
+    <VStack
+      {...group}
+      w="full"
+      borderRadius="xl"
+      bg={colorMode === "light" ? "white" : "blackAlpha.300"}
+      spacing="0"
+      border="1px"
+      borderColor={colorMode === "light" ? "blackAlpha.300" : "whiteAlpha.300"}
+      divider={<StackDivider />}
+    >
+      {OPTIONS.map((option) => {
+        const radio = getRadioProps({ value: option.value })
+        return (
+          <InflationaryModelOption key={option.value} {...radio} {...option}>
+            {option.children}
+          </InflationaryModelOption>
+        )
+      })}
+    </VStack>
   )
 }
 

@@ -20,7 +20,6 @@ type Props = {
 const LinearVestingForm = ({ index }: Props): JSX.Element => {
   const {
     control,
-    register,
     formState: { errors },
   } = useFormContext()
 
