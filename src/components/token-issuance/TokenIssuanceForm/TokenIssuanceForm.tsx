@@ -1,22 +1,21 @@
 import {
   Button,
-  Circle,
   Flex,
   FormControl,
   FormErrorMessage,
   Icon,
+  IconButton,
   Input,
   InputGroup,
   InputRightElement,
   Select,
   SimpleGrid,
   Stack,
-  Text,
   Tooltip,
 } from "@chakra-ui/react"
-import FormSection from "components/common/FormSection"
 import { useTimeline } from "components/common/Timeline/components/TImelineContext"
-import { Question } from "phosphor-react"
+import FormSection from "components/forms/FormSection"
+import { ImageSquare, Question } from "phosphor-react"
 import { Controller, useFormContext } from "react-hook-form"
 import shortenHex from "utils/shortenHex"
 import { useAccount } from "wagmi"
@@ -45,11 +44,19 @@ const TokenIssuanceForm = (): JSX.Element => {
     <Stack spacing={8}>
       <FormSection title="General data">
         <SimpleGrid w="full" gridTemplateColumns="3rem 2fr 1fr" gap={4}>
-          <Circle size={12} bgColor="gray.700">
-            <Text as="span" color="gray" fontSize="xs">
-              img
-            </Text>
-          </Circle>
+          <IconButton
+            autoFocus
+            aria-label="Upload image"
+            icon={<Icon as={ImageSquare} />}
+            rounded="full"
+            boxSize={12}
+            flexShrink={0}
+            colorScheme="gray"
+            variant="outline"
+            borderWidth={1}
+            bg="blackAlpha.300"
+            // onClick={onOpen}
+          />
           <FormControl isInvalid={errors?.tokenName}>
             <Input
               size="lg"

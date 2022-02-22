@@ -7,10 +7,10 @@ import {
   Icon,
   SimpleGrid,
 } from "@chakra-ui/react"
-import DynamicDevTool from "components/common/DynamicDevTool"
 import Layout from "components/common/Layout"
 import Timeline from "components/common/Timeline"
 import { TimelineProvider } from "components/common/Timeline/components/TImelineContext"
+import DynamicDevTool from "components/forms/DynamicDevTool"
 import CurrentForm from "components/token-issuance/CurrentForm"
 import DeployForm from "components/token-issuance/DeployForm"
 import DistributionForm from "components/token-issuance/DistributionForm"

@@ -52,7 +52,7 @@ const Chart = (): JSX.Element => {
           ?.map((allocationData) =>
             allocationData.allocationAddressesAmounts?.map((data) => data.amount)
           )
-          ?.reduce((arr1, arr2) => [...arr1, arr2])
+          ?.reduce((arr1, arr2) => [...(arr1 || []), ...(arr2 || [])])
           ?.map((value) => parseInt(value))
           ?.reduce((a, b) => a + b, 0)
       : 0
