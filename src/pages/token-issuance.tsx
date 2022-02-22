@@ -7,6 +7,7 @@ import {
   Icon,
   SimpleGrid,
 } from "@chakra-ui/react"
+import { ConfettiProvider } from "components/common/ConfettiContext"
 import Layout from "components/common/Layout"
 import Timeline from "components/common/Timeline"
 import { TimelineProvider } from "components/common/Timeline/components/TimelineContext"
@@ -48,39 +49,41 @@ const Page = (): JSX.Element => {
   const methods = useForm({ mode: "all" })
 
   return (
-    <Layout>
-      {accountData?.address ? (
-        <FormProvider {...methods}>
-          <TimelineProvider steps={STEPS}>
-            <DynamicPageTitle />
+    <ConfettiProvider>
+      <Layout>
+        {accountData?.address ? (
+          <FormProvider {...methods}>
+            <TimelineProvider steps={STEPS}>
+              <DynamicPageTitle />
 
-            <SimpleGrid gridTemplateColumns="2fr 1fr" gap={8}>
-              <Flex minH="60vh" direction="column">
-                <CurrentForm />
-              </Flex>
+              <SimpleGrid gridTemplateColumns="2fr 1fr" gap={8}>
+                <Flex minH="60vh" direction="column">
+                  <CurrentForm />
+                </Flex>
 
-              <Box>
-                <Timeline
-                  sx={{
-                    position: "sticky",
-                    top: "1rem",
-                  }}
-                />
-              </Box>
-            </SimpleGrid>
-          </TimelineProvider>
+                <Box>
+                  <Timeline
+                    sx={{
+                      position: "sticky",
+                      top: "1rem",
+                    }}
+                  />
+                </Box>
+              </SimpleGrid>
+            </TimelineProvider>
 
-          <DynamicDevTool control={methods.control} />
-        </FormProvider>
-      ) : (
-        <Alert status="error">
-          <AlertIcon />
-          <AlertDescription>
-            Please connect your wallet in order to continue!
-          </AlertDescription>
-        </Alert>
-      )}
-    </Layout>
+            <DynamicDevTool control={methods.control} />
+          </FormProvider>
+        ) : (
+          <Alert status="error">
+            <AlertIcon />
+            <AlertDescription>
+              Please connect your wallet in order to continue!
+            </AlertDescription>
+          </Alert>
+        )}
+      </Layout>
+    </ConfettiProvider>
   )
 }
 

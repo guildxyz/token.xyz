@@ -1,9 +1,11 @@
 import { Button, Heading, SimpleGrid, Stack } from "@chakra-ui/react"
+import { useConfetti } from "components/common/ConfettiContext"
 import { useFormContext, useWatch } from "react-hook-form"
 
 const DeployButtons = (): JSX.Element => {
   const { control } = useFormContext()
   const correct = useWatch({ control, name: "correct" })
+  const startConfetti = useConfetti()
 
   return (
     <Stack>
@@ -14,7 +16,12 @@ const DeployButtons = (): JSX.Element => {
         <Button size="lg" variant="outline" disabled={!correct}>
           Deploy to testnet
         </Button>
-        <Button size="lg" colorScheme="primary" disabled={!correct}>
+        <Button
+          size="lg"
+          colorScheme="primary"
+          disabled={!correct}
+          onClick={startConfetti}
+        >
           Deploy to mainnet
         </Button>
       </SimpleGrid>
