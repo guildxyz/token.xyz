@@ -8,6 +8,7 @@ const TokenIssuancePreview = (): JSX.Element => {
   const { control } = useFormContext()
 
   const tokenTicker = useWatch({ control, name: "tokenTicker" })
+  const inflationaryModel = useWatch({ control, name: "inflationaryModel" })
   const initialSupply = useWatch({ control, name: "initialSupply" })
   const transferOwnershipTo = useWatch({ control, name: "transferOwnershipTo" })
   const chain = useWatch({ control, name: "chain" })
@@ -20,7 +21,10 @@ const TokenIssuancePreview = (): JSX.Element => {
         {tokenTicker ? `$${tokenTicker} token` : "No ticker"}
       </Text>
       <Tag size="sm">
-        Supply: {!isNaN(initialSupply) && Number(initialSupply).toLocaleString("en")}
+        Supply:{" "}
+        {inflationaryModel === "UNLIMITED"
+          ? "unlimited"
+          : !isNaN(initialSupply) && Number(initialSupply).toLocaleString("en")}
       </Tag>
       <Tag size="sm">
         Owner: {shortenHex(transferOwnershipTo || accountData?.address, 3)}

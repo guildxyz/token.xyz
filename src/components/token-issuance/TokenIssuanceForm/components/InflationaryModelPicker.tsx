@@ -42,6 +42,7 @@ const InflationaryModelPicker = (): JSX.Element => {
     control,
     name: "inflationaryModel",
     rules: { required: "You must pick a realm for your guild" },
+    defaultValue: "FIXED",
   })
 
   const { getRootProps, getRadioProps } = useRadioGroup({

@@ -39,6 +39,7 @@ const VestingTypePicker = ({ index }: Props): JSX.Element => {
     control,
     name: `distributionData.${index}.vestingType`,
     rules: { required: "You must pick a realm for your guild" },
+    defaultValue: "NO_VESTING",
   })
 
   const { getRootProps, getRadioProps } = useRadioGroup({
