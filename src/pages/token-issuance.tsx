@@ -40,7 +40,6 @@ const STEPS: TimelineSteps = [
     title: "Deploy",
     icon: <Icon as={CurrencyEth} />,
     content: <DeployForm />,
-    preview: "Deploy preview",
   },
 ]
 

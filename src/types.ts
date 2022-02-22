@@ -15,7 +15,7 @@ type TimelineSteps = Array<{
   title: string
   icon?: JSX.Element
   content: JSX.Element
-  preview: any
+  preview?: JSX.Element
 }>
 
 export type { WalletError, Rest, Token, TimelineSteps }
