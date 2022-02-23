@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Heading,
+  HStack,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -16,12 +17,14 @@ import {
   Th,
   Thead,
   Tr,
+  useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
 import Modal from "components/common/Modal"
 import Chart from "components/token-issuance/DistributionForm/components/Chart"
 import { useMemo } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { FixedSizeList } from "react-window"
 import shortenHex from "utils/shortenHex"
 
 const DistributionData = (): JSX.Element => {
@@ -37,6 +40,21 @@ const DistributionData = (): JSX.Element => {
         ?.reduce((arr1, arr2) => arr1.concat(arr2), [])
         ?.filter((item) => !!item),
     [distributionData]
+  )
+
+  const shouldShortenAddresses = useBreakpointValue({ base: true, md: false })
+
+  const Row = ({ index, style }) => (
+    <HStack style={style}>
+      <pre>
+        {shouldShortenAddresses
+          ? shortenHex(addressList[index]?.address, 4)
+          : addressList[index]?.address}
+      </pre>
+      <Text as="span" w="full" textAlign="right">
+        {addressList[index]?.amount}
+      </Text>
+    </HStack>
   )
 
   return (
@@ -90,26 +108,37 @@ const DistributionData = (): JSX.Element => {
           <ModalHeader>Eligible addresses</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Box maxH="50vh" overflowY="auto" className="custom-scrollbar">
-              <Table size="sm" variant="simple">
-                <Thead>
-                  <Tr>
-                    <Th>Address</Th>
-                    <Th isNumeric>Amount</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {addressList?.map((row, i) => (
-                    <Tr key={`${i}-${row.address}`}>
-                      <Td>
-                        <pre>{row.address}</pre>
-                      </Td>
-                      <Td isNumeric>{row.amount}</Td>
-                    </Tr>
-                  ))}
-                </Tbody>
-              </Table>
-            </Box>
+            {addressList?.length && (
+              <>
+                <HStack
+                  mb={1}
+                  fontWeight="bold"
+                  letterSpacing="wider"
+                  textTransform="uppercase"
+                  textColor="gray"
+                  fontSize="sm"
+                >
+                  <Text as="span">Address</Text>
+                  <Text as="span" w="full" textAlign="right">
+                    Amount
+                  </Text>
+                </HStack>
+                <Box
+                  sx={{
+                    "> div": { width: "100%", overflow: "hidden auto !important" },
+                  }}
+                >
+                  <FixedSizeList
+                    height={350}
+                    itemCount={addressList.length}
+                    itemSize={32}
+                    className="custom-scrollbar"
+                  >
+                    {Row}
+                  </FixedSizeList>
+                </Box>
+              </>
+            )}
           </ModalBody>
         </ModalContent>
       </Modal>
