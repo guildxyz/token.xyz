@@ -16,15 +16,23 @@ import { useConfetti } from "components/common/ConfettiContext"
 import Modal from "components/common/Modal"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import useDeploy from "../hooks/useDeploy"
 
 const DeployButtons = (): JSX.Element => {
   const { control } = useFormContext()
   const correct = useWatch({ control, name: "correct" })
 
+  const { isLoading, onSubmit, response } = useDeploy()
+
   const tokenTicker = useWatch({ control, name: "tokenTicker" })
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const startConfetti = useConfetti()
+
+  useEffect(() => {
+    if (!response) return
+    onOpen()
+  }, [response])
 
   useEffect(() => {
     if (!isOpen) return
@@ -38,14 +46,16 @@ const DeployButtons = (): JSX.Element => {
           Deploy
         </Heading>
         <SimpleGrid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
-          <Button size="lg" variant="outline" disabled={!correct}>
+          <Button size="lg" variant="outline" disabled={!correct || isLoading}>
             Deploy to testnet
           </Button>
           <Button
             size="lg"
             colorScheme="primary"
-            disabled={!correct}
-            onClick={onOpen}
+            disabled={!correct || isLoading || response}
+            isLoading={isLoading}
+            loadingText="Deployment in progress"
+            onClick={onSubmit}
           >
             Deploy to mainnet
           </Button>
