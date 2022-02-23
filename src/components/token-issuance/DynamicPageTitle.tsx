@@ -10,7 +10,7 @@ const DynamicPageTitle = (): JSX.Element => {
 
   return (
     <>
-      <Meta title={steps[activeItem].title} />
+      <Meta title={`Token.xyz - ${steps[activeItem].title}`} />
       <HStack alignItems="center" mb={8}>
         {activeItem > 0 && (
           <IconButton
