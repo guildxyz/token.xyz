@@ -48,6 +48,7 @@ const ConfettiProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
           width: "full",
           height: "full",
           pointerEvents: "none",
+          zIndex: 10001,
         }}
       />
     </ConfettiContext.Provider>
