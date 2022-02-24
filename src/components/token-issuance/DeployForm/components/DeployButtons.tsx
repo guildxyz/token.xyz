@@ -16,10 +16,11 @@ import { useConfetti } from "components/common/ConfettiContext"
 import Modal from "components/common/Modal"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { TokenIssuanceFormType } from "types"
 import useDeploy from "../hooks/useDeploy"
 
 const DeployButtons = (): JSX.Element => {
-  const { control } = useFormContext()
+  const { control, handleSubmit } = useFormContext<TokenIssuanceFormType>()
   const correct = useWatch({ control, name: "correct" })
 
   const { isLoading, onSubmit, response } = useDeploy()
@@ -55,7 +56,8 @@ const DeployButtons = (): JSX.Element => {
             disabled={!correct || isLoading || response}
             isLoading={isLoading}
             loadingText="Deployment in progress"
-            onClick={onSubmit}
+            // TODO error handler
+            onClick={handleSubmit(onSubmit, console.log)}
           >
             Deploy to mainnet
           </Button>

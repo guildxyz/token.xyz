@@ -25,12 +25,13 @@ import Chart from "components/token-issuance/DistributionForm/components/Chart"
 import { useMemo } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { FixedSizeList } from "react-window"
+import { TokenIssuanceFormType } from "types"
 import shortenHex from "utils/shortenHex"
 
 const DistributionData = (): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const { control } = useFormContext()
+  const { control } = useFormContext<TokenIssuanceFormType>()
   const distributionData = useWatch({ control, name: "distributionData" })
 
   const addressList = useMemo(

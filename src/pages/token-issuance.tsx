@@ -23,7 +23,7 @@ import { Web3Connection } from "components/_app/Web3ConnectionManager"
 import { ChartLine, Coin, CurrencyEth } from "phosphor-react"
 import { useContext, useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { TimelineSteps } from "types"
+import { TimelineSteps, TokenIssuanceFormType } from "types"
 import { useAccount } from "wagmi"
 
 const STEPS: TimelineSteps = [
@@ -49,7 +49,7 @@ const STEPS: TimelineSteps = [
 const Page = (): JSX.Element => {
   const [{ data: accountData, loading }] = useAccount()
   const { openWalletSelectorModal, triedEager } = useContext(Web3Connection)
-  const methods = useForm({ mode: "all" })
+  const methods = useForm<TokenIssuanceFormType>({ mode: "all" })
 
   useEffect(() => {
     if (loading || accountData || !triedEager) return

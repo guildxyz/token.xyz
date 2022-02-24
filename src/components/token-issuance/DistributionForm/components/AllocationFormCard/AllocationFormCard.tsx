@@ -15,6 +15,7 @@ import { parse } from "papaparse"
 import { TrashSimple } from "phosphor-react"
 import { useRef, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { TokenIssuanceFormType } from "types"
 import FormCard from "../FormCard"
 import VestingTypePicker from "./components/VestingTypePicker"
 
@@ -36,7 +37,7 @@ const AllocationFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
     setError,
     clearErrors,
     formState: { errors },
-  } = useFormContext()
+  } = useFormContext<TokenIssuanceFormType>()
 
   const allocationAddressesAmounts = useWatch({
     name: `distributionData.${index}.allocationAddressesAmounts`,
@@ -100,7 +101,7 @@ const AllocationFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
     <FormCard title="Allocation" onRemove={onRemove}>
       <SimpleGrid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
         <FormControl
-          isInvalid={errors?.distributionData?.[index]?.allocationName}
+          isInvalid={!!errors?.distributionData?.[index]?.allocationName}
           w="full"
         >
           <Input
@@ -116,7 +117,7 @@ const AllocationFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
 
         <FormControl
           position="relative"
-          isInvalid={errors?.distributionData?.[index]?.allocationCsv}
+          isInvalid={!!errors?.distributionData?.[index]?.allocationCsv}
         >
           <HStack>
             <Button
@@ -125,7 +126,7 @@ const AllocationFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
               h={10}
               onClick={onUploadClick}
               isLoading={isParseLoading}
-              isDisabled={allocationAddressesAmounts?.length || isParseLoading}
+              isDisabled={allocationAddressesAmounts?.length > 0 || isParseLoading}
             >
               {allocationAddressesAmounts?.length
                 ? `${allocationAddressesAmounts.length} addresses`

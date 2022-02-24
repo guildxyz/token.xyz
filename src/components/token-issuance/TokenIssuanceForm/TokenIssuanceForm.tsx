@@ -17,6 +17,7 @@ import { useTimeline } from "components/common/Timeline/components/TimelineConte
 import FormSection from "components/forms/FormSection"
 import { ImageSquare, Question } from "phosphor-react"
 import { Controller, useFormContext } from "react-hook-form"
+import { TokenIssuanceFormType } from "types"
 import shortenHex from "utils/shortenHex"
 import { useAccount } from "wagmi"
 import InflationaryModelPicker from "./components/InflationaryModelPicker"
@@ -31,15 +32,15 @@ const TokenIssuanceForm = (): JSX.Element => {
     register,
     getValues,
     formState: { errors },
-  } = useFormContext()
+  } = useFormContext<TokenIssuanceFormType>()
 
   const isNextButtonDisabled = () =>
     !getValues("tokenName") ||
     !getValues("tokenTicker") ||
-    errors.tokenName ||
-    errors.tokenTicker ||
-    errors.initialSupply ||
-    errors.maxSupply
+    !!errors.tokenName ||
+    !!errors.tokenTicker ||
+    !!errors.initialSupply ||
+    !!errors.maxSupply
 
   return (
     <Stack spacing={8}>
@@ -58,7 +59,7 @@ const TokenIssuanceForm = (): JSX.Element => {
             bg="blackAlpha.300"
             // onClick={onOpen}
           />
-          <FormControl isInvalid={errors?.tokenName}>
+          <FormControl isInvalid={!!errors?.tokenName}>
             <Input
               size="lg"
               {...register("tokenName", { required: "This field is required!" })}
@@ -66,7 +67,7 @@ const TokenIssuanceForm = (): JSX.Element => {
             />
             <FormErrorMessage>{errors?.tokenName?.message}</FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={errors?.tokenTicker}>
+          <FormControl isInvalid={!!errors?.tokenTicker}>
             <InputGroup>
               <Input
                 size="lg"
@@ -89,7 +90,7 @@ const TokenIssuanceForm = (): JSX.Element => {
       </FormSection>
 
       <FormSection title="Transfer ownership">
-        <FormControl isInvalid={errors?.transferOwnershipTo}>
+        <FormControl isInvalid={!!errors?.transferOwnershipTo}>
           <InputGroup>
             <Input
               size="lg"

@@ -12,6 +12,7 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react"
 import { Controller, useFormContext } from "react-hook-form"
+import { TokenIssuanceFormType } from "types"
 
 type Props = {
   index: number
@@ -22,12 +23,12 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
     control,
     getValues,
     formState: { errors },
-  } = useFormContext()
+  } = useFormContext<TokenIssuanceFormType>()
 
   return (
     <SimpleGrid gridTemplateColumns="repeat(2, 1fr)" gap={4} px={5} pb={4}>
       <FormControl
-        isInvalid={errors?.distributionData?.[index]?.vestingPeriod}
+        isInvalid={!!errors?.distributionData?.[index]?.vestingPeriod}
         isRequired={
           getValues(`distributionData.${index}.vestingType`) === "LINEAR_VESTING"
         }
@@ -71,7 +72,7 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
       </FormControl>
 
       <FormControl
-        isInvalid={errors?.distributionData?.[index]?.cliff}
+        isInvalid={!!errors?.distributionData?.[index]?.cliff}
         isRequired={
           getValues(`distributionData.${index}.vestingType`) === "LINEAR_VESTING"
         }

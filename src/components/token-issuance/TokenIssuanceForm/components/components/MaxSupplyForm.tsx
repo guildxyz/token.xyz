@@ -10,18 +10,19 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react"
 import { Controller, useFormContext } from "react-hook-form"
+import { TokenIssuanceFormType } from "types"
 
 const MaxSupplyForm = (): JSX.Element => {
   const {
     control,
     getValues,
     formState: { errors },
-  } = useFormContext()
+  } = useFormContext<TokenIssuanceFormType>()
 
   return (
     <SimpleGrid gridTemplateColumns="repeat(2, 1fr)" gap={4} px={5} pb={4}>
       <FormControl
-        isInvalid={errors?.initialSupply}
+        isInvalid={!!errors?.initialSupply}
         isRequired={getValues("inflationaryModel") !== "UNLIMITED"}
       >
         <FormLabel>Initial supply</FormLabel>
@@ -58,7 +59,7 @@ const MaxSupplyForm = (): JSX.Element => {
       </FormControl>
 
       <FormControl
-        isInvalid={errors?.maxSupply}
+        isInvalid={!!errors?.maxSupply}
         isRequired={getValues("inflationaryModel") !== "UNLIMITED"}
       >
         <FormLabel>Max supply</FormLabel>

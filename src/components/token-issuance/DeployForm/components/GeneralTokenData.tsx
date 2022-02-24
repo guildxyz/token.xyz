@@ -1,10 +1,11 @@
 import { Box, Heading, Stack, Table, Tbody, Td, Tr } from "@chakra-ui/react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { TokenIssuanceFormType } from "types"
 import { useAccount } from "wagmi"
 
 const GeneralTokenData = (): JSX.Element => {
   const [{ data: accountData }] = useAccount()
-  const { control } = useFormContext()
+  const { control } = useFormContext<TokenIssuanceFormType>()
 
   const tokenName = useWatch({ control, name: "tokenName" })
   const tokenTicker = useWatch({ control, name: "tokenTicker" })

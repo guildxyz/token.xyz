@@ -1,6 +1,7 @@
 import { StackDivider, useColorMode, useRadioGroup, VStack } from "@chakra-ui/react"
 import { useEffect } from "react"
 import { useController, useFormContext } from "react-hook-form"
+import { TokenIssuanceFormType } from "types"
 import LinearVestingForm from "./LinearVestingForm"
 import VestingTypeOption from "./VestingTypeOption"
 
@@ -33,7 +34,8 @@ const OPTIONS: Array<{
 ]
 
 const VestingTypePicker = ({ index }: Props): JSX.Element => {
-  const { control, setValue, getValues, clearErrors, trigger } = useFormContext()
+  const { control, setValue, getValues, clearErrors, trigger } =
+    useFormContext<TokenIssuanceFormType>()
 
   const { field } = useController({
     control,

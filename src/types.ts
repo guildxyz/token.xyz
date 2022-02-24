@@ -18,4 +18,25 @@ type TimelineSteps = Array<{
   preview?: JSX.Element
 }>
 
-export type { WalletError, Rest, Token, TimelineSteps }
+type TokenIssuanceFormType = {
+  tokenName: string
+  tokenTicker: string
+  inflationaryModel: "FIXED" | "MAX" | "UNLIMITED"
+  initialSupply?: number
+  maxSupply?: number
+  transferOwnershipTo?: string
+  chain: "GOERLI" | "ETHEREUM"
+  distributionData?: Array<AllocationFormType>
+  correct: boolean
+}
+
+type AllocationFormType = {
+  allocationName: string
+  allocationCsv?: any
+  allocationAddressesAmounts: Array<{ address: string; amount: string }>
+  vestingType: "NO_VESTING" | "LINEAR_VESTING" | "BOND_VESTING"
+  vestingPeriod?: number // In months
+  cliff?: number // In months
+}
+
+export type { WalletError, Rest, Token, TimelineSteps, TokenIssuanceFormType }

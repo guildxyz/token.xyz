@@ -1,6 +1,7 @@
 import { StackDivider, useColorMode, useRadioGroup, VStack } from "@chakra-ui/react"
 import { useEffect } from "react"
 import { useController, useFormContext, useWatch } from "react-hook-form"
+import { TokenIssuanceFormType } from "types"
 import FixedSupplyForm from "./components/FixedSupplyForm"
 import InflationaryModelOption from "./components/InflationaryModelOption"
 import MaxSupplyForm from "./components/MaxSupplyForm"
@@ -36,7 +37,8 @@ const OPTIONS: Array<{
 ]
 
 const InflationaryModelPicker = (): JSX.Element => {
-  const { control, setValue, clearErrors, trigger } = useFormContext()
+  const { control, setValue, clearErrors, trigger } =
+    useFormContext<TokenIssuanceFormType>()
 
   const { field } = useController({
     control,

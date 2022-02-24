@@ -12,6 +12,7 @@ import {
 import { useMemo } from "react"
 import { Line } from "react-chartjs-2"
 import { useFormContext, useWatch } from "react-hook-form"
+import { TokenIssuanceFormType } from "types"
 
 ChartJS.register(
   CategoryScale,
@@ -58,7 +59,7 @@ const CHART_COLORS: Array<{ bg: string; border: string }> = [
 ]
 
 const Chart = (): JSX.Element => {
-  const { control, getValues } = useFormContext()
+  const { control, getValues } = useFormContext<TokenIssuanceFormType>()
 
   const initialSupply = useWatch({ control, name: "initialSupply" })
   const distributionData = useWatch({ name: "distributionData", control })
@@ -78,8 +79,8 @@ const Chart = (): JSX.Element => {
       distributionData?.length &&
       typeof distributionData[0].vestingPeriod === "number"
         ? Math.max(
-            ...distributionData.map((allocationData) =>
-              parseInt(allocationData.vestingPeriod)
+            ...distributionData.map(
+              (allocationData) => allocationData.vestingPeriod
             ),
             12
           )
@@ -94,7 +95,7 @@ const Chart = (): JSX.Element => {
         {
           label: "Token owner",
           data: Array(longestVestingPeriod).fill(
-            parseInt(initialSupply) - parseInt(distributedSupply || 0)
+            initialSupply - distributedSupply || 0
           ),
           borderColor: "#fefefe",
           backgroundColor: "rgba(255, 255, 255, 0.2)",
@@ -107,9 +108,9 @@ const Chart = (): JSX.Element => {
           data: Array(longestVestingPeriod)
             .fill(0)
             .map((_, i) => {
-              const cliff = parseInt(allocationData.cliff) || 0
+              const cliff = allocationData.cliff || 0
               const vestingPeriod =
-                parseInt(allocationData.vestingPeriod) || longestVestingPeriod
+                allocationData.vestingPeriod || longestVestingPeriod
 
               // TODO: double-check if this logic is right...
               const multiplier = (num: number) =>

@@ -1,8 +1,9 @@
 import { Checkbox, Heading, Stack, Text } from "@chakra-ui/react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { TokenIssuanceFormType } from "types"
 
 const AcceptCorrectData = () => {
-  const { control, register } = useFormContext()
+  const { control, register } = useFormContext<TokenIssuanceFormType>()
   const correct = useWatch({ control, name: "correct" })
 
   return (

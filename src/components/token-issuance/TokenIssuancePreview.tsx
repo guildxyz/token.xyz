@@ -1,11 +1,12 @@
 import { Tag, Text, VStack } from "@chakra-ui/react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { TokenIssuanceFormType } from "types"
 import shortenHex from "utils/shortenHex"
 import { useAccount } from "wagmi"
 
 const TokenIssuancePreview = (): JSX.Element => {
   const [{ data: accountData }] = useAccount()
-  const { control } = useFormContext()
+  const { control } = useFormContext<TokenIssuanceFormType>()
 
   const tokenTicker = useWatch({ control, name: "tokenTicker" })
   const inflationaryModel = useWatch({ control, name: "inflationaryModel" })

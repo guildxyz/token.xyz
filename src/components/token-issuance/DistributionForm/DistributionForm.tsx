@@ -3,13 +3,14 @@ import AddCard from "components/common/AddCard"
 import { useTimeline } from "components/common/Timeline/components/TimelineContext"
 import { useMemo } from "react"
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
+import { TokenIssuanceFormType } from "types"
 import AllocationFormCard from "./components/AllocationFormCard"
 import Chart from "./components/Chart"
 
 const DistributionForm = (): JSX.Element => {
   const { next } = useTimeline()
 
-  const { control } = useFormContext()
+  const { control } = useFormContext<TokenIssuanceFormType>()
   const { fields, append, remove } = useFieldArray({ name: "distributionData" })
 
   const distributionData = useWatch({ control, name: "distributionData" })
