@@ -141,8 +141,8 @@ const TokenIssuanceForm = (): JSX.Element => {
 
       <Accordion allowToggle>
         <AccordionItem border="none">
-          <AccordionButton mb={4} p={0}>
-            <Box pr={2} textAlign="left">
+          <AccordionButton mb={4} p={0} _hover={{ bgColor: null }}>
+            <Box pr={2} textAlign="left" fontWeight="bold">
               Advanced settings
             </Box>
             <AccordionIcon />
