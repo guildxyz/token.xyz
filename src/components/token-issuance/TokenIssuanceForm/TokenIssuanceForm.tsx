@@ -1,8 +1,16 @@
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
   Button,
   Flex,
   FormControl,
   FormErrorMessage,
+  FormLabel,
+  HStack,
   Icon,
   IconButton,
   Input,
@@ -10,13 +18,20 @@ import {
   InputRightElement,
   Select,
   SimpleGrid,
+  Slider,
+  SliderFilledTrack,
+  SliderMark,
+  SliderThumb,
+  SliderTrack,
   Stack,
+  Switch,
   Tooltip,
 } from "@chakra-ui/react"
 import { useTimeline } from "components/common/Timeline/components/TimelineContext"
 import FormSection from "components/forms/FormSection"
 import { ImageSquare, Question } from "phosphor-react"
-import { Controller, useFormContext } from "react-hook-form"
+import { useEffect } from "react"
+import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
 import shortenHex from "utils/shortenHex"
 import { useAccount } from "wagmi"
@@ -31,8 +46,16 @@ const TokenIssuanceForm = (): JSX.Element => {
     control,
     register,
     getValues,
+    setValue,
     formState: { errors },
   } = useFormContext<TokenIssuanceFormType>()
+
+  useEffect(() => {
+    if (!register) return
+    register("decimals")
+  }, [register])
+
+  const decimals = useWatch({ control, name: "decimals" })
 
   const isNextButtonDisabled = () =>
     !getValues("tokenName") ||
@@ -89,24 +112,6 @@ const TokenIssuanceForm = (): JSX.Element => {
         <InflationaryModelPicker />
       </FormSection>
 
-      <FormSection title="Transfer ownership">
-        <FormControl isInvalid={!!errors?.transferOwnershipTo}>
-          <InputGroup>
-            <Input
-              size="lg"
-              {...register("transferOwnershipTo")}
-              placeholder={shortenHex(accountData?.address)}
-            />
-            <InputRightElement h="full" alignItems="center">
-              <Tooltip label="TODO">
-                <Icon as={Question} color="gray" boxSize={5} />
-              </Tooltip>
-            </InputRightElement>
-          </InputGroup>
-          <FormErrorMessage>{errors?.transferOwnershipTo?.message}</FormErrorMessage>
-        </FormControl>
-      </FormSection>
-
       <FormSection title="Chain">
         <Controller
           control={control}
@@ -133,6 +138,97 @@ const TokenIssuanceForm = (): JSX.Element => {
           )}
         />
       </FormSection>
+
+      <Accordion allowToggle>
+        <AccordionItem border="none">
+          <AccordionButton mb={4} p={0}>
+            <Box pr={2} textAlign="left">
+              Advanced settings
+            </Box>
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel px={0} pt={4} borderTopWidth={1}>
+            <Stack spacing={8}>
+              <FormControl isInvalid={!!errors?.transferOwnershipTo}>
+                <FormLabel>Transfer ownership</FormLabel>
+                <InputGroup>
+                  <Input
+                    size="lg"
+                    {...register("transferOwnershipTo")}
+                    placeholder={shortenHex(accountData?.address)}
+                  />
+                  <InputRightElement h="full" alignItems="center">
+                    <Tooltip label="TODO">
+                      <Icon as={Question} color="gray" boxSize={5} />
+                    </Tooltip>
+                  </InputRightElement>
+                </InputGroup>
+                <FormErrorMessage>
+                  {errors?.transferOwnershipTo?.message}
+                </FormErrorMessage>
+              </FormControl>
+
+              <HStack gap={4}>
+                <FormControl isInvalid={!!errors?.canPause}>
+                  <FormLabel>Can pause</FormLabel>
+                  <Switch
+                    {...register("canPause")}
+                    variant="strong"
+                    colorScheme="cyan"
+                  />
+                  <FormErrorMessage>{errors?.canPause?.message}</FormErrorMessage>
+                </FormControl>
+
+                <FormControl isInvalid={!!errors?.enableBlacklists}>
+                  <FormLabel>Enable blacklists</FormLabel>
+                  <Switch
+                    {...register("enableBlacklists")}
+                    variant="strong"
+                    colorScheme="cyan"
+                  />
+                  <FormErrorMessage>
+                    {errors?.enableBlacklists?.message}
+                  </FormErrorMessage>
+                </FormControl>
+              </HStack>
+
+              <FormControl
+                maxW={{ base: "full", md: "50%" }}
+                pr={{ base: 2, md: 8 }}
+                pb={4}
+              >
+                <FormLabel>Decimals</FormLabel>
+                <Slider
+                  defaultValue={18}
+                  min={0}
+                  max={18}
+                  onChange={(value) => setValue("decimals", value)}
+                >
+                  <SliderMark
+                    value={typeof decimals === "number" ? decimals : 18}
+                    textAlign="center"
+                    bg="primary.500"
+                    color="white"
+                    mt={4}
+                    ml={-4}
+                    w={8}
+                    rounded="full"
+                    fontSize="sm"
+                    fontWeight="bold"
+                  >
+                    {decimals}
+                  </SliderMark>
+                  <SliderTrack bg="gray">
+                    <Box position="relative" right={10} />
+                    <SliderFilledTrack bg="primary.500" />
+                  </SliderTrack>
+                  <SliderThumb boxSize={5} ml={-2.5} />
+                </Slider>
+              </FormControl>
+            </Stack>
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
 
       <Flex mt="auto" width="100%" justifyContent="end">
         <Button

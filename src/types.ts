@@ -25,6 +25,9 @@ type TokenIssuanceFormType = {
   initialSupply?: number
   maxSupply?: number
   transferOwnershipTo?: string
+  canPause: boolean
+  enableBlacklists: boolean
+  decimals: number
   chain: "GOERLI" | "ETHEREUM"
   distributionData?: Array<AllocationFormType>
   correct: boolean

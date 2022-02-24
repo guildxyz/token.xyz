@@ -6,6 +6,7 @@ import Menu from "./menu"
 import Modal from "./modal"
 import NumberInput from "./number-input"
 import Select from "./select"
+import Switch from "./switch"
 import Tag from "./tag"
 import Text from "./text"
 import Textarea from "./textarea"
@@ -20,6 +21,7 @@ const components = {
   Modal,
   NumberInput,
   Select,
+  Switch,
   Tag,
   Text,
   Textarea,
