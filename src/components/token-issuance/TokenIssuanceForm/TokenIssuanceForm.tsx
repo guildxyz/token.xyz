@@ -34,6 +34,7 @@ import { useEffect } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
 import shortenHex from "utils/shortenHex"
+import slugify from "utils/slugify"
 import { useAccount } from "wagmi"
 import InflationaryModelPicker from "./components/InflationaryModelPicker"
 
@@ -47,7 +48,7 @@ const TokenIssuanceForm = (): JSX.Element => {
     register,
     getValues,
     setValue,
-    formState: { errors },
+    formState: { errors, touchedFields },
   } = useFormContext<TokenIssuanceFormType>()
 
   useEffect(() => {
@@ -55,7 +56,13 @@ const TokenIssuanceForm = (): JSX.Element => {
     register("decimals")
   }, [register])
 
+  const tokenName = useWatch({ control, name: "tokenName" })
   const decimals = useWatch({ control, name: "decimals" })
+
+  useEffect(() => {
+    if (touchedFields.issuanceId) return
+    setValue("issuanceId", slugify(tokenName || ""))
+  }, [tokenName])
 
   const isNextButtonDisabled = () =>
     !getValues("tokenName") ||
@@ -106,6 +113,22 @@ const TokenIssuanceForm = (): JSX.Element => {
             <FormErrorMessage>{errors?.tokenTicker?.message}</FormErrorMessage>
           </FormControl>
         </SimpleGrid>
+
+        <FormControl isInvalid={!!errors?.issuanceId}>
+          <Input
+            size="lg"
+            {...register("issuanceId", {
+              required: "This field is required!",
+              pattern: {
+                value: /^[0-9a-z-]*$/,
+                message:
+                  "Issuance ID can only contain lowercase letters, numbers, and hyphen",
+              },
+            })}
+            placeholder="Issuance ID"
+          />
+          <FormErrorMessage>{errors?.issuanceId?.message}</FormErrorMessage>
+        </FormControl>
       </FormSection>
 
       <FormSection title="Inflationary model">
