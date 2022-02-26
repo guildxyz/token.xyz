@@ -60,8 +60,8 @@ const TokenIssuanceForm = (): JSX.Element => {
   const decimals = useWatch({ control, name: "decimals" })
 
   useEffect(() => {
-    if (touchedFields.issuanceId) return
-    setValue("issuanceId", slugify(tokenName || ""))
+    if (touchedFields.creatorId) return
+    setValue("creatorId", slugify(tokenName || ""))
   }, [tokenName])
 
   const isNextButtonDisabled = () =>
@@ -114,10 +114,10 @@ const TokenIssuanceForm = (): JSX.Element => {
           </FormControl>
         </SimpleGrid>
 
-        <FormControl isInvalid={!!errors?.issuanceId}>
+        <FormControl isInvalid={!!errors?.creatorId}>
           <Input
             size="lg"
-            {...register("issuanceId", {
+            {...register("creatorId", {
               required: "This field is required!",
               pattern: {
                 value: /^[0-9a-z-]*$/,
@@ -127,7 +127,7 @@ const TokenIssuanceForm = (): JSX.Element => {
             })}
             placeholder="Issuance ID"
           />
-          <FormErrorMessage>{errors?.issuanceId?.message}</FormErrorMessage>
+          <FormErrorMessage>{errors?.creatorId?.message}</FormErrorMessage>
         </FormControl>
       </FormSection>
 

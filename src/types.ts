@@ -21,7 +21,7 @@ type TimelineSteps = Array<{
 type TokenIssuanceFormType = {
   tokenName: string
   tokenTicker: string
-  issuanceId: string
+  creatorId: string
   inflationaryModel: "FIXED" | "MAX" | "UNLIMITED"
   initialSupply?: number
   maxSupply?: number
