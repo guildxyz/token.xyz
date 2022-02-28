@@ -2,9 +2,9 @@ import { StackDivider, useColorMode, useRadioGroup, VStack } from "@chakra-ui/re
 import { useEffect } from "react"
 import { useController, useFormContext, useWatch } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
-import FixedSupplyForm from "./components/FixedSupplyForm"
 import InflationaryModelOption from "./components/InflationaryModelOption"
 import MaxSupplyForm from "./components/MaxSupplyForm"
+import UnlimitedOrFixedSupplyForm from "./components/UnlimitedOrFixedSupplyForm"
 
 const OPTIONS: Array<{
   value: string
@@ -18,7 +18,7 @@ const OPTIONS: Array<{
     title: "Fixed Supply",
     description: "Description...",
     disabled: false,
-    children: <FixedSupplyForm />,
+    children: <UnlimitedOrFixedSupplyForm />,
   },
   {
     value: "MAX",
@@ -32,7 +32,7 @@ const OPTIONS: Array<{
     title: "Unlimited",
     disabled: false,
     description: "Description...",
-    children: null,
+    children: <UnlimitedOrFixedSupplyForm />,
   },
 ]
 
