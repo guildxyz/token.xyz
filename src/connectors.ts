@@ -1,12 +1,16 @@
-import { chain, defaultChains, defaultL2Chains } from "wagmi"
+import { chain, defaultChains, developmentChains } from "wagmi"
 import { InjectedConnector } from "wagmi/connectors/injected"
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect"
 import { WalletLinkConnector } from "wagmi/connectors/walletLink"
 
-const supportedChainIds = [1, 5]
-const chains = [...defaultChains, ...defaultL2Chains].filter((c) =>
-  supportedChainIds.includes(c.id)
-)
+const supportedChainIds =
+  process.env.NODE_ENV === "development" ? [1337, 1, 5] : [1, 5]
+const chains =
+  process.env.NODE_ENV === "development"
+    ? [...developmentChains, ...defaultChains].filter((c) =>
+        supportedChainIds.includes(c.id)
+      )
+    : [...defaultChains].filter((c) => supportedChainIds.includes(c.id))
 
 const injected = new InjectedConnector({
   chains,
