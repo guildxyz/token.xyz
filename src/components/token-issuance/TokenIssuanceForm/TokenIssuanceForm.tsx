@@ -258,7 +258,7 @@ const TokenIssuanceForm = (): JSX.Element => {
                     fontSize="sm"
                     fontWeight="bold"
                   >
-                    {decimals}
+                    {typeof decimals === "number" ? decimals : 18}
                   </SliderMark>
                   <SliderTrack bg="gray">
                     <Box position="relative" right={10} />
