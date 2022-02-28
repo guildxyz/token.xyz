@@ -10,7 +10,6 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  HStack,
   Icon,
   IconButton,
   Input,
@@ -60,8 +59,8 @@ const TokenIssuanceForm = (): JSX.Element => {
   const decimals = useWatch({ control, name: "decimals" })
 
   useEffect(() => {
-    if (touchedFields.creatorId) return
-    setValue("creatorId", slugify(tokenName || ""))
+    if (touchedFields.urlName) return
+    setValue("urlName", slugify(tokenName || ""))
   }, [tokenName])
 
   const isNextButtonDisabled = () =>
@@ -114,20 +113,20 @@ const TokenIssuanceForm = (): JSX.Element => {
           </FormControl>
         </SimpleGrid>
 
-        <FormControl isInvalid={!!errors?.creatorId}>
+        <FormControl isInvalid={!!errors?.urlName}>
           <Input
             size="lg"
-            {...register("creatorId", {
+            {...register("urlName", {
               required: "This field is required!",
               pattern: {
                 value: /^[0-9a-z-]*$/,
                 message:
-                  "Issuance ID can only contain lowercase letters, numbers, and hyphen",
+                  "URL name can only contain lowercase letters, numbers, and hyphen",
               },
             })}
-            placeholder="Issuance ID"
+            placeholder="URL name"
           />
-          <FormErrorMessage>{errors?.creatorId?.message}</FormErrorMessage>
+          <FormErrorMessage>{errors?.urlName?.message}</FormErrorMessage>
         </FormControl>
       </FormSection>
 
@@ -191,7 +190,27 @@ const TokenIssuanceForm = (): JSX.Element => {
                 </FormErrorMessage>
               </FormControl>
 
-              <HStack gap={4}>
+              <SimpleGrid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
+                <FormControl isInvalid={!!errors?.mintable}>
+                  <FormLabel>Mintable</FormLabel>
+                  <Switch
+                    {...register("mintable")}
+                    variant="strong"
+                    colorScheme="cyan"
+                  />
+                  <FormErrorMessage>{errors?.mintable?.message}</FormErrorMessage>
+                </FormControl>
+
+                <FormControl isInvalid={!!errors?.multiOwner}>
+                  <FormLabel>Multiple owners</FormLabel>
+                  <Switch
+                    {...register("multiOwner")}
+                    variant="strong"
+                    colorScheme="cyan"
+                  />
+                  <FormErrorMessage>{errors?.multiOwner?.message}</FormErrorMessage>
+                </FormControl>
+
                 <FormControl isInvalid={!!errors?.canPause}>
                   <FormLabel>Can pause</FormLabel>
                   <Switch
@@ -213,7 +232,7 @@ const TokenIssuanceForm = (): JSX.Element => {
                     {errors?.enableBlacklists?.message}
                   </FormErrorMessage>
                 </FormControl>
-              </HStack>
+              </SimpleGrid>
 
               <FormControl
                 maxW={{ base: "full", md: "50%" }}
