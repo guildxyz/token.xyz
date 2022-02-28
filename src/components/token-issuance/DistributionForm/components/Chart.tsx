@@ -95,7 +95,7 @@ const Chart = (): JSX.Element => {
         {
           label: "Token owner",
           data: Array(longestVestingPeriod).fill(
-            initialSupply - distributedSupply || 0
+            initialSupply - (distributedSupply || 0)
           ),
           borderColor: "#fefefe",
           backgroundColor: "rgba(255, 255, 255, 0.2)",
