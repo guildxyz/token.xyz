@@ -6,7 +6,11 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { motion } from "framer-motion"
 import { KeyboardEventHandler, PropsWithChildren } from "react"
+
+const MotionBox = motion(Box)
+const MotionCircle = motion(Circle)
 
 type Props = {
   active?: boolean
@@ -24,7 +28,10 @@ const TimelineItem = ({
   onClick,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
-  const borderColor = useColorModeValue("gray.200", "gray.700")
+  const borderColor = useColorModeValue(
+    "var(--chakra-colors-gray-200)",
+    "var(--chakra-colors-gray-700)"
+  )
 
   const handleTitleKeyDown: KeyboardEventHandler = (event) => {
     if (event.code === "Enter") onClick()
@@ -32,6 +39,7 @@ const TimelineItem = ({
 
   return (
     <Stack
+      spacing={0}
       position="relative"
       overflow="hidden"
       minH={12}
@@ -42,21 +50,43 @@ const TimelineItem = ({
         left: "1.125rem",
         width: 1,
         height: "full",
-        bgColor: completed ? "primary.500" : borderColor,
+        bgColor: borderColor,
       }}
       _last={{
         _before: { display: "none" },
       }}
     >
+      <MotionBox
+        position="absolute"
+        top={10}
+        left="1.125rem"
+        width={1}
+        bgColor="primary.500"
+        animate={{
+          height: completed ? "100%" : "0%",
+        }}
+        transition={{
+          type: "just",
+          duration: 0.3,
+          delay: completed ? 0 : 0.3,
+        }}
+      />
       <HStack>
-        <Circle
+        <MotionCircle
           size={10}
-          borderWidth={4}
-          borderColor={active ? "primary.500" : borderColor}
-          bgColor={icon ? (active ? "primary.500" : borderColor) : "transparent"}
+          // borderWidth={4}
+          // borderColor={active ? "primary.500" : borderColor}
+          bgColor={icon ? borderColor : "transparent"}
+          animate={{
+            background: active ? "var(--chakra-colors-primary-500)" : borderColor,
+          }}
+          transition={{
+            type: "just",
+            delay: active ? 0.3 : 0,
+          }}
         >
           {icon}
-        </Circle>
+        </MotionCircle>
         <Text
           as="span"
           fontWeight="bold"
