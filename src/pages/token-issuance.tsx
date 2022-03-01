@@ -65,7 +65,7 @@ const Page = (): JSX.Element => {
               <DynamicPageTitle />
 
               <SimpleGrid gridTemplateColumns="2fr 1fr" gap={8}>
-                <Flex minH="60vh" direction="column">
+                <Flex minW={0} minH="60vh" direction="column">
                   <CurrentForm />
                 </Flex>
 
