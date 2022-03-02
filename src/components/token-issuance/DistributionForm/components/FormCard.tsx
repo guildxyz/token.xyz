@@ -1,17 +1,12 @@
-import { CloseButton, Heading, Stack } from "@chakra-ui/react"
+import { CloseButton, Stack } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { PropsWithChildren } from "react"
 
 type Props = {
-  title: string
   onRemove?: () => void
 }
 
-const FormCard = ({
-  title,
-  onRemove,
-  children,
-}: PropsWithChildren<Props>): JSX.Element => (
+const FormCard = ({ onRemove, children }: PropsWithChildren<Props>): JSX.Element => (
   <Card position="relative" px={{ base: 5, sm: 6 }} py={7}>
     {typeof onRemove !== "undefined" && (
       <CloseButton
@@ -25,11 +20,6 @@ const FormCard = ({
         onClick={onRemove}
       />
     )}
-
-    <Heading as="h3" fontSize="xl" fontFamily="display" mb={4}>
-      {title}
-    </Heading>
-
     <Stack>{children}</Stack>
   </Card>
 )

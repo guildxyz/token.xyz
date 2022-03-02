@@ -2,12 +2,12 @@ import {
   Button,
   FormControl,
   FormErrorMessage,
-  GridItem,
+  FormLabel,
   HStack,
   Icon,
   IconButton,
   Input,
-  SimpleGrid,
+  Stack,
   Tag,
   Text,
 } from "@chakra-ui/react"
@@ -98,17 +98,19 @@ const AllocationFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
   }
 
   return (
-    <FormCard title="Allocation" onRemove={onRemove}>
-      <SimpleGrid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
+    <FormCard onRemove={onRemove}>
+      <Stack spacing={4}>
         <FormControl
+          isRequired
           isInvalid={!!errors?.distributionData?.[index]?.allocationName}
           w="full"
         >
+          <FormLabel>Distribution group name</FormLabel>
           <Input
             {...register(`distributionData.${index}.allocationName`, {
               required: "This field is required!",
             })}
-            placeholder="Name"
+            placeholder="Choose a name for your group"
           />
           <FormErrorMessage>
             {errors?.distributionData?.[index]?.allocationName?.message}
@@ -116,9 +118,15 @@ const AllocationFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
         </FormControl>
 
         <FormControl
+          isRequired
           position="relative"
           isInvalid={!!errors?.distributionData?.[index]?.allocationCsv}
         >
+          <FormLabel mb={1}>Allocation list</FormLabel>
+          <Text mb={2} colorScheme="gray" fontSize="sm">
+            Upload the participant's addresses with their corresponding allocation
+            sizes in a CSV file.
+          </Text>
           <HStack>
             <Button
               colorScheme="primary"
@@ -160,19 +168,21 @@ const AllocationFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
           </FormErrorMessage>
         </FormControl>
 
-        <GridItem colSpan={2}>
+        <FormControl isRequired>
+          <FormLabel>Vesting</FormLabel>
           <VestingTypePicker index={index} />
-        </GridItem>
+          <FormErrorMessage>
+            {errors?.distributionData?.[index]?.vestingType?.message}
+          </FormErrorMessage>
+        </FormControl>
 
-        <GridItem colSpan={2}>
-          <Tag>
-            Estimated gas cost:
-            <Text as="b" ml={1}>
-              0.44 ETH
-            </Text>
-          </Tag>
-        </GridItem>
-      </SimpleGrid>
+        <Tag w="max-content">
+          Estimated gas cost:
+          <Text as="b" ml={1}>
+            0.44 ETH
+          </Text>
+        </Tag>
+      </Stack>
     </FormCard>
   )
 }

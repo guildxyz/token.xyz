@@ -22,7 +22,7 @@ type TokenIssuanceFormType = {
   tokenName: string
   tokenTicker: string
   urlName: string
-  inflationaryModel: "FIXED" | "MAX" | "UNLIMITED"
+  economyModel: "FIXED" | "UNLIMITED"
   initialSupply?: number
   maxSupply?: number
   transferOwnershipTo?: string

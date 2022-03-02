@@ -9,7 +9,7 @@ const TokenIssuancePreview = (): JSX.Element => {
   const { control } = useFormContext<TokenIssuanceFormType>()
 
   const tokenTicker = useWatch({ control, name: "tokenTicker" })
-  const inflationaryModel = useWatch({ control, name: "inflationaryModel" })
+  const economyModel = useWatch({ control, name: "economyModel" })
   const initialSupply = useWatch({ control, name: "initialSupply" })
   const transferOwnershipTo = useWatch({ control, name: "transferOwnershipTo" })
   const chain = useWatch({ control, name: "chain" })
@@ -23,7 +23,7 @@ const TokenIssuancePreview = (): JSX.Element => {
       </Text>
       <Tag size="sm">
         Supply:{" "}
-        {inflationaryModel === "UNLIMITED"
+        {economyModel === "UNLIMITED"
           ? "unlimited"
           : !isNaN(initialSupply) && Number(initialSupply).toLocaleString("en")}
       </Tag>

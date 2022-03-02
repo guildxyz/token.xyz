@@ -1,6 +1,7 @@
-import { Box, Button, Flex, SimpleGrid, Stack, Tooltip } from "@chakra-ui/react"
+import { Button, Flex, Stack } from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
 import { useTimeline } from "components/common/Timeline/components/TimelineContext"
+import FormSection from "components/forms/FormSection"
 import { useMemo } from "react"
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
@@ -26,23 +27,23 @@ const DistributionForm = (): JSX.Element => {
     <Stack spacing={8} w="full">
       <Chart />
 
-      {fields.map((field, index) => (
-        <AllocationFormCard
-          key={field.id}
-          index={index}
-          field={field}
-          onRemove={() => remove(index)}
-        />
-      ))}
+      <FormSection
+        title="How do you want to airdrop the tokens?"
+        description="Set up distribution groups with a custom list of participants, allocation sizes and vesting periods."
+      >
+        <Stack spacing={8} w="full">
+          {fields.map((field, index) => (
+            <AllocationFormCard
+              key={field.id}
+              index={index}
+              field={field}
+              onRemove={() => remove(index)}
+            />
+          ))}
 
-      <SimpleGrid gridTemplateColumns="repeat(3, 1fr)" gap={4}>
-        <AddCard text="Claiming" onClick={() => append({})} />
-        <Tooltip label="Coming soon">
-          <Box>
-            <AddCard text="Distribution" />
-          </Box>
-        </Tooltip>
-      </SimpleGrid>
+          <AddCard text="New group" onClick={() => append({})} />
+        </Stack>
+      </FormSection>
 
       <Flex mt="auto" width="100%" justifyContent="end">
         <Button

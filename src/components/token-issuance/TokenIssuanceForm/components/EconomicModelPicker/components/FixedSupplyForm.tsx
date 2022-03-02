@@ -13,7 +13,7 @@ import { useEffect } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
 
-const MaxSupplyForm = (): JSX.Element => {
+const FixedSupplyForm = (): JSX.Element => {
   const {
     control,
     getValues,
@@ -39,7 +39,7 @@ const MaxSupplyForm = (): JSX.Element => {
       <FormControl
         minW={0}
         isInvalid={!!errors?.initialSupply}
-        isRequired={getValues("inflationaryModel") !== "UNLIMITED"}
+        isRequired={getValues("economyModel") !== "UNLIMITED"}
       >
         <FormLabel>Initial supply</FormLabel>
         <Controller
@@ -47,8 +47,7 @@ const MaxSupplyForm = (): JSX.Element => {
           name="initialSupply"
           rules={{
             required:
-              getValues("inflationaryModel") !== "UNLIMITED" &&
-              "This field is required!",
+              getValues("economyModel") !== "UNLIMITED" && "This field is required!",
             min: {
               value: 0,
               message: "Must be positive",
@@ -81,7 +80,7 @@ const MaxSupplyForm = (): JSX.Element => {
       <FormControl
         minW={0}
         isInvalid={!!errors?.maxSupply}
-        isRequired={getValues("inflationaryModel") !== "UNLIMITED"}
+        isRequired={getValues("economyModel") !== "UNLIMITED"}
       >
         <FormLabel>Max supply</FormLabel>
         <Controller
@@ -89,8 +88,7 @@ const MaxSupplyForm = (): JSX.Element => {
           name="maxSupply"
           rules={{
             required:
-              getValues("inflationaryModel") !== "UNLIMITED" &&
-              "This field is required!",
+              getValues("economyModel") !== "UNLIMITED" && "This field is required!",
             min: {
               value: initialSupply,
               message: "Must be greater than initial supply",
@@ -119,4 +117,4 @@ const MaxSupplyForm = (): JSX.Element => {
   )
 }
 
-export default MaxSupplyForm
+export default FixedSupplyForm

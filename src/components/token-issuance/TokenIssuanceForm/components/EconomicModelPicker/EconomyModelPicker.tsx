@@ -2,9 +2,9 @@ import { StackDivider, useColorMode, useRadioGroup, VStack } from "@chakra-ui/re
 import { useEffect } from "react"
 import { useController, useFormContext, useWatch } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
-import InflationaryModelOption from "./components/InflationaryModelOption"
-import MaxSupplyForm from "./components/MaxSupplyForm"
-import UnlimitedOrFixedSupplyForm from "./components/UnlimitedOrFixedSupplyForm"
+import EconomyModelOption from "./components/EconomyModelOption"
+import FixedSupplyForm from "./components/FixedSupplyForm"
+import UnlimitedSupplyForm from "./components/UnlimitedSupplyForm"
 
 const OPTIONS: Array<{
   value: string
@@ -16,39 +16,34 @@ const OPTIONS: Array<{
   {
     value: "FIXED",
     title: "Fixed Supply",
-    description: "Description...",
+    description:
+      "Choose your limited supply type.\nInitial supply = Max supply: no more tokens will be minted after this amount.\nInitial supply < Max supply: more tokens can be minted until the amount reaches the Max supply.",
     disabled: false,
-    children: <UnlimitedOrFixedSupplyForm />,
-  },
-  {
-    value: "MAX",
-    title: "Max Supply",
-    description: "Description...",
-    disabled: false,
-    children: <MaxSupplyForm />,
+    children: <FixedSupplyForm />,
   },
   {
     value: "UNLIMITED",
     title: "Unlimited",
     disabled: false,
-    description: "Description...",
-    children: <UnlimitedOrFixedSupplyForm />,
+    description:
+      "Choose the amount of tokens to mint now, while an infinite amount can be released later.",
+    children: <UnlimitedSupplyForm />,
   },
 ]
 
-const InflationaryModelPicker = (): JSX.Element => {
+const EconomyModelPicker = (): JSX.Element => {
   const { control, setValue, clearErrors, trigger } =
     useFormContext<TokenIssuanceFormType>()
 
   const { field } = useController({
     control,
-    name: "inflationaryModel",
-    rules: { required: "You must pick a realm for your guild" },
+    name: "economyModel",
+    rules: { required: "You must pick an economy model" },
     defaultValue: "FIXED",
   })
 
   const { getRootProps, getRadioProps } = useRadioGroup({
-    name: "inflationaryModel",
+    name: "economyModel",
     onChange: field.onChange,
     value: field.value,
     defaultValue: "FIXED",
@@ -57,10 +52,10 @@ const InflationaryModelPicker = (): JSX.Element => {
   const group = getRootProps()
   const { colorMode } = useColorMode()
 
-  const inflationaryModel = useWatch({ control, name: "inflationaryModel" })
+  const economyModel = useWatch({ control, name: "economyModel" })
 
   useEffect(() => {
-    if (inflationaryModel !== "UNLIMITED") {
+    if (economyModel !== "UNLIMITED") {
       trigger(["initialSupply", "maxSupply"])
       return
     }
@@ -68,7 +63,7 @@ const InflationaryModelPicker = (): JSX.Element => {
     setValue("initialSupply", 0)
     setValue("maxSupply", 0)
     clearErrors(["initialSupply", "maxSupply"])
-  }, [inflationaryModel])
+  }, [economyModel])
 
   return (
     <VStack
@@ -84,13 +79,13 @@ const InflationaryModelPicker = (): JSX.Element => {
       {OPTIONS.map((option) => {
         const radio = getRadioProps({ value: option.value })
         return (
-          <InflationaryModelOption key={option.value} {...radio} {...option}>
+          <EconomyModelOption key={option.value} {...radio} {...option}>
             {option.children}
-          </InflationaryModelOption>
+          </EconomyModelOption>
         )
       })}
     </VStack>
   )
 }
 
-export default InflationaryModelPicker
+export default EconomyModelPicker

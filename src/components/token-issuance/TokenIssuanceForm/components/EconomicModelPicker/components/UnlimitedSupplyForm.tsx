@@ -12,7 +12,7 @@ import {
 import { Controller, useFormContext } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
 
-const UnlimitedOrFixedSupplyForm = (): JSX.Element => {
+const UnlimitedSupplyForm = (): JSX.Element => {
   const {
     control,
     formState: { errors },
@@ -55,4 +55,4 @@ const UnlimitedOrFixedSupplyForm = (): JSX.Element => {
   )
 }
 
-export default UnlimitedOrFixedSupplyForm
+export default UnlimitedSupplyForm

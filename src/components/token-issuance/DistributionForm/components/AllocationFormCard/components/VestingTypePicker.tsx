@@ -12,17 +12,21 @@ type Props = {
 const OPTIONS: Array<{
   value: string
   title: string
+  description?: string
   disabled: boolean | string
   children?: (props: any) => JSX.Element
 }> = [
   {
     value: "NO_VESTING",
     title: "No vesting",
+    description: "Tokens will be available in the recipients addresses instantly.",
     disabled: false,
   },
   {
     value: "LINEAR_VESTING",
     title: "Linear vesting",
+    description:
+      "Set custom lengths of vesting and cliff periods for this distribution group.",
     disabled: false,
     children: LinearVestingForm,
   },

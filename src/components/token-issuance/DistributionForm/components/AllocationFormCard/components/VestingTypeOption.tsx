@@ -6,6 +6,7 @@ import {
   Heading,
   RadioProps,
   Tag,
+  Text,
   useColorMode,
   useRadio,
 } from "@chakra-ui/react"
@@ -14,6 +15,7 @@ import { PropsWithChildren } from "react"
 type Props = {
   value: string
   title: string
+  description?: string
   disabled: boolean | string
 } & RadioProps
 
@@ -24,7 +26,7 @@ const VestingTypeOption = ({
   const { getInputProps, getCheckboxProps } = useRadio(props)
   const input = getInputProps()
   const checkbox = getCheckboxProps()
-  const { title, disabled, isChecked } = props
+  const { title, description, disabled, isChecked } = props
 
   const { colorMode } = useColorMode()
 
@@ -92,6 +94,11 @@ const VestingTypeOption = ({
         <input {...input} />
         <Box whiteSpace="break-spaces" w="full">
           <Heading size="sm">{title}</Heading>
+          {description && (
+            <Text fontWeight="normal" colorScheme="gray" mt={1} fontSize="sm">
+              {description}
+            </Text>
+          )}
         </Box>
       </Flex>
       {children && <Collapse in={isChecked}>{children}</Collapse>}

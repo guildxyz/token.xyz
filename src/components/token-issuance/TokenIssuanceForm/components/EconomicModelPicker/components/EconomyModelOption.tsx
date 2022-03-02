@@ -19,7 +19,7 @@ type Props = {
   disabled: boolean | string
 } & RadioProps
 
-const InflationaryModelOption = ({
+const EconomyModelOption = ({
   children,
   ...props
 }: PropsWithChildren<Props>): JSX.Element => {
@@ -106,4 +106,4 @@ const InflationaryModelOption = ({
   )
 }
 
-export default InflationaryModelOption
+export default EconomyModelOption

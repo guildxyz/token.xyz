@@ -35,7 +35,7 @@ import { TokenIssuanceFormType } from "types"
 import shortenHex from "utils/shortenHex"
 import slugify from "utils/slugify"
 import { useAccount } from "wagmi"
-import InflationaryModelPicker from "./components/InflationaryModelPicker"
+import EconomyModelPicker from "./components/EconomicModelPicker"
 
 const TokenIssuanceForm = (): JSX.Element => {
   const [{ data: accountData }] = useAccount()
@@ -52,12 +52,14 @@ const TokenIssuanceForm = (): JSX.Element => {
 
   useEffect(() => {
     if (!register) return
+    register("urlName")
     register("decimals")
   }, [register])
 
   const tokenName = useWatch({ control, name: "tokenName" })
   const decimals = useWatch({ control, name: "decimals" })
 
+  // TODO: check if the urlName already exists, and ask for another token name if needed!
   useEffect(() => {
     if (touchedFields.urlName) return
     setValue("urlName", slugify(tokenName || ""))
@@ -112,26 +114,10 @@ const TokenIssuanceForm = (): JSX.Element => {
             <FormErrorMessage>{errors?.tokenTicker?.message}</FormErrorMessage>
           </FormControl>
         </SimpleGrid>
-
-        <FormControl isInvalid={!!errors?.urlName}>
-          <Input
-            size="lg"
-            {...register("urlName", {
-              required: "This field is required!",
-              pattern: {
-                value: /^[0-9a-z-]*$/,
-                message:
-                  "URL name can only contain lowercase letters, numbers, and hyphen",
-              },
-            })}
-            placeholder="URL name"
-          />
-          <FormErrorMessage>{errors?.urlName?.message}</FormErrorMessage>
-        </FormControl>
       </FormSection>
 
-      <FormSection title="Inflationary model">
-        <InflationaryModelPicker />
+      <FormSection title="Choose a token economy model:">
+        <EconomyModelPicker />
       </FormSection>
 
       <FormSection title="Chain">
