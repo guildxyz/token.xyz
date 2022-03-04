@@ -16,8 +16,7 @@ const OPTIONS: Array<{
   {
     value: "FIXED",
     title: "Fixed Supply",
-    description:
-      "Choose your limited supply type.\nInitial supply = Max supply: no more tokens will be minted after this amount.\nInitial supply < Max supply: more tokens can be minted until the amount reaches the Max supply.",
+    description: "Choose your limited supply type.",
     disabled: false,
     children: <FixedSupplyForm />,
   },
@@ -32,8 +31,7 @@ const OPTIONS: Array<{
 ]
 
 const EconomyModelPicker = (): JSX.Element => {
-  const { control, setValue, clearErrors, trigger } =
-    useFormContext<TokenIssuanceFormType>()
+  const { control, setValue, clearErrors } = useFormContext<TokenIssuanceFormType>()
 
   const { field } = useController({
     control,

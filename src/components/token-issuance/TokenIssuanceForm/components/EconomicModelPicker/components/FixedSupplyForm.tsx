@@ -115,6 +115,23 @@ const FixedSupplyForm = (): JSX.Element => {
         />
         <FormErrorMessage>{errors?.maxSupply?.message}</FormErrorMessage>
       </FormControl>
+
+      {/* <GridItem minW={0} colSpan={2}>
+        <Alert status="info">
+          <AlertIcon mt={0} mr={2} />
+          <Box flex={1}>
+            <AlertTitle>Tip</AlertTitle>
+            <AlertDescription fontWeight="normal" fontSize="sm">
+              <b>Initial supply = Max supply:</b>
+              {` no more tokens will be minted after this
+                amount.`}
+
+              <b>Initial supply &lt; Max supply:</b>
+              {` more tokens can be minted until the amount reaches the Max supply.`}
+            </AlertDescription>
+          </Box>
+        </Alert>
+      </GridItem> */}
     </SimpleGrid>
   )
 }
