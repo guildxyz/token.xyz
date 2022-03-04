@@ -189,7 +189,7 @@ const TokenIssuanceForm = (): JSX.Element => {
                   <FormErrorMessage>{errors?.mintable?.message}</FormErrorMessage>
                 </FormControl>
 
-                <FormControl isInvalid={!!errors?.multiOwner}>
+                {/* <FormControl isInvalid={!!errors?.multiOwner}>
                   <FormLabel>Multiple owners</FormLabel>
                   <Switch
                     {...register("multiOwner")}
@@ -197,9 +197,9 @@ const TokenIssuanceForm = (): JSX.Element => {
                     colorScheme="cyan"
                   />
                   <FormErrorMessage>{errors?.multiOwner?.message}</FormErrorMessage>
-                </FormControl>
+                </FormControl> */}
 
-                <FormControl isInvalid={!!errors?.canPause}>
+                {/* <FormControl isInvalid={!!errors?.canPause}>
                   <FormLabel>Can pause</FormLabel>
                   <Switch
                     {...register("canPause")}
@@ -207,9 +207,9 @@ const TokenIssuanceForm = (): JSX.Element => {
                     colorScheme="cyan"
                   />
                   <FormErrorMessage>{errors?.canPause?.message}</FormErrorMessage>
-                </FormControl>
+                </FormControl> */}
 
-                <FormControl isInvalid={!!errors?.enableBlacklists}>
+                {/* <FormControl isInvalid={!!errors?.enableBlacklists}>
                   <FormLabel>Enable blacklists</FormLabel>
                   <Switch
                     {...register("enableBlacklists")}
@@ -219,7 +219,7 @@ const TokenIssuanceForm = (): JSX.Element => {
                   <FormErrorMessage>
                     {errors?.enableBlacklists?.message}
                   </FormErrorMessage>
-                </FormControl>
+                </FormControl> */}
               </SimpleGrid>
 
               <FormControl
