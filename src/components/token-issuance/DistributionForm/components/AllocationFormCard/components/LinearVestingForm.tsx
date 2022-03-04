@@ -39,7 +39,7 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
       >
         <HStack alignItems="center" spacing={0}>
           <FormLabel>Cliff</FormLabel>
-          <Tooltip label="Smart contracts lock a certain amount of tokens until the desired time period.">
+          <Tooltip label="Time period before the release of the first increment of tokens.">
             <Icon
               position="relative"
               left={-2}
@@ -93,7 +93,19 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
           getValues(`distributionData.${index}.vestingType`) === "LINEAR_VESTING"
         }
       >
-        <FormLabel>Vesting</FormLabel>
+        <HStack alignItems="center" spacing={0}>
+          <FormLabel>Vesting</FormLabel>
+          <Tooltip label="Smart contracts lock a certain amount of tokens until the desired time period.">
+            <Icon
+              position="relative"
+              left={-2}
+              top={-1}
+              as={Question}
+              color="gray"
+              boxSize={5}
+            />
+          </Tooltip>
+        </HStack>
         <InputGroup>
           <Controller
             control={control}
