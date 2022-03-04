@@ -77,6 +77,11 @@ const useDeploy = () => {
                 actions: ["assignErrorToContext", "onError"],
               },
             },
+            on: {
+              SKIP_DISTRIBUTION: {
+                target: "finished",
+              },
+            },
           },
           finished: {
             type: "final",
@@ -155,7 +160,7 @@ const useDeploy = () => {
 
   // DEBUG
   useEffect(() => {
-    console.log("MACHINE STATE", state)
+    if (process.env.NODE_ENV === "development") console.log("MACHINE STATE", state)
   }, [state])
 
   const startDeploy = () => send("DEPLOY")
