@@ -42,23 +42,30 @@ const MONTHS = [
 
 const getMonthName = (index: number) => MONTHS[(index + new Date().getMonth()) % 12]
 
-// TODO: generate colors dynamicall
+// TODO: generate colors dynamicall?
 const CHART_COLORS: Array<{ bg: string; border: string }> = [
+  // Cyan
   {
-    bg: "rgba(239, 68, 68, 0.2)",
-    border: "#EF4444",
+    bg: "#76E4F7",
+    border: "#00B5D8",
   },
+  // Pink
   {
-    bg: "rgba(34, 197, 94, 0.2)",
-    border: "#22C55E",
+    bg: "#F687B3",
+    border: "#D53F8C",
   },
+  // Teal
   {
-    bg: "rgba(99, 102, 241, 0.2)",
-    border: "#6366F1",
+    bg: "#4FD1C5",
+    border: "#319795",
   },
 ]
 
-const Chart = (): JSX.Element => {
+type Props = {
+  isSimple?: boolean
+}
+
+const Chart = ({ isSimple }: Props): JSX.Element => {
   const { control, getValues } = useFormContext<TokenIssuanceFormType>()
 
   const initialSupply = useWatch({ control, name: "initialSupply" })
@@ -77,7 +84,7 @@ const Chart = (): JSX.Element => {
 
     const longestVestingPeriod =
       distributionData?.length &&
-      typeof distributionData[0].vestingPeriod === "number"
+      distributionData.some((allocation) => allocation.vestingPeriod != 0)
         ? Math.max(
             ...distributionData.map(
               (allocationData) => allocationData.vestingPeriod
@@ -90,15 +97,15 @@ const Chart = (): JSX.Element => {
       // Get the longest vesting period, and just create an array of that length
       labels: Array(longestVestingPeriod)
         .fill(0)
-        .map((_, index) => getMonthName(index)),
+        .map((_, index) => (isSimple ? "" : getMonthName(index))),
       datasets: [
         {
           label: "Token owner",
           data: Array(longestVestingPeriod).fill(
             initialSupply - (distributedSupply || 0)
           ),
-          borderColor: "#fefefe",
-          backgroundColor: "rgba(255, 255, 255, 0.2)",
+          borderColor: "#718096",
+          backgroundColor: "#CBD5E0",
           fill: "origin",
         },
       ].concat(
@@ -150,6 +157,7 @@ const Chart = (): JSX.Element => {
       options={{
         plugins: {
           legend: {
+            display: !isSimple,
             labels: {
               usePointStyle: true,
             },
@@ -159,6 +167,9 @@ const Chart = (): JSX.Element => {
           y: {
             min: 0,
             stacked: true,
+            ticks: {
+              display: !isSimple,
+            },
           },
         },
         color: "#ffffff",

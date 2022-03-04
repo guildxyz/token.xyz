@@ -95,11 +95,11 @@ const DistributionData = (): JSX.Element => {
           )}
         </Stack>
 
-        <Stack maxW="full">
+        <Stack minW={0} maxW="full">
           <Heading as="h3" mb={2} fontFamily="display" fontSize="lg">
             Distribution chart
           </Heading>
-          <Chart />
+          <Chart isSimple />
         </Stack>
       </SimpleGrid>
 

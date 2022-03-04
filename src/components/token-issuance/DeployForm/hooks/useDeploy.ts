@@ -146,6 +146,8 @@ const useDeploy = () => {
         const [, , tokenAddress] = tokenDeployedEvent.args
         // If we know the token address & the user provided distribution data, we should start distributing the tokens
         console.log("Token address:", tokenAddress)
+
+        // TODO: distribute tokens...
         return new Promise((resolve) => setTimeout(() => resolve({}), 1000))
       },
     },

@@ -1,4 +1,4 @@
-import { Button, Flex, Stack } from "@chakra-ui/react"
+import { Box, Button, Flex, Stack, Tooltip } from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
 import { useTimeline } from "components/common/Timeline/components/TimelineContext"
 import FormSection from "components/forms/FormSection"
@@ -41,7 +41,15 @@ const DistributionForm = (): JSX.Element => {
             />
           ))}
 
-          <AddCard text="New group" onClick={() => append({})} />
+          {fields?.length < 3 ? (
+            <AddCard text="New group" onClick={() => append({})} />
+          ) : (
+            <Tooltip label="You can add up to 3 distribution groups">
+              <Box>
+                <AddCard text="New group" disabled />
+              </Box>
+            </Tooltip>
+          )}
         </Stack>
       </FormSection>
 
