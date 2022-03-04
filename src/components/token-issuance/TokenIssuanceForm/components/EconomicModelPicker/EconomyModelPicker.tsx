@@ -55,11 +55,6 @@ const EconomyModelPicker = (): JSX.Element => {
   const economyModel = useWatch({ control, name: "economyModel" })
 
   useEffect(() => {
-    if (economyModel !== "UNLIMITED") {
-      trigger(["initialSupply", "maxSupply"])
-      return
-    }
-
     setValue("initialSupply", 0)
     setValue("maxSupply", 0)
     clearErrors(["initialSupply", "maxSupply"])

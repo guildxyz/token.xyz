@@ -46,16 +46,18 @@ const FixedSupplyForm = (): JSX.Element => {
           control={control}
           name="initialSupply"
           rules={{
-            required:
-              getValues("economyModel") !== "UNLIMITED" && "This field is required!",
+            required: "This field is required!",
             min: {
               value: 0,
               message: "Must be positive",
             },
-            max: {
-              value: maxSupply,
-              message: "Must be less than max supply",
-            },
+            max:
+              getValues("economyModel") !== "UNLIMITED"
+                ? {
+                    value: maxSupply,
+                    message: "Must be less than max supply",
+                  }
+                : undefined,
           }}
           defaultValue={0}
           render={({ field: { ref, value, onChange, onBlur } }) => (
