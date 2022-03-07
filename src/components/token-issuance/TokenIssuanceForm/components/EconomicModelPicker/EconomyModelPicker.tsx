@@ -31,7 +31,8 @@ const OPTIONS: Array<{
 ]
 
 const EconomyModelPicker = (): JSX.Element => {
-  const { control, setValue, clearErrors } = useFormContext<TokenIssuanceFormType>()
+  const { control, setValue, clearErrors, trigger } =
+    useFormContext<TokenIssuanceFormType>()
 
   const { field } = useController({
     control,
@@ -53,9 +54,13 @@ const EconomyModelPicker = (): JSX.Element => {
   const economyModel = useWatch({ control, name: "economyModel" })
 
   useEffect(() => {
-    setValue("initialSupply", 0)
-    setValue("maxSupply", 0)
+    if (economyModel === "UNLIMITED") setValue("maxSupply", 0)
     clearErrors(["initialSupply", "maxSupply"])
+
+    setTimeout(() => {
+      trigger("initialSupply")
+      if (economyModel !== "UNLIMITED") trigger("maxSupply")
+    }, 500)
   }, [economyModel])
 
   return (
