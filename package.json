@@ -24,6 +24,7 @@
     "@xstate/react": "^2.0.0",
     "canvas-confetti": "^1.5.1",
     "chart.js": "^3.7.1",
+    "ethers": "^5.5.4",
     "focus-visible": "^5.2.0",
     "framer-motion": "^6.2.8",
     "next": "^12.1.0",
