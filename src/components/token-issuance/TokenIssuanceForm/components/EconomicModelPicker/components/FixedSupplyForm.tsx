@@ -1,13 +1,21 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
   FormControl,
   FormErrorMessage,
   FormLabel,
+  GridItem,
+  HStack,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
   SimpleGrid,
+  Stack,
+  Text,
 } from "@chakra-ui/react"
 import { useEffect } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
@@ -116,22 +124,32 @@ const FixedSupplyForm = (): JSX.Element => {
         <FormErrorMessage>{errors?.maxSupply?.message}</FormErrorMessage>
       </FormControl>
 
-      {/* <GridItem minW={0} colSpan={2}>
+      <GridItem minW={0} colSpan={2}>
         <Alert status="info">
-          <AlertIcon mt={0} mr={2} />
-          <Box flex={1}>
-            <AlertTitle>Tip</AlertTitle>
-            <AlertDescription fontWeight="normal" fontSize="sm">
-              <b>Initial supply = Max supply:</b>
-              {` no more tokens will be minted after this
-                amount.`}
+          <Stack>
+            <HStack spacing={0.5}>
+              <AlertIcon mt={0} mr={2} />
 
-              <b>Initial supply &lt; Max supply:</b>
-              {` more tokens can be minted until the amount reaches the Max supply.`}
+              <AlertTitle>Tip</AlertTitle>
+            </HStack>
+            <AlertDescription
+              fontWeight="normal"
+              fontSize="sm"
+              whiteSpace="break-spaces"
+            >
+              <Text>
+                <b>Initial = Max supply:</b>
+                {` no more tokens will be minted after this amount.`}
+              </Text>
+
+              <Text>
+                <b>Initial &lt; Max supply:</b>
+                {` more tokens can be minted until the amount reaches the Max supply.`}
+              </Text>
             </AlertDescription>
-          </Box>
+          </Stack>
         </Alert>
-      </GridItem> */}
+      </GridItem>
     </SimpleGrid>
   )
 }
