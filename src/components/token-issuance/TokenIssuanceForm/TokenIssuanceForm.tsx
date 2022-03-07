@@ -68,6 +68,7 @@ const TokenIssuanceForm = (): JSX.Element => {
   const isNextButtonDisabled = () =>
     !getValues("tokenName") ||
     !getValues("tokenTicker") ||
+    getValues("initialSupply") < 1 ||
     !!errors.tokenName ||
     !!errors.tokenTicker ||
     !!errors.initialSupply ||

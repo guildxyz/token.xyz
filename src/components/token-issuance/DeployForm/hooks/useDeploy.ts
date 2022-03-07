@@ -1,4 +1,5 @@
 import { useMachine } from "@xstate/react"
+import { utils } from "ethers"
 import useToast from "hooks/useToast"
 import useTokenXyzContract from "hooks/useTokenXyzContract"
 import { useEffect, useMemo, useRef } from "react"
@@ -132,8 +133,8 @@ const useDeploy = () => {
             tokenName,
             tokenTicker,
             decimals || 18,
-            initialSupply,
-            maxSupply,
+            utils.parseEther(initialSupply?.toString()).toString(),
+            maxSupply ? utils.parseEther(maxSupply.toString()).toString() : null,
             transferOwnershipTo || accountData?.address,
             mintable
           )
