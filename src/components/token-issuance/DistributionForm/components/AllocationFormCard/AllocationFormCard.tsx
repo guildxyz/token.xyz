@@ -20,6 +20,7 @@ import FormCard from "../FormCard"
 import VestingTypePicker from "./components/VestingTypePicker"
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
+const unique = (value, index, self): boolean => self.indexOf(value) === index
 
 type Props = {
   index: number
@@ -80,6 +81,12 @@ const AllocationFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
             type: "validate",
           })
           return
+        } else if (!results.data.map(([address]) => address).every(unique)) {
+          setError(`distributionData.${index}.allocationCsv`, {
+            message: "The CSV contains duplicate addresses",
+            type: "validate",
+          })
+          return
         }
 
         setValue(
@@ -90,7 +97,7 @@ const AllocationFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
     })
   }
 
-  const onRemoveCsv = (e) => {
+  const onRemoveCsv = () => {
     if (!fileInputRef?.current) return
     fileInputRef.current.value = null
     setValue(`distributionData.${index}.allocationAddressesAmounts`, null)
