@@ -31,8 +31,13 @@ const OPTIONS: Array<{
 ]
 
 const EconomyModelPicker = (): JSX.Element => {
-  const { control, setValue, clearErrors, trigger } =
-    useFormContext<TokenIssuanceFormType>()
+  const {
+    control,
+    setValue,
+    clearErrors,
+    trigger,
+    formState: { dirtyFields },
+  } = useFormContext<TokenIssuanceFormType>()
 
   const { field } = useController({
     control,
@@ -52,16 +57,18 @@ const EconomyModelPicker = (): JSX.Element => {
   const { colorMode } = useColorMode()
 
   const economyModel = useWatch({ control, name: "economyModel" })
+  const initialSupply = useWatch({ control, name: "initialSupply" })
+  const maxSupply = useWatch({ control, name: "maxSupply" })
+
+  useEffect(() => clearErrors(["initialSupply", "maxSupply"]), [economyModel])
 
   useEffect(() => {
-    if (economyModel === "UNLIMITED") setValue("maxSupply", 0)
-    clearErrors(["initialSupply", "maxSupply"])
+    if (economyModel === "UNLIMITED" && !dirtyFields.maxSupply)
+      setValue("maxSupply", 0)
 
-    setTimeout(() => {
-      trigger("initialSupply")
-      if (economyModel !== "UNLIMITED") trigger("maxSupply")
-    }, 500)
-  }, [economyModel])
+    if (dirtyFields.initialSupply) trigger("initialSupply")
+    if (dirtyFields.maxSupply && economyModel !== "UNLIMITED") trigger("maxSupply")
+  }, [economyModel, initialSupply, maxSupply])
 
   return (
     <VStack
