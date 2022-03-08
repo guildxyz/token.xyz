@@ -1,15 +1,22 @@
 import { useMachine } from "@xstate/react"
-import { utils } from "ethers"
+import { ethers, utils } from "ethers"
 import useToast from "hooks/useToast"
 import useTokenXyzContract from "hooks/useTokenXyzContract"
-import { useEffect, useMemo, useRef } from "react"
+import { useMemo, useRef } from "react"
 import { useFormContext } from "react-hook-form"
+import MerkleVestingABI from "static/abis/MerkleVestingABI.json"
 import { TokenIssuanceFormType } from "types"
-import { useAccount } from "wagmi"
+import generateMerkleTree from "utils/merkle/generateMerkleTree"
+import { MerkleDistributorInfo, parseBalanceMap } from "utils/merkle/parseBalanceMap"
+import { useAccount, useSigner } from "wagmi"
 import { assign, createMachine } from "xstate"
+
+const monthsToSecond = (months: number): number =>
+  months ? Math.floor(months * 2629743.83) : 0
 
 const useDeploy = () => {
   const [{ data: accountData }] = useAccount()
+  const [{ data: signerData }] = useSigner()
   const tokenXyzContract = useTokenXyzContract()
 
   const { getValues } = useFormContext<TokenIssuanceFormType>()
@@ -42,6 +49,11 @@ const useDeploy = () => {
     createMachine<{
       error?: string
       response?: Record<string, any>
+      tokenDeployer?: string
+      tokenUrlName?: string
+      tokenAddress?: string
+      merkleTrees?: Array<MerkleDistributorInfo>
+      addCohortCalls?: Array<any> // TODO: better types!
     }>(
       {
         id: "deployMachine",
@@ -57,8 +69,8 @@ const useDeploy = () => {
             invoke: {
               src: "createToken",
               onDone: {
-                target: "distributing",
-                actions: ["assignDataToContext"],
+                target: "creatingMerkleContracts",
+                actions: ["assignResponseToContext", "logResponse"],
               },
               onError: {
                 target: "idle",
@@ -66,12 +78,12 @@ const useDeploy = () => {
               },
             },
           },
-          distributing: {
+          creatingMerkleContracts: {
             invoke: {
-              src: "distributeToken",
+              src: "createMerkleContracts",
               onDone: {
-                target: "finished",
-                actions: ["assignDataToContext"],
+                target: "creatingCohorts",
+                actions: ["assignResponseToContext", "logResponse"], // Debug...
               },
               onError: {
                 target: "idle",
@@ -79,8 +91,45 @@ const useDeploy = () => {
               },
             },
             on: {
-              SKIP_DISTRIBUTION: {
+              SKIP: {
                 target: "finished",
+              },
+              UPDATE_CONTEXT: {
+                actions: ["assignDataToContext"],
+              },
+            },
+          },
+          creatingCohorts: {
+            invoke: {
+              src: "addCohorts",
+              onDone: {
+                target: "ipfs",
+                actions: ["logResponse"], // Debug...
+              },
+              onError: {
+                target: "idle",
+                actions: ["assignErrorToContext", "onError"],
+              },
+            },
+            on: {
+              SKIP: {
+                target: "ipfs",
+              },
+              UPDATE_CONTEXT: {
+                actions: ["assignDataToContext"],
+              },
+            },
+          },
+          ipfs: {
+            invoke: {
+              src: "uploadToIpfs",
+              onDone: {
+                target: "finished",
+                actions: ["logResponse"], // Debug...
+              },
+              onError: {
+                target: "idle",
+                actions: ["assignErrorToContext", "onError"],
               },
             },
           },
@@ -102,6 +151,13 @@ const useDeploy = () => {
               "An unknown error occurred",
           })),
           assignDataToContext: assign((_context, event) => ({
+            ...event.data,
+          })),
+          logResponse: (_context, event) =>
+            process.env.NODE_ENV === "development"
+              ? console.log("LOGRESPONSE", _context, event)
+              : {},
+          assignResponseToContext: assign((_context, event) => ({
             response: event?.data,
           })),
           onSuccess: (_context) =>
@@ -109,16 +165,12 @@ const useDeploy = () => {
               status: "success",
               title: "Successful token issuance!",
             }),
-          onError: (_context, event) => {
-            if (process.env.NODE_ENV === "development")
-              console.log("createToken:error", _context, event)
-
+          onError: (_context, event) =>
             toast({
               status: "error",
               title: "Uh-oh!",
               description: _context.error,
-            })
-          },
+            }),
         },
       }
     )
@@ -139,30 +191,187 @@ const useDeploy = () => {
             mintable
           )
           .then((res) => res.wait()),
-      distributeToken: async (_context) => {
+      createMerkleContracts: async (_context) => {
         // If there's no distribution data, we can skip this step
-        if (!distributionData?.length) send("SKIP_DISTRIBUTION")
+        if (!distributionData?.length) send("SKIP")
 
         const tokenDeployedEvent = _context?.response?.events?.find(
           (event) => event.event === "TokenDeployed"
         )
+
         // TODO: Maybe we don't event need this here, since if the deployment was successful, we should know the token data already...
         if (!tokenDeployedEvent) Promise.reject("Could not deploy token contract.")
 
-        const [, , tokenAddress] = tokenDeployedEvent.args
-        // If we know the token address & the user provided distribution data, we should start distributing the tokens
-        console.log("Token address:", tokenAddress)
+        const [tokenDeployer, tokenUrlName, tokenAddress] = tokenDeployedEvent.args
 
-        // TODO: distribute tokens...
-        return new Promise((resolve) => setTimeout(() => resolve({}), 1000))
+        // Generating and storing merkle trees, so we don't need to regenerate them where we need to use them
+        const merkleTrees = distributionData.map((allocation) =>
+          parseBalanceMap(generateMerkleTree(allocation.allocationAddressesAmounts))
+        )
+
+        // Assinging the data to the context, so we can use these in the upcoming machine states
+        send("UPDATE_CONTEXT", {
+          data: { tokenDeployer, tokenUrlName, tokenAddress, merkleTrees },
+        })
+
+        // Preparing the contract calls
+        const contractCalls = []
+
+        // Deploying 1 vesting contract if needed
+        const shouldCreateVesting = distributionData.some(
+          (allocation) => allocation.vestingType === "LINEAR_VESTING"
+        )
+
+        if (shouldCreateVesting)
+          contractCalls.push(
+            tokenXyzContract.interface.encodeFunctionData(
+              "createVesting(string,address,address)",
+              [tokenUrlName, tokenAddress, tokenDeployer]
+            )
+          )
+
+        // Preparing the "createAirdrop" call(s)
+        distributionData?.forEach((allocation, index) => {
+          if (allocation.vestingType !== "NO_VESTING") return
+
+          // Distribution duration in seconds
+          const distributionDuration = monthsToSecond(
+            allocation.distributionDuration
+          )
+
+          contractCalls.push(
+            tokenXyzContract.interface.encodeFunctionData(
+              "createAirdrop(string,address,bytes32,uint256,address)",
+              [
+                tokenUrlName,
+                tokenAddress,
+                merkleTrees?.[index]?.merkleRoot,
+                distributionDuration,
+                tokenDeployer,
+              ]
+            )
+          )
+        })
+
+        return tokenXyzContract
+          .multicall(contractCalls)
+          .then((multicallRes) => multicallRes?.wait())
+      },
+      addCohorts: async (_context) => {
+        const shouldCreateVesting = distributionData.some(
+          (allocation) => allocation.vestingType === "LINEAR_VESTING"
+        )
+
+        const merkleVestingDeployedEvent = _context?.response?.events?.find(
+          (event) => event.event === "MerkleVestingDeployed"
+        )
+
+        if (!shouldCreateVesting || !merkleVestingDeployedEvent) send("SKIP")
+
+        const [, , merkleVestingContractAddress] = merkleVestingDeployedEvent.args
+
+        const merkleVestingContract = new ethers.Contract(
+          merkleVestingContractAddress,
+          MerkleVestingABI.abi,
+          signerData
+        )
+
+        const addCohortCalls = []
+
+        // Preparing the "addCohort" calls
+        distributionData?.forEach((allocation, index) => {
+          if (allocation.vestingType !== "LINEAR_VESTING") return
+
+          // Distribution duration in seconds
+          const distributionDuration = monthsToSecond(
+            allocation.distributionDuration
+          )
+
+          const cliff = monthsToSecond(allocation.cliff)
+          const vestingPeriod = monthsToSecond(allocation.vestingPeriod)
+
+          addCohortCalls.push(
+            merkleVestingContract.interface.encodeFunctionData(
+              "addCohort(bytes32,uint256,uint64,uint64)",
+              [
+                _context.merkleTrees?.[index]?.merkleRoot,
+                distributionDuration,
+                vestingPeriod,
+                cliff,
+              ]
+            )
+          )
+        })
+
+        return merkleVestingContract
+          .multicall(addCohortCalls)
+          .then((addCohortCallsRes) => addCohortCallsRes?.wait())
+      },
+      uploadToIpfs: async (_context) => {
+        const ipfsData = new FormData()
+
+        ipfsData.append(
+          "metadata",
+          JSON.stringify({
+            name: _context.tokenAddress,
+          })
+        )
+
+        distributionData.forEach((allocation, index) => {
+          const currentDateInSeconds = Date.now() / 1000
+          const distributionDurationInSeconds = monthsToSecond(
+            allocation.distributionDuration
+          )
+          const cliffInSeconds = monthsToSecond(allocation.cliff)
+          const vestingPeriodInSeconds = monthsToSecond(allocation.vestingPeriod)
+
+          const merkleData = {
+            ..._context.merkleTrees?.[index],
+            vestingType: allocation.vestingType,
+            distributionEnd: Math.round(
+              currentDateInSeconds + distributionDurationInSeconds
+            ),
+            vestingEnd: Math.round(currentDateInSeconds + vestingPeriodInSeconds),
+            vestingPeriod: vestingPeriodInSeconds,
+            cliffPeriod: cliffInSeconds,
+            createdBy: accountData?.address,
+          }
+
+          ipfsData.append(
+            "file",
+            new Blob([JSON.stringify(merkleData)]),
+            `${_context.tokenAddress}/allocation${index}.json`
+          )
+          if (process.env.NODE_ENV === "development")
+            console.log(`[FILE]: allocation${index}.json`)
+        })
+
+        const apiKey = await fetch("/api/pinata-key").then((response) =>
+          response.json().then((body) => ({ jwt: body.jwt, key: body.key }))
+        )
+
+        await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${apiKey.jwt}`,
+          },
+          body: ipfsData,
+        })
+        // .then((res) => res?.json())
+
+        await fetch("/api/pinata-key", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ key: apiKey.key }),
+        }).catch(() => console.error("Failed to revoke API key after request"))
       },
     },
   })
 
   // DEBUG
-  useEffect(() => {
-    if (process.env.NODE_ENV === "development") console.log("MACHINE STATE", state)
-  }, [state])
+  // useEffect(() => {
+  //   if (process.env.NODE_ENV === "development") console.log("MACHINE STATE", state)
+  // }, [state])
 
   const startDeploy = () => send("DEPLOY")
 
@@ -176,7 +385,9 @@ const useDeploy = () => {
 
   const loadingText = useMemo(() => {
     if (state.matches("deploying")) return "Creating token"
-    else if (state.matches("distributing")) return "Distributing token"
+    else if (state.matches("creatingMerkleContracts")) return "Deploying contracts"
+    else if (state.matches("creatingCohorts")) return "Creating cohorts"
+    else if (state.matches("ipfs")) return "Uploading data to IPFS"
     else return "Loading"
   }, [state])
 
