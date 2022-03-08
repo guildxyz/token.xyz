@@ -23,6 +23,8 @@ import { TokenIssuanceFormType } from "types"
 const FixedSupplyForm = (): JSX.Element => {
   const {
     control,
+    getValues,
+    setValue,
     formState: { errors },
   } = useFormContext<TokenIssuanceFormType>()
 
@@ -60,7 +62,12 @@ const FixedSupplyForm = (): JSX.Element => {
             <NumberInput
               ref={ref}
               value={value}
-              onChange={onChange}
+              onChange={(newValue) => {
+                onChange(newValue)
+                const parsedValue = parseInt(newValue)
+                if (parsedValue > getValues("maxSupply"))
+                  setValue("maxSupply", parsedValue)
+              }}
               onBlur={onBlur}
               min={0}
             >

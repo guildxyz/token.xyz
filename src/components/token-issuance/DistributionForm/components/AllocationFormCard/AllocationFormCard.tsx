@@ -24,11 +24,10 @@ const unique = (value, index, self): boolean => self.indexOf(value) === index
 
 type Props = {
   index: number
-  field: Record<string, any> // TODO: better types
   onRemove?: () => void
 }
 
-const AllocationFormCard = ({ index, field, onRemove }: Props): JSX.Element => {
+const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const fileInputRef = useRef(null)
 
   const {

@@ -41,6 +41,7 @@ type AllocationFormType = {
   allocationCsv?: any
   allocationAddressesAmounts: Array<{ address: string; amount: string }>
   vestingType: "NO_VESTING" | "LINEAR_VESTING" | "BOND_VESTING"
+  distributionDuration?: number // In months
   vestingPeriod?: number // In months
   cliff?: number // In months
 }

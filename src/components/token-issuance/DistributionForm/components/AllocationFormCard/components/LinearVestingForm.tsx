@@ -26,6 +26,7 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
   const {
     control,
     getValues,
+    setValue,
     formState: { errors },
   } = useFormContext<TokenIssuanceFormType>()
 
@@ -119,6 +120,56 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                 message: "Vesting must be positive",
               },
             }}
+            render={({ field: { ref, value, onChange, onBlur } }) => (
+              <NumberInput
+                ref={ref}
+                value={value}
+                onChange={(newValue) => {
+                  onChange(newValue)
+                  const parsedValue = parseInt(newValue)
+                  if (
+                    parsedValue >
+                    getValues(`distributionData.${index}.distributionDuration`)
+                  )
+                    setValue(
+                      `distributionData.${index}.distributionDuration`,
+                      parsedValue
+                    )
+                }}
+                onBlur={onBlur}
+                min={0}
+              >
+                <NumberInputField borderRightRadius={0} />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            )}
+          />
+          <InputRightAddon bgColor="whiteAlpha.50">months</InputRightAddon>
+        </InputGroup>
+        <FormErrorMessage>
+          {errors?.distributionData?.[index]?.vestingPeriod?.message}
+        </FormErrorMessage>
+      </FormControl>
+
+      <FormControl
+        isInvalid={!!errors?.distributionData?.[index]?.distributionDuration}
+        isRequired
+      >
+        <FormLabel>Distribution duration</FormLabel>
+        <InputGroup>
+          <Controller
+            control={control}
+            name={`distributionData.${index}.distributionDuration`}
+            rules={{
+              required: "This field is required!",
+              min: {
+                value: getValues(`distributionData.${index}.vestingPeriod`),
+                message: "Distribution duration must be greater than vesting period",
+              },
+            }}
             defaultValue={12}
             render={({ field: { ref, value, onChange, onBlur } }) => (
               <NumberInput
@@ -139,7 +190,7 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
           <InputRightAddon bgColor="whiteAlpha.50">months</InputRightAddon>
         </InputGroup>
         <FormErrorMessage>
-          {errors?.distributionData?.[index]?.vestingPeriod?.message}
+          {errors?.distributionData?.[index]?.distributionDuration?.message}
         </FormErrorMessage>
       </FormControl>
     </SimpleGrid>

@@ -36,7 +36,6 @@ const DistributionForm = (): JSX.Element => {
             <AllocationFormCard
               key={field.id}
               index={index}
-              field={field}
               onRemove={() => remove(index)}
             />
           ))}

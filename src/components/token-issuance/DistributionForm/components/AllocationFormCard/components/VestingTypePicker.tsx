@@ -3,6 +3,7 @@ import { useEffect } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
 import LinearVestingForm from "./LinearVestingForm"
+import NoVestingForm from "./NoVestingForm"
 import VestingTypeOption from "./VestingTypeOption"
 
 type Props = {
@@ -21,6 +22,7 @@ const OPTIONS: Array<{
     title: "No vesting",
     description: "Tokens will be available in the recipients addresses instantly.",
     disabled: false,
+    children: NoVestingForm,
   },
   {
     value: "LINEAR_VESTING",
