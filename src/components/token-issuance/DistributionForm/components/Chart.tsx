@@ -6,9 +6,11 @@ import {
   LinearScale,
   LineElement,
   PointElement,
+  TimeScale,
   Title,
   Tooltip as ChartTooltip,
 } from "chart.js"
+import "chartjs-adapter-moment"
 import { useMemo } from "react"
 import { Line } from "react-chartjs-2"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -22,25 +24,14 @@ ChartJS.register(
   Title,
   Legend,
   ChartTooltip,
-  Filler
+  Filler,
+  TimeScale
 )
 
-const MONTHS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-]
-
-const getMonthName = (index: number) => MONTHS[(index + new Date().getMonth()) % 12]
+const getCurrentMonth = (index: number) => {
+  const date = new Date()
+  return new Date(date.getFullYear(), date.getMonth() + index, 1).toString()
+}
 
 // TODO: generate colors dynamicall?
 const CHART_COLORS: Array<{ bg: string; border: string }> = [
@@ -82,28 +73,28 @@ const Chart = ({ isSimple }: Props): JSX.Element => {
           ?.reduce((a, b) => a + b, 0)
       : 0
 
-    const longestVestingPeriod =
+    const longestDistributionDuration =
       distributionData?.length &&
-      distributionData.some((allocation) => allocation.vestingPeriod != 0)
+      distributionData.some((allocation) => allocation.distributionDuration != 0)
         ? Math.max(
             ...distributionData.map(
-              (allocationData) => allocationData.vestingPeriod
+              (allocationData) => allocationData.distributionDuration
             ),
             12
-          )
-        : 12
+          ) + 1
+        : 13
 
     return {
-      // Get the longest vesting period, and just create an array of that length
-      labels: Array(longestVestingPeriod)
-        .fill(0)
-        .map((_, index) => (isSimple ? "" : getMonthName(index))),
+      // Get the longest istribution duration, and just create an array of that length
       datasets: [
         {
           label: "Token owner",
-          data: Array(longestVestingPeriod).fill(
-            initialSupply - (distributedSupply || 0)
-          ),
+          data: Array(longestDistributionDuration)
+            .fill(0)
+            .map((_, i) => ({
+              x: getCurrentMonth(i),
+              y: initialSupply - (distributedSupply || 0),
+            })),
           borderColor: "#718096",
           backgroundColor: "#CBD5E0",
           fill: "origin",
@@ -111,38 +102,42 @@ const Chart = ({ isSimple }: Props): JSX.Element => {
       ].concat(
         distributionData?.map((allocationData, index) => ({
           label: getValues(`distributionData.${index}.allocationName`),
-          // TODO: replace the const 5 with a dynamic value...
-          data: Array(longestVestingPeriod)
+          data: Array(longestDistributionDuration)
             .fill(0)
             .map((_, i) => {
               const cliff = allocationData.cliff || 0
-              const vestingPeriod =
-                allocationData.vestingPeriod || longestVestingPeriod
 
               // TODO: double-check if this logic is right...
               const multiplier = (num: number) =>
-                cliff > 0 && num < cliff
+                cliff > 0 && num <= cliff
                   ? 0
-                  : num >= vestingPeriod
-                  ? vestingPeriod
-                  : num + 1
+                  : num > allocationData.vestingPeriod
+                  ? allocationData.vestingPeriod - cliff
+                  : num - cliff
 
               // Linear vesting
               if (allocationData.vestingType === "LINEAR_VESTING")
-                return Math.round(
-                  (allocationData.allocationAddressesAmounts
-                    ?.map((data) => parseFloat(data.amount))
-                    ?.reduce((a, b) => a + b, 0) /
-                    vestingPeriod) *
-                    multiplier(i)
-                )
+                return {
+                  x: getCurrentMonth(i),
+                  y: Math.round(
+                    (allocationData.allocationAddressesAmounts
+                      ?.map((data) => parseFloat(data.amount))
+                      ?.reduce((a, b) => a + b, 0) /
+                      allocationData.vestingPeriod -
+                      cliff) *
+                      multiplier(i)
+                  ),
+                }
 
               // No vesting
-              return Math.round(
-                allocationData.allocationAddressesAmounts
-                  ?.map((data) => parseFloat(data.amount))
-                  ?.reduce((a, b) => a + b, 0)
-              )
+              return {
+                x: getCurrentMonth(i),
+                y: Math.round(
+                  allocationData.allocationAddressesAmounts
+                    ?.map((data) => parseFloat(data.amount))
+                    ?.reduce((a, b) => a + b, 0)
+                ),
+              }
             }),
           borderColor: CHART_COLORS[index].border,
           backgroundColor: CHART_COLORS[index].bg,
@@ -164,6 +159,15 @@ const Chart = ({ isSimple }: Props): JSX.Element => {
           },
         },
         scales: {
+          x: {
+            type: "time",
+            time: {
+              unit: "month",
+            },
+            ticks: {
+              display: !isSimple,
+            },
+          },
           y: {
             min: 0,
             stacked: true,
