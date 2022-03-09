@@ -154,6 +154,11 @@ const Chart = ({ isSimple }: Props): JSX.Element => {
   return (
     <Line
       options={{
+        elements: {
+          point: {
+            radius: isSimple ? 0 : undefined,
+          },
+        },
         plugins: {
           legend: {
             display: !isSimple,
