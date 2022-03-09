@@ -36,14 +36,23 @@ type TokenIssuanceFormType = {
   correct: boolean
 }
 
+type VestingTypes = "NO_VESTING" | "LINEAR_VESTING" | "BOND_VESTING"
+
 type AllocationFormType = {
   allocationName: string
   allocationCsv?: any
   allocationAddressesAmounts: Array<{ address: string; amount: string }>
-  vestingType: "NO_VESTING" | "LINEAR_VESTING" | "BOND_VESTING"
+  vestingType: VestingTypes
   distributionDuration?: number // In months
   vestingPeriod?: number // In months
   cliff?: number // In months
 }
 
-export type { WalletError, Rest, Token, TimelineSteps, TokenIssuanceFormType }
+export type {
+  WalletError,
+  Rest,
+  Token,
+  TimelineSteps,
+  VestingTypes,
+  TokenIssuanceFormType,
+}

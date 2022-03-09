@@ -7,6 +7,7 @@ import {
   Icon,
   IconButton,
   Input,
+  Spinner,
   Stack,
   Tag,
   Text,
@@ -18,6 +19,7 @@ import { useFormContext, useWatch } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
 import FormCard from "../FormCard"
 import VestingTypePicker from "./components/VestingTypePicker"
+import useEstimateGas from "./hooks/useEstimateGas"
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 const unique = (value, index, self): boolean => self.indexOf(value) === index
@@ -103,6 +105,8 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
     clearErrors(`distributionData.${index}.allocationCsv`)
   }
 
+  const { estimatedFee, loading, error } = useEstimateGas(index)
+
   return (
     <FormCard onRemove={onRemove}>
       <Stack spacing={4}>
@@ -183,10 +187,21 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
         </FormControl>
 
         <Tag w="max-content">
-          Estimated gas cost:
-          <Text as="b" ml={1}>
-            0.44 ETH
-          </Text>
+          <HStack spacing={1}>
+            {loading && <Spinner size="xs" />}
+            <Text as="span">
+              {loading ? (
+                "Estimating gas fee"
+              ) : error ? (
+                "Could not estimate gas fee"
+              ) : (
+                <>
+                  {`Estimated gas cost: `}
+                  <Text as="b">{`${estimatedFee} ETH`}</Text>
+                </>
+              )}
+            </Text>
+          </HStack>
         </Tag>
       </Stack>
     </FormCard>
