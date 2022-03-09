@@ -81,8 +81,8 @@ const Chart = ({ isSimple }: Props): JSX.Element => {
               (allocationData) => allocationData.distributionDuration
             ),
             12
-          ) + 1
-        : 13
+          )
+        : 12
 
     const longestDistributionDuration =
       rawLongestDistributionDuration > 120 ? 120 : rawLongestDistributionDuration
@@ -103,49 +103,50 @@ const Chart = ({ isSimple }: Props): JSX.Element => {
           fill: "origin",
         },
       ].concat(
-        distributionData?.map((allocationData, index) => ({
-          label: getValues(`distributionData.${index}.allocationName`),
-          data: Array(longestDistributionDuration)
-            .fill(0)
-            .map((_, i) => {
-              const cliff = allocationData.cliff || 0
+        distributionData?.map((allocationData, index) => {
+          const amountToAllocate = allocationData.allocationAddressesAmounts
+            ?.map((data) => parseFloat(data.amount))
+            ?.reduce((a, b) => a + b, 0)
 
-              // TODO: double-check if this logic is right...
-              const multiplier = (num: number) =>
-                cliff > 0 && num <= cliff
-                  ? 0
-                  : num > allocationData.vestingPeriod
-                  ? allocationData.vestingPeriod - cliff
-                  : num - cliff
+          return {
+            label: getValues(`distributionData.${index}.allocationName`),
+            data: Array(longestDistributionDuration)
+              .fill(0)
+              .map((_, i) => {
+                const cliff = allocationData.cliff || 0
 
-              // Linear vesting
-              if (allocationData.vestingType === "LINEAR_VESTING")
+                const multiplier = (num: number) =>
+                  cliff > 0 && num <= cliff
+                    ? 0
+                    : num > allocationData.vestingPeriod
+                    ? allocationData.vestingPeriod - cliff
+                    : num - cliff
+
+                // Linear vesting
+                if (allocationData.vestingType === "LINEAR_VESTING")
+                  return {
+                    x: getCurrentMonth(i),
+                    y: Math.round(
+                      (amountToAllocate / (allocationData.vestingPeriod - cliff)) *
+                        multiplier(i)
+                    ),
+                  }
+
+                // No vesting
                 return {
                   x: getCurrentMonth(i),
                   y: Math.round(
-                    (allocationData.allocationAddressesAmounts
+                    allocationData.allocationAddressesAmounts
                       ?.map((data) => parseFloat(data.amount))
-                      ?.reduce((a, b) => a + b, 0) /
-                      allocationData.vestingPeriod -
-                      cliff) *
-                      multiplier(i)
+                      ?.reduce((a, b) => a + b, 0)
                   ),
                 }
-
-              // No vesting
-              return {
-                x: getCurrentMonth(i),
-                y: Math.round(
-                  allocationData.allocationAddressesAmounts
-                    ?.map((data) => parseFloat(data.amount))
-                    ?.reduce((a, b) => a + b, 0)
-                ),
-              }
-            }),
-          borderColor: CHART_COLORS[index].border,
-          backgroundColor: CHART_COLORS[index].bg,
-          fill: "origin",
-        })) || []
+              }),
+            borderColor: CHART_COLORS[index].border,
+            backgroundColor: CHART_COLORS[index].bg,
+            fill: "origin",
+          }
+        }) || []
       ),
     }
   }, [initialSupply, distributionData])
