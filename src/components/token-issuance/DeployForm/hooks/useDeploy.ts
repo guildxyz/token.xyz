@@ -94,7 +94,7 @@ const useDeploy = () => {
             },
             on: {
               SKIP: {
-                target: "finished",
+                target: "ipfs",
               },
               UPDATE_CONTEXT: {
                 actions: ["assignDataToContext"],
@@ -132,6 +132,11 @@ const useDeploy = () => {
               onError: {
                 target: "idle",
                 actions: ["assignErrorToContext", "onError"],
+              },
+            },
+            on: {
+              SKIP: {
+                target: "finished",
               },
             },
           },
@@ -194,9 +199,6 @@ const useDeploy = () => {
           )
           .then((res) => res.wait()),
       createMerkleContracts: async (_context) => {
-        // If there's no distribution data, we can skip this step
-        if (!distributionData?.length) send("SKIP")
-
         const tokenDeployedEvent = _context?.response?.events?.find(
           (event) => event.event === "TokenDeployed"
         )
@@ -206,15 +208,20 @@ const useDeploy = () => {
 
         const [tokenDeployer, tokenUrlName, tokenAddress] = tokenDeployedEvent.args
 
+        // Assinging the data to the context, so we can use these in the upcoming machine states
+        send("UPDATE_CONTEXT", {
+          data: { tokenDeployer, tokenUrlName, tokenAddress },
+        })
+
+        // If there's no distribution data, we can skip this step
+        if (!distributionData?.length) return send("SKIP")
+
         // Generating and storing merkle trees, so we don't need to regenerate them where we need to use them
         const merkleTrees = distributionData.map((allocation) =>
           parseBalanceMap(generateMerkleTree(allocation.allocationAddressesAmounts))
         )
 
-        // Assinging the data to the context, so we can use these in the upcoming machine states
-        send("UPDATE_CONTEXT", {
-          data: { tokenDeployer, tokenUrlName, tokenAddress, merkleTrees },
-        })
+        send("UPDATE_CONTEXT", { data: { merkleTrees } })
 
         // Preparing the contract calls
         const contractCalls = []
@@ -268,7 +275,7 @@ const useDeploy = () => {
           (event) => event.event === "MerkleVestingDeployed"
         )
 
-        if (!shouldCreateVesting || !merkleVestingDeployedEvent) send("SKIP")
+        if (!shouldCreateVesting || !merkleVestingDeployedEvent) return send("SKIP")
 
         const [, , merkleVestingContractAddress] = merkleVestingDeployedEvent.args
 
@@ -310,6 +317,8 @@ const useDeploy = () => {
           .then((addCohortCallsRes) => addCohortCallsRes?.wait())
       },
       uploadToIpfs: async (_context) => {
+        if (!icon && !distributionData?.length) return send("SKIP")
+
         const ipfsData = new FormData()
 
         ipfsData.append(
@@ -349,14 +358,18 @@ const useDeploy = () => {
         })
 
         if (icon) {
-          ipfsData.append("file", icon, `${_context.tokenAddress}/icon.json`)
+          ipfsData.append(
+            "file",
+            icon,
+            `${_context.tokenAddress}/icon.${icon.name.split(".").pop()}`
+          )
         }
 
         const apiKey = await fetch("/api/pinata-key").then((response) =>
           response.json().then((body) => ({ jwt: body.jwt, key: body.key }))
         )
 
-        await fetch(`${process.env.NEXT_PUBLIC_PINATA_API}/pinning/pinFileToIPF`, {
+        await fetch(`${process.env.NEXT_PUBLIC_PINATA_API}/pinning/pinFileToIPFS`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${apiKey.jwt}`,
