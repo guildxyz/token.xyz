@@ -1,7 +1,8 @@
+import { ethers } from "ethers"
 import TokenXyzABI from "static/abis/TokenXyzABI.json"
 import { useContract, useSigner } from "wagmi"
 
-const useTokenXyzContract = () => {
+const useTokenXyzContract = (): ethers.Contract => {
   const [{ data: signerData }] = useSigner()
 
   return useContract({
