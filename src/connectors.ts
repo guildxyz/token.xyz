@@ -1,7 +1,11 @@
+import { providers } from "ethers"
 import { chain, defaultChains, developmentChains } from "wagmi"
 import { InjectedConnector } from "wagmi/connectors/injected"
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect"
 import { WalletLinkConnector } from "wagmi/connectors/walletLink"
+
+const provider = ({ chainId }) =>
+  new providers.InfuraProvider(chainId, process.env.NEXT_PUBLIC_INFURA_ID)
 
 const supportedChainIds =
   process.env.NODE_ENV === "development" ? [1337, /* 1,*/ 5] : [/* 1,*/ 5]
@@ -43,4 +47,4 @@ const iconUrls = {
   5: "/networkLogos/ethereum.svg",
 }
 
-export { chains, connectors, injected, iconUrls }
+export { provider, chains, connectors, injected, iconUrls }

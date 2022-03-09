@@ -1,6 +1,6 @@
 import Chakra from "components/_app/Chakra"
 import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import { connectors } from "connectors"
+import { connectors, provider } from "connectors"
 import "focus-visible/dist/focus-visible"
 import type { AppProps } from "next/app"
 import { IconContext } from "phosphor-react"
@@ -20,7 +20,7 @@ const App = ({ Component, pageProps }: AppProps): JSX.Element => (
       }}
     >
       <SWRConfig value={{ fetcher }}>
-        <WagmiProvider autoConnect connectors={connectors}>
+        <WagmiProvider provider={provider} connectors={connectors} autoConnect>
           <Web3ConnectionManager>
             <Component {...pageProps} />
           </Web3ConnectionManager>
