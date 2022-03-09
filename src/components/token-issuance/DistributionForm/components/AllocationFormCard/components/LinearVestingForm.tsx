@@ -116,8 +116,12 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                 getValues(`distributionData.${index}.vestingType`) ===
                   "LINEAR_VESTING" && "This field is required!",
               min: {
-                value: 0,
+                value: 1,
                 message: "Vesting must be positive",
+              },
+              max: {
+                value: 120,
+                message: "Maximum vesting time is 120 months",
               },
             }}
             render={({ field: { ref, value, onChange, onBlur } }) => (
@@ -137,7 +141,8 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                     )
                 }}
                 onBlur={onBlur}
-                min={0}
+                min={1}
+                max={120}
               >
                 <NumberInputField borderRightRadius={0} />
                 <NumberInputStepper>
@@ -155,6 +160,7 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
       </FormControl>
 
       <FormControl
+        minW={0}
         isInvalid={!!errors?.distributionData?.[index]?.distributionDuration}
         isRequired
       >
@@ -169,6 +175,10 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                 value: getValues(`distributionData.${index}.vestingPeriod`),
                 message: "Distribution duration must be greater than vesting period",
               },
+              max: {
+                value: 120,
+                message: "Maximum distribution time is 120 months",
+              },
             }}
             defaultValue={12}
             render={({ field: { ref, value, onChange, onBlur } }) => (
@@ -178,6 +188,7 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                 onChange={onChange}
                 onBlur={onBlur}
                 min={0}
+                max={120}
               >
                 <NumberInputField borderRightRadius={0} />
                 <NumberInputStepper>

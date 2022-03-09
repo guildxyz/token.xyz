@@ -15,13 +15,13 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
   Select,
   SimpleGrid,
-  Slider,
-  SliderFilledTrack,
-  SliderMark,
-  SliderThumb,
-  SliderTrack,
   Stack,
   Switch,
   Tooltip,
@@ -227,34 +227,44 @@ const TokenIssuanceForm = (): JSX.Element => {
                 maxW={{ base: "full", md: "50%" }}
                 pr={{ base: 2, md: 8 }}
                 pb={4}
+                isRequired
+                isInvalid={!!errors?.decimals}
               >
                 <FormLabel>Decimals</FormLabel>
-                <Slider
+                <Controller
+                  control={control}
+                  name="decimals"
+                  rules={{
+                    required: "This field is required!",
+                    min: {
+                      value: 0,
+                      message: "Must positive",
+                    },
+                    max: {
+                      value: 18,
+                      message: "Maximum 18",
+                    },
+                  }}
                   defaultValue={18}
-                  min={0}
-                  max={18}
-                  onChange={(value) => setValue("decimals", value)}
-                >
-                  <SliderMark
-                    value={typeof decimals === "number" ? decimals : 18}
-                    textAlign="center"
-                    bg="primary.500"
-                    color="white"
-                    mt={4}
-                    ml={-4}
-                    w={8}
-                    rounded="full"
-                    fontSize="sm"
-                    fontWeight="bold"
-                  >
-                    {typeof decimals === "number" ? decimals : 18}
-                  </SliderMark>
-                  <SliderTrack bg="gray">
-                    <Box position="relative" right={10} />
-                    <SliderFilledTrack bg="primary.500" />
-                  </SliderTrack>
-                  <SliderThumb boxSize={5} ml={-2.5} />
-                </Slider>
+                  render={({ field: { ref, value, onChange, onBlur } }) => (
+                    <NumberInput
+                      ref={ref}
+                      value={value}
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      min={0}
+                      max={18}
+                      size="lg"
+                    >
+                      <NumberInputField />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+                  )}
+                />
+                <FormErrorMessage>{errors?.decimals?.message}</FormErrorMessage>
               </FormControl>
             </Stack>
           </AccordionPanel>

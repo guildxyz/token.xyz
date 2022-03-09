@@ -73,7 +73,7 @@ const Chart = ({ isSimple }: Props): JSX.Element => {
           ?.reduce((a, b) => a + b, 0)
       : 0
 
-    const longestDistributionDuration =
+    const rawLongestDistributionDuration =
       distributionData?.length &&
       distributionData.some((allocation) => allocation.distributionDuration != 0)
         ? Math.max(
@@ -83,6 +83,9 @@ const Chart = ({ isSimple }: Props): JSX.Element => {
             12
           ) + 1
         : 13
+
+    const longestDistributionDuration =
+      rawLongestDistributionDuration > 120 ? 120 : rawLongestDistributionDuration
 
     return {
       // Get the longest istribution duration, and just create an array of that length

@@ -41,6 +41,10 @@ const NoVestingForm = ({ index }: Props): JSX.Element => {
                 value: 0,
                 message: "Distribution duration must positive",
               },
+              max: {
+                value: 120,
+                message: "Maximum distribution time is 120 months",
+              },
             }}
             defaultValue={12}
             render={({ field: { ref, value, onChange, onBlur } }) => (
@@ -50,6 +54,7 @@ const NoVestingForm = ({ index }: Props): JSX.Element => {
                 onChange={onChange}
                 onBlur={onBlur}
                 min={0}
+                max={120}
               >
                 <NumberInputField borderRightRadius={0} />
                 <NumberInputStepper>

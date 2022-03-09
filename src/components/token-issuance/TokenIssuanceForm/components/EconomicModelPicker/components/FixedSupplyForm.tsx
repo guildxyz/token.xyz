@@ -25,7 +25,7 @@ const FixedSupplyForm = (): JSX.Element => {
     control,
     getValues,
     setValue,
-    formState: { errors },
+    formState: { errors, dirtyFields },
   } = useFormContext<TokenIssuanceFormType>()
 
   const economyModel = useWatch({ control, name: "economyModel" })
@@ -50,7 +50,7 @@ const FixedSupplyForm = (): JSX.Element => {
               message: "Must be positive",
             },
             max:
-              economyModel !== "UNLIMITED"
+              economyModel !== "UNLIMITED" && dirtyFields.maxSupply
                 ? {
                     value: maxSupply,
                     message: "Must be less than max supply",
