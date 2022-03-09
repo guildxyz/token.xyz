@@ -25,6 +25,7 @@ const useDeploy = () => {
     urlName,
     tokenName,
     tokenTicker,
+    icon,
     decimals,
     initialSupply,
     maxSupply,
@@ -35,6 +36,7 @@ const useDeploy = () => {
     "urlName",
     "tokenName",
     "tokenTicker",
+    "icon",
     "decimals",
     "initialSupply",
     "maxSupply",
@@ -346,11 +348,15 @@ const useDeploy = () => {
             console.log(`[FILE]: allocation${index}.json`)
         })
 
+        if (icon) {
+          ipfsData.append("file", icon, `${_context.tokenAddress}/icon.json`)
+        }
+
         const apiKey = await fetch("/api/pinata-key").then((response) =>
           response.json().then((body) => ({ jwt: body.jwt, key: body.key }))
         )
 
-        await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
+        await fetch(`${process.env.NEXT_PUBLIC_PINATA_API}/pinning/pinFileToIPF`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${apiKey.jwt}`,

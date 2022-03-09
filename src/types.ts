@@ -22,6 +22,7 @@ type TokenIssuanceFormType = {
   tokenName: string
   tokenTicker: string
   urlName: string
+  icon: File
   economyModel: "FIXED" | "UNLIMITED"
   initialSupply?: number
   maxSupply?: number

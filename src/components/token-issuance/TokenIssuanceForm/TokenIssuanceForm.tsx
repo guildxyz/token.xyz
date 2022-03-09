@@ -12,7 +12,6 @@ import {
   FormLabel,
   GridItem,
   Icon,
-  IconButton,
   Input,
   InputGroup,
   InputRightElement,
@@ -29,7 +28,7 @@ import {
 } from "@chakra-ui/react"
 import { useTimeline } from "components/common/Timeline/components/TimelineContext"
 import FormSection from "components/forms/FormSection"
-import { ImageSquare, Question } from "phosphor-react"
+import { Question } from "phosphor-react"
 import { useEffect } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
@@ -37,6 +36,7 @@ import shortenHex from "utils/shortenHex"
 import slugify from "utils/slugify"
 import { useAccount } from "wagmi"
 import EconomyModelPicker from "./components/EconomicModelPicker"
+import IconPicker from "./components/IconPicker"
 
 const TokenIssuanceForm = (): JSX.Element => {
   const [{ data: accountData }] = useAccount()
@@ -58,7 +58,6 @@ const TokenIssuanceForm = (): JSX.Element => {
   }, [register])
 
   const tokenName = useWatch({ control, name: "tokenName" })
-  const decimals = useWatch({ control, name: "decimals" })
 
   // TODO: check if the urlName already exists, and ask for another token name if needed!
   useEffect(() => {
@@ -84,19 +83,7 @@ const TokenIssuanceForm = (): JSX.Element => {
           gap={4}
         >
           <GridItem order={1}>
-            <IconButton
-              autoFocus
-              aria-label="Upload image"
-              icon={<Icon as={ImageSquare} />}
-              rounded="full"
-              boxSize={12}
-              flexShrink={0}
-              colorScheme="gray"
-              variant="outline"
-              borderWidth={1}
-              bg="blackAlpha.300"
-              // onClick={onOpen}
-            />
+            <IconPicker />
           </GridItem>
 
           <GridItem order={{ base: 3, sm: 2 }} colSpan={{ base: 2, sm: 1 }}>
