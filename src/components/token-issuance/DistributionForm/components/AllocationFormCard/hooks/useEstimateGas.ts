@@ -4,8 +4,8 @@ import { TokenIssuanceFormType, VestingTypes } from "types"
 import { useFeeData } from "wagmi"
 
 const AVG_CONTRACT_DEPLOYMENT_FEES: Record<VestingTypes, string> = {
-  NO_VESTING: "690819",
-  LINEAR_VESTING: "1255685",
+  NO_VESTING: "697232",
+  LINEAR_VESTING: "1220339",
   BOND_VESTING: "0",
 }
 
