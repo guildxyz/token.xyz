@@ -1,5 +1,6 @@
 import {
   Button,
+  GridItem,
   Heading,
   ModalBody,
   ModalCloseButton,
@@ -46,22 +47,33 @@ const DeployButtons = (): JSX.Element => {
         <Heading as="h3" mb={2} fontFamily="display" fontSize="lg">
           Deploy
         </Heading>
-        <SimpleGrid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
-          <Button size="lg" variant="outline" disabled={!correct || isLoading}>
-            Deploy to testnet
-          </Button>
-          <Button
-            size="lg"
-            colorScheme="primary"
-            disabled={!correct || isLoading}
-            isLoading={isLoading}
-            loadingText={loadingText}
-            // TODO error handler
-            // onClick={handleSubmit(onSubmit, console.log)}
-            onClick={startDeploy}
-          >
-            Deploy to mainnet
-          </Button>
+        <SimpleGrid columns={2} gap={4}>
+          <GridItem colSpan={{ base: 2, lg: 1 }}>
+            <Button
+              w="full"
+              size="lg"
+              variant="outline"
+              disabled={!correct || isLoading}
+            >
+              Deploy to testnet
+            </Button>
+          </GridItem>
+
+          <GridItem colSpan={{ base: 2, md: 1 }}>
+            <Button
+              w="full"
+              size="lg"
+              colorScheme="primary"
+              disabled={!correct || isLoading}
+              isLoading={isLoading}
+              loadingText={loadingText}
+              // TODO error handler
+              // onClick={handleSubmit(onSubmit, console.log)}
+              onClick={startDeploy}
+            >
+              Deploy to mainnet
+            </Button>
+          </GridItem>
         </SimpleGrid>
       </Stack>
 

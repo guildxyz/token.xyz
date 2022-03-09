@@ -2,8 +2,7 @@ import {
   Alert,
   AlertDescription,
   AlertIcon,
-  Box,
-  Flex,
+  GridItem,
   Icon,
   SimpleGrid,
 } from "@chakra-ui/react"
@@ -64,19 +63,17 @@ const Page = (): JSX.Element => {
             <TimelineProvider steps={STEPS}>
               <DynamicPageTitle />
 
-              <SimpleGrid gridTemplateColumns="2fr 1fr" gap={8}>
-                <Flex minW={0} minH="60vh" direction="column">
+              <SimpleGrid
+                gridTemplateColumns={{ base: "1fr", md: "2fr 1fr" }}
+                gap={8}
+              >
+                <GridItem minW={0}>
                   <CurrentForm />
-                </Flex>
+                </GridItem>
 
-                <Box>
-                  <Timeline
-                    sx={{
-                      position: "sticky",
-                      top: "1rem",
-                    }}
-                  />
-                </Box>
+                <GridItem minW={0} display={{ base: "none", md: "block" }}>
+                  <Timeline />
+                </GridItem>
               </SimpleGrid>
             </TimelineProvider>
 

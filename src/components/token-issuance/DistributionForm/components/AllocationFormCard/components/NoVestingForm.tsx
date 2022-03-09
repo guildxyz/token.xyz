@@ -2,6 +2,7 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
+  GridItem,
   InputGroup,
   InputRightAddon,
   NumberDecrementStepper,
@@ -25,51 +26,53 @@ const NoVestingForm = ({ index }: Props): JSX.Element => {
   } = useFormContext<TokenIssuanceFormType>()
 
   return (
-    <SimpleGrid gridTemplateColumns="repeat(2, 1fr)" gap={4} px={5} pb={4}>
-      <FormControl
-        isInvalid={!!errors?.distributionData?.[index]?.distributionDuration}
-        isRequired
-      >
-        <FormLabel>Distribution duration</FormLabel>
-        <InputGroup>
-          <Controller
-            control={control}
-            name={`distributionData.${index}.distributionDuration`}
-            rules={{
-              required: "This field is required!",
-              min: {
-                value: 0,
-                message: "Distribution duration must positive",
-              },
-              max: {
-                value: 120,
-                message: "Maximum distribution time is 120 months",
-              },
-            }}
-            defaultValue={12}
-            render={({ field: { ref, value, onChange, onBlur } }) => (
-              <NumberInput
-                ref={ref}
-                value={value}
-                onChange={onChange}
-                onBlur={onBlur}
-                min={0}
-                max={120}
-              >
-                <NumberInputField borderRightRadius={0} />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            )}
-          />
-          <InputRightAddon bgColor="whiteAlpha.50">months</InputRightAddon>
-        </InputGroup>
-        <FormErrorMessage>
-          {errors?.distributionData?.[index]?.distributionDuration?.message}
-        </FormErrorMessage>
-      </FormControl>
+    <SimpleGrid columns={2} gap={4} px={5} pb={4}>
+      <GridItem colSpan={{ base: 2, sm: 1 }}>
+        <FormControl
+          isInvalid={!!errors?.distributionData?.[index]?.distributionDuration}
+          isRequired
+        >
+          <FormLabel>Distribution duration</FormLabel>
+          <InputGroup>
+            <Controller
+              control={control}
+              name={`distributionData.${index}.distributionDuration`}
+              rules={{
+                required: "This field is required!",
+                min: {
+                  value: 0,
+                  message: "Distribution duration must positive",
+                },
+                max: {
+                  value: 120,
+                  message: "Maximum distribution time is 120 months",
+                },
+              }}
+              defaultValue={12}
+              render={({ field: { ref, value, onChange, onBlur } }) => (
+                <NumberInput
+                  ref={ref}
+                  value={value}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  min={0}
+                  max={120}
+                >
+                  <NumberInputField borderRightRadius={0} />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+              )}
+            />
+            <InputRightAddon bgColor="whiteAlpha.50">months</InputRightAddon>
+          </InputGroup>
+          <FormErrorMessage>
+            {errors?.distributionData?.[index]?.distributionDuration?.message}
+          </FormErrorMessage>
+        </FormControl>
+      </GridItem>
     </SimpleGrid>
   )
 }

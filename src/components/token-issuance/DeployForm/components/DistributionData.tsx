@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  GridItem,
   Heading,
   HStack,
   ModalBody,
@@ -60,47 +61,55 @@ const DistributionData = (): JSX.Element => {
 
   return (
     <>
-      <SimpleGrid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
-        <Stack>
-          <Heading as="h3" mb={2} fontFamily="display" fontSize="lg">
-            Distribution data
-          </Heading>
-          {addressList?.length ? (
-            <>
-              <Box borderWidth={1} borderRadius="xl" overflow="hidden">
-                <Table variant="simple" size="sm">
-                  <Thead>
-                    <Tr>
-                      <Th>Address</Th>
-                      <Th isNumeric>Amount</Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {addressList.slice(0, 3).map((row) => (
-                      <Tr key={`${row.address}-${row.amount}`}>
-                        <Td>{shortenHex(row.address, 3)}</Td>
-                        <Td isNumeric>{row.amount}</Td>
+      <SimpleGrid columns={2} gap={4}>
+        <GridItem colSpan={{ base: 2, sm: 1 }}>
+          <Stack>
+            <Heading as="h3" mb={2} fontFamily="display" fontSize="lg">
+              Distribution data
+            </Heading>
+            {addressList?.length ? (
+              <>
+                <Box borderWidth={1} borderRadius="xl" overflow="hidden">
+                  <Table variant="simple" size="sm">
+                    <Thead>
+                      <Tr>
+                        <Th>Address</Th>
+                        <Th isNumeric>Amount</Th>
                       </Tr>
-                    ))}
-                  </Tbody>
-                </Table>
-              </Box>
+                    </Thead>
+                    <Tbody>
+                      {addressList.slice(0, 3).map((row, i) => (
+                        <Tr key={`${row.address}-${row.amount}`}>
+                          <Td borderBottom={i === 2 ? "none" : undefined}>
+                            {shortenHex(row.address, 3)}
+                          </Td>
+                          <Td borderBottom={i === 2 ? "none" : undefined} isNumeric>
+                            {row.amount}
+                          </Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
+                  </Table>
+                </Box>
 
-              <Button size="sm" w="full" onClick={onOpen}>
-                View all addresses
-              </Button>
-            </>
-          ) : (
-            <Text>No distribution data</Text>
-          )}
-        </Stack>
+                <Button size="sm" w="full" onClick={onOpen}>
+                  View all addresses
+                </Button>
+              </>
+            ) : (
+              <Text>No distribution data</Text>
+            )}
+          </Stack>
+        </GridItem>
 
-        <Stack minW={0} maxW="full">
-          <Heading as="h3" mb={2} fontFamily="display" fontSize="lg">
-            Distribution chart
-          </Heading>
-          <Chart isSimple />
-        </Stack>
+        <GridItem colSpan={{ base: 2, sm: 1 }}>
+          <Stack minW={0} maxW="full">
+            <Heading as="h3" mb={2} fontFamily="display" fontSize="lg">
+              Distribution chart
+            </Heading>
+            <Chart isSimple />
+          </Stack>
+        </GridItem>
       </SimpleGrid>
 
       <Modal isOpen={isOpen} onClose={onClose} size="xl">

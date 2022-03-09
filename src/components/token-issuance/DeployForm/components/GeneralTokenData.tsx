@@ -1,6 +1,16 @@
-import { Box, Heading, Stack, Table, Tbody, Td, Tr } from "@chakra-ui/react"
+import {
+  Box,
+  Heading,
+  Stack,
+  Table,
+  Tbody,
+  Td,
+  Tr,
+  useBreakpointValue,
+} from "@chakra-ui/react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
+import shortenHex from "utils/shortenHex"
 import { useAccount } from "wagmi"
 
 const GeneralTokenData = (): JSX.Element => {
@@ -12,6 +22,11 @@ const GeneralTokenData = (): JSX.Element => {
   const initialSupply = useWatch({ control, name: "initialSupply" })
   const transferOwnershipTo = useWatch({ control, name: "transferOwnershipTo" })
   const chain = useWatch({ control, name: "chain" })
+
+  const displayedAddress = useBreakpointValue({
+    base: shortenHex(transferOwnershipTo || accountData?.address, 3),
+    md: transferOwnershipTo || accountData?.address,
+  })
 
   return (
     <Stack>
@@ -37,11 +52,13 @@ const GeneralTokenData = (): JSX.Element => {
             </Tr>
             <Tr>
               <Td fontWeight="bold">Owner address</Td>
-              <Td>{transferOwnershipTo || accountData?.address}</Td>
+              <Td>{displayedAddress}</Td>
             </Tr>
             <Tr>
-              <Td fontWeight="bold">Chain</Td>
-              <Td>{chain}</Td>
+              <Td fontWeight="bold" borderBottom="none">
+                Chain
+              </Td>
+              <Td borderBottom="none">{chain}</Td>
             </Tr>
           </Tbody>
         </Table>

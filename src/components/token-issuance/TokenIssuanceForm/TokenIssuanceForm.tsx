@@ -10,6 +10,7 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
+  GridItem,
   Icon,
   IconButton,
   Input,
@@ -77,43 +78,57 @@ const TokenIssuanceForm = (): JSX.Element => {
   return (
     <Stack spacing={8}>
       <FormSection title="General data">
-        <SimpleGrid w="full" gridTemplateColumns="3rem 2fr 1fr" gap={4}>
-          <IconButton
-            autoFocus
-            aria-label="Upload image"
-            icon={<Icon as={ImageSquare} />}
-            rounded="full"
-            boxSize={12}
-            flexShrink={0}
-            colorScheme="gray"
-            variant="outline"
-            borderWidth={1}
-            bg="blackAlpha.300"
-            // onClick={onOpen}
-          />
-          <FormControl isInvalid={!!errors?.tokenName}>
-            <Input
-              size="lg"
-              {...register("tokenName", { required: "This field is required!" })}
-              placeholder="Token name"
+        <SimpleGrid
+          w="full"
+          gridTemplateColumns={{ base: "3rem auto", sm: "3rem 2fr 1fr" }}
+          gap={4}
+        >
+          <GridItem order={1}>
+            <IconButton
+              autoFocus
+              aria-label="Upload image"
+              icon={<Icon as={ImageSquare} />}
+              rounded="full"
+              boxSize={12}
+              flexShrink={0}
+              colorScheme="gray"
+              variant="outline"
+              borderWidth={1}
+              bg="blackAlpha.300"
+              // onClick={onOpen}
             />
-            <FormErrorMessage>{errors?.tokenName?.message}</FormErrorMessage>
-          </FormControl>
-          <FormControl isInvalid={!!errors?.tokenTicker}>
-            <InputGroup>
+          </GridItem>
+
+          <GridItem order={{ base: 3, sm: 2 }} colSpan={{ base: 2, sm: 1 }}>
+            <FormControl isInvalid={!!errors?.tokenName}>
               <Input
                 size="lg"
-                {...register("tokenTicker", { required: "This field is required!" })}
-                placeholder="Ticker"
+                {...register("tokenName", { required: "This field is required!" })}
+                placeholder="Token name"
               />
-              <InputRightElement h="full" alignItems="center">
-                <Tooltip label="A ticker means a short symbol for your token, used by exchanges.">
-                  <Icon as={Question} color="gray" boxSize={5} />
-                </Tooltip>
-              </InputRightElement>
-            </InputGroup>
-            <FormErrorMessage>{errors?.tokenTicker?.message}</FormErrorMessage>
-          </FormControl>
+              <FormErrorMessage>{errors?.tokenName?.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+
+          <GridItem order={{ base: 2, sm: 3 }}>
+            <FormControl isInvalid={!!errors?.tokenTicker}>
+              <InputGroup>
+                <Input
+                  size="lg"
+                  {...register("tokenTicker", {
+                    required: "This field is required!",
+                  })}
+                  placeholder="Ticker"
+                />
+                <InputRightElement h="full" alignItems="center">
+                  <Tooltip label="A ticker means a short symbol for your token, used by exchanges.">
+                    <Icon as={Question} color="gray" boxSize={5} />
+                  </Tooltip>
+                </InputRightElement>
+              </InputGroup>
+              <FormErrorMessage>{errors?.tokenTicker?.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
         </SimpleGrid>
       </FormSection>
 

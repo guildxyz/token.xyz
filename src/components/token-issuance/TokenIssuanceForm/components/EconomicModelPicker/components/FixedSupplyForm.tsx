@@ -33,90 +33,94 @@ const FixedSupplyForm = (): JSX.Element => {
   const maxSupply = useWatch({ control, name: "maxSupply" })
 
   return (
-    <SimpleGrid gridTemplateColumns="repeat(2, 1fr)" gap={4} px={5} pb={4}>
-      <FormControl
-        minW={0}
-        isInvalid={!!errors?.initialSupply}
-        isRequired={economyModel !== "UNLIMITED"}
-      >
-        <FormLabel>Initial supply</FormLabel>
-        <Controller
-          control={control}
-          name="initialSupply"
-          rules={{
-            required: "This field is required!",
-            min: {
-              value: 0,
-              message: "Must be positive",
-            },
-            max:
-              economyModel !== "UNLIMITED" && dirtyFields.maxSupply
-                ? {
-                    value: maxSupply,
-                    message: "Must be less than max supply",
-                  }
-                : undefined,
-          }}
-          defaultValue={0}
-          render={({ field: { ref, value, onChange, onBlur } }) => (
-            <NumberInput
-              ref={ref}
-              value={value}
-              onChange={(newValue) => {
-                onChange(newValue)
-                const parsedValue = parseInt(newValue)
-                if (parsedValue > getValues("maxSupply"))
-                  setValue("maxSupply", parsedValue)
-              }}
-              onBlur={onBlur}
-              min={0}
-            >
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-          )}
-        />
-        <FormErrorMessage>{errors?.initialSupply?.message}</FormErrorMessage>
-      </FormControl>
+    <SimpleGrid columns={2} gap={4} px={5} pb={4}>
+      <GridItem colSpan={{ base: 2, sm: 1 }}>
+        <FormControl
+          minW={0}
+          isInvalid={!!errors?.initialSupply}
+          isRequired={economyModel !== "UNLIMITED"}
+        >
+          <FormLabel>Initial supply</FormLabel>
+          <Controller
+            control={control}
+            name="initialSupply"
+            rules={{
+              required: "This field is required!",
+              min: {
+                value: 0,
+                message: "Must be positive",
+              },
+              max:
+                economyModel !== "UNLIMITED" && dirtyFields.maxSupply
+                  ? {
+                      value: maxSupply,
+                      message: "Must be less than max supply",
+                    }
+                  : undefined,
+            }}
+            defaultValue={0}
+            render={({ field: { ref, value, onChange, onBlur } }) => (
+              <NumberInput
+                ref={ref}
+                value={value}
+                onChange={(newValue) => {
+                  onChange(newValue)
+                  const parsedValue = parseInt(newValue)
+                  if (parsedValue > getValues("maxSupply"))
+                    setValue("maxSupply", parsedValue)
+                }}
+                onBlur={onBlur}
+                min={0}
+              >
+                <NumberInputField />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            )}
+          />
+          <FormErrorMessage>{errors?.initialSupply?.message}</FormErrorMessage>
+        </FormControl>
+      </GridItem>
 
-      <FormControl
-        minW={0}
-        isInvalid={!!errors?.maxSupply}
-        isRequired={economyModel !== "UNLIMITED"}
-      >
-        <FormLabel>Max supply</FormLabel>
-        <Controller
-          control={control}
-          name="maxSupply"
-          rules={{
-            required: economyModel !== "UNLIMITED" && "This field is required!",
-            min: {
-              value: initialSupply,
-              message: "Must be greater than initial supply",
-            },
-          }}
-          defaultValue={0}
-          render={({ field: { ref, value, onChange, onBlur } }) => (
-            <NumberInput
-              ref={ref}
-              value={value}
-              onChange={onChange}
-              onBlur={onBlur}
-              min={0}
-            >
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-          )}
-        />
-        <FormErrorMessage>{errors?.maxSupply?.message}</FormErrorMessage>
-      </FormControl>
+      <GridItem colSpan={{ base: 2, sm: 1 }}>
+        <FormControl
+          minW={0}
+          isInvalid={!!errors?.maxSupply}
+          isRequired={economyModel !== "UNLIMITED"}
+        >
+          <FormLabel>Max supply</FormLabel>
+          <Controller
+            control={control}
+            name="maxSupply"
+            rules={{
+              required: economyModel !== "UNLIMITED" && "This field is required!",
+              min: {
+                value: initialSupply,
+                message: "Must be greater than initial supply",
+              },
+            }}
+            defaultValue={0}
+            render={({ field: { ref, value, onChange, onBlur } }) => (
+              <NumberInput
+                ref={ref}
+                value={value}
+                onChange={onChange}
+                onBlur={onBlur}
+                min={0}
+              >
+                <NumberInputField />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            )}
+          />
+          <FormErrorMessage>{errors?.maxSupply?.message}</FormErrorMessage>
+        </FormControl>
+      </GridItem>
 
       <GridItem minW={0} colSpan={2}>
         <Alert status="info">

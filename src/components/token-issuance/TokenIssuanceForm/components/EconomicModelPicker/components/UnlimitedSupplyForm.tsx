@@ -2,6 +2,7 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
+  GridItem,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -19,38 +20,40 @@ const UnlimitedSupplyForm = (): JSX.Element => {
   } = useFormContext<TokenIssuanceFormType>()
 
   return (
-    <SimpleGrid gridTemplateColumns="repeat(2, 1fr)" gap={4} px={5} pb={4}>
-      <FormControl isInvalid={!!errors?.initialSupply} isRequired={true}>
-        <FormLabel>Initial supply</FormLabel>
-        <Controller
-          control={control}
-          name="initialSupply"
-          rules={{
-            required: "This field is required!",
-            min: {
-              value: 0,
-              message: "Initial supply must be positive",
-            },
-          }}
-          defaultValue={0}
-          render={({ field: { ref, value, onChange, onBlur } }) => (
-            <NumberInput
-              ref={ref}
-              value={value}
-              onChange={onChange}
-              onBlur={onBlur}
-              min={0}
-            >
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-          )}
-        />
-        <FormErrorMessage>{errors?.initialSupply?.message}</FormErrorMessage>
-      </FormControl>
+    <SimpleGrid columns={2} gap={4} px={5} pb={4}>
+      <GridItem colSpan={{ base: 2, sm: 1 }}>
+        <FormControl isInvalid={!!errors?.initialSupply} isRequired={true}>
+          <FormLabel>Initial supply</FormLabel>
+          <Controller
+            control={control}
+            name="initialSupply"
+            rules={{
+              required: "This field is required!",
+              min: {
+                value: 0,
+                message: "Initial supply must be positive",
+              },
+            }}
+            defaultValue={0}
+            render={({ field: { ref, value, onChange, onBlur } }) => (
+              <NumberInput
+                ref={ref}
+                value={value}
+                onChange={onChange}
+                onBlur={onBlur}
+                min={0}
+              >
+                <NumberInputField />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            )}
+          />
+          <FormErrorMessage>{errors?.initialSupply?.message}</FormErrorMessage>
+        </FormControl>
+      </GridItem>
     </SimpleGrid>
   )
 }
