@@ -54,8 +54,8 @@ const useDeploy = () => {
       tokenDeployer?: string
       tokenUrlName?: string
       tokenAddress?: string
+      merkleVestingContractAddress?: string
       merkleTrees?: Array<MerkleDistributorInfo>
-      addCohortCalls?: Array<any> // TODO: better types!
     }>(
       {
         id: "deployMachine",
@@ -279,6 +279,8 @@ const useDeploy = () => {
 
         const [, , merkleVestingContractAddress] = merkleVestingDeployedEvent.args
 
+        send("UPDATE_CONTEXT", { data: { merkleVestingContractAddress } })
+
         const merkleVestingContract = new ethers.Contract(
           merkleVestingContractAddress,
           MerkleVestingABI.abi,
@@ -321,12 +323,21 @@ const useDeploy = () => {
 
         const ipfsData = new FormData()
 
-        ipfsData.append(
-          "metadata",
-          JSON.stringify({
-            name: _context.tokenAddress,
-          })
-        )
+        const rawMetadata: {
+          name: string
+          keyvalues?: {
+            icon?: string
+            airdrops: Array<string>
+            vestings: Array<string>
+          }
+        } = {
+          name: _context.tokenAddress,
+          keyvalues: {
+            icon: null,
+            airdrops: [],
+            vestings: [],
+          },
+        }
 
         distributionData.forEach((allocation, index) => {
           const currentDateInSeconds = Date.now() / 1000
@@ -346,6 +357,9 @@ const useDeploy = () => {
             vestingPeriod: vestingPeriodInSeconds,
             cliffPeriod: cliffInSeconds,
             createdBy: accountData?.address,
+            tokenAddress: _context.tokenAddress,
+            vestingContract: _context.merkleVestingContractAddress,
+            name: allocation.allocationName,
           }
 
           ipfsData.append(
@@ -353,8 +367,10 @@ const useDeploy = () => {
             new Blob([JSON.stringify(merkleData)]),
             `${_context.tokenAddress}/allocation${index}.json`
           )
-          if (process.env.NODE_ENV === "development")
-            console.log(`[FILE]: allocation${index}.json`)
+
+          const metadataAttribute =
+            allocation.vestingType === "NO_VESTING" ? "airdrops" : "vestings"
+          rawMetadata.keyvalues[metadataAttribute].push(`allocation${index}.json`)
         })
 
         if (icon) {
@@ -363,7 +379,26 @@ const useDeploy = () => {
             icon,
             `${_context.tokenAddress}/icon.${icon.name.split(".").pop()}`
           )
+          rawMetadata.keyvalues.icon = `icon.${icon.name.split(".").pop()}`
         }
+
+        // Converting the metadata to the proper format
+        const metadata = {
+          name: rawMetadata.name,
+          keyvalues: {
+            icon: rawMetadata.keyvalues.icon || undefined,
+            airdrops:
+              rawMetadata.keyvalues.airdrops?.length > 0
+                ? rawMetadata.keyvalues.airdrops.toString()
+                : undefined,
+            vestings:
+              rawMetadata.keyvalues.vestings?.length > 0
+                ? rawMetadata.keyvalues.vestings.toString()
+                : undefined,
+          },
+        }
+
+        ipfsData.append("pinataMetadata", JSON.stringify(metadata))
 
         const apiKey = await fetch("/api/pinata-key").then((response) =>
           response.json().then((body) => ({ jwt: body.jwt, key: body.key }))
