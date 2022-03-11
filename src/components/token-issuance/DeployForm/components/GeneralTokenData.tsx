@@ -7,6 +7,7 @@ import {
   Td,
   Tr,
   useBreakpointValue,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
@@ -14,6 +15,8 @@ import shortenHex from "utils/shortenHex"
 import { useAccount } from "wagmi"
 
 const GeneralTokenData = (): JSX.Element => {
+  const borderColor = useColorModeValue("gray.200", undefined)
+
   const [{ data: accountData }] = useAccount()
   const { control } = useFormContext<TokenIssuanceFormType>()
 
@@ -37,22 +40,30 @@ const GeneralTokenData = (): JSX.Element => {
         <Table variant="simple" size="sm">
           <Tbody>
             <Tr>
-              <Td fontWeight="bold">Name</Td>
-              <Td>{tokenName}</Td>
+              <Td borderColor={borderColor} fontWeight="bold">
+                Name
+              </Td>
+              <Td borderColor={borderColor}>{tokenName}</Td>
             </Tr>
             <Tr>
-              <Td fontWeight="bold">Symbol</Td>
-              <Td>${tokenTicker}</Td>
+              <Td borderColor={borderColor} fontWeight="bold">
+                Symbol
+              </Td>
+              <Td borderColor={borderColor}>${tokenTicker}</Td>
             </Tr>
             <Tr>
-              <Td fontWeight="bold">Supply</Td>
-              <Td>
+              <Td borderColor={borderColor} fontWeight="bold">
+                Supply
+              </Td>
+              <Td borderColor={borderColor}>
                 {!isNaN(initialSupply) && Number(initialSupply).toLocaleString("en")}
               </Td>
             </Tr>
             <Tr>
-              <Td fontWeight="bold">Owner address</Td>
-              <Td>{displayedAddress}</Td>
+              <Td borderColor={borderColor} fontWeight="bold">
+                Owner address
+              </Td>
+              <Td borderColor={borderColor}>{displayedAddress}</Td>
             </Tr>
             <Tr>
               <Td fontWeight="bold" borderBottom="none">

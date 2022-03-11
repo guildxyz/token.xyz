@@ -75,11 +75,7 @@ const VestingTypeOption = ({
       _last={{ borderBottomRadius: "xl" }}
       boxShadow="none !important"
       border="2px"
-      bg={
-        colorMode === "light"
-          ? (isChecked && "primary.50") || "white"
-          : (isChecked && "gray.700") || null
-      }
+      bg={colorMode === "light" ? "white" : (isChecked && "gray.700") || null}
       borderColor={isChecked ? "primary.500" : "transparent"}
       _hover={{
         bg: isChecked

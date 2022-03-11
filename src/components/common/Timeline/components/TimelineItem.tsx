@@ -84,6 +84,7 @@ const TimelineItem = ({
             type: "just",
             delay: active ? 0.3 : 0,
           }}
+          color={active ? "white" : undefined}
         >
           {icon}
         </MotionCircle>

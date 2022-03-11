@@ -1,4 +1,11 @@
-import { Button, FormControl, FormErrorMessage, Icon, Img } from "@chakra-ui/react"
+import {
+  Button,
+  FormControl,
+  FormErrorMessage,
+  Icon,
+  Img,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import { ImageSquare } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -10,6 +17,8 @@ const errorMessages = {
 }
 
 const IconPicker = (): JSX.Element => {
+  const buttonColor = useColorModeValue("white", "blackAlpha.300")
+
   const { control, register, setValue } = useFormContext<TokenIssuanceFormType>()
 
   useEffect(() => {
@@ -55,7 +64,7 @@ const IconPicker = (): JSX.Element => {
         colorScheme="gray"
         variant="outline"
         borderWidth={1}
-        bg="blackAlpha.300"
+        bg={buttonColor}
         overflow="hidden"
         p={0}
       >

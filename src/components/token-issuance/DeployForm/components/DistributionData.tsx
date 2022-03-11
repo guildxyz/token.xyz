@@ -19,6 +19,7 @@ import {
   Thead,
   Tr,
   useBreakpointValue,
+  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
 import Modal from "components/common/Modal"
@@ -30,6 +31,8 @@ import { TokenIssuanceFormType } from "types"
 import shortenHex from "utils/shortenHex"
 
 const DistributionData = (): JSX.Element => {
+  const borderColor = useColorModeValue("gray.200", undefined)
+
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { control } = useFormContext<TokenIssuanceFormType>()
@@ -69,7 +72,12 @@ const DistributionData = (): JSX.Element => {
             </Heading>
             {addressList?.length ? (
               <>
-                <Box borderWidth={1} borderRadius="xl" overflow="hidden">
+                <Box
+                  borderColor={borderColor}
+                  borderWidth={1}
+                  borderRadius="xl"
+                  overflow="hidden"
+                >
                   <Table variant="simple" size="sm">
                     <Thead>
                       <Tr>
@@ -80,10 +88,17 @@ const DistributionData = (): JSX.Element => {
                     <Tbody>
                       {addressList.slice(0, 3).map((row, i) => (
                         <Tr key={`${row.address}-${row.amount}`}>
-                          <Td borderBottom={i === 2 ? "none" : undefined}>
+                          <Td
+                            borderBottom={i === 2 ? "none" : undefined}
+                            borderColor={borderColor}
+                          >
                             {shortenHex(row.address, 3)}
                           </Td>
-                          <Td borderBottom={i === 2 ? "none" : undefined} isNumeric>
+                          <Td
+                            borderBottom={i === 2 ? "none" : undefined}
+                            isNumeric
+                            borderColor={borderColor}
+                          >
                             {row.amount}
                           </Td>
                         </Tr>

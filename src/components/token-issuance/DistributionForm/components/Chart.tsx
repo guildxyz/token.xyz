@@ -1,3 +1,4 @@
+import { useColorModeValue } from "@chakra-ui/react"
 import {
   CategoryScale,
   Chart as ChartJS,
@@ -57,6 +58,8 @@ type Props = {
 }
 
 const Chart = ({ isSimple }: Props): JSX.Element => {
+  const chartTextColor = useColorModeValue("#000000", "#ffffff")
+
   const { control, getValues } = useFormContext<TokenIssuanceFormType>()
 
   const initialSupply = useWatch({ control, name: "initialSupply" })
@@ -185,7 +188,7 @@ const Chart = ({ isSimple }: Props): JSX.Element => {
             },
           },
         },
-        color: "#ffffff",
+        color: chartTextColor,
       }}
       data={dynamicChartData}
     />
