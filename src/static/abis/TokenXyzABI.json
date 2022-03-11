@@ -4,6 +4,22 @@
     {
       "inputs": [
         {
+          "internalType": "uint256",
+          "name": "maxSupply",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "initialSupply",
+          "type": "uint256"
+        }
+      ],
+      "name": "MaxSupplyTooLow",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "bytes4",
           "name": "selector",
           "type": "bytes4"
@@ -246,11 +262,6 @@
           "internalType": "address",
           "name": "firstOwner",
           "type": "address"
-        },
-        {
-          "internalType": "bool",
-          "name": "mintable",
-          "type": "bool"
         }
       ],
       "name": "createToken",
@@ -294,11 +305,6 @@
           "internalType": "address",
           "name": "firstOwner",
           "type": "address"
-        },
-        {
-          "internalType": "bool",
-          "name": "mintable",
-          "type": "bool"
         }
       ],
       "name": "createTokenWithRoles",
@@ -538,7 +544,7 @@
       "type": "receive"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.8.12+commit.f00d7308\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"}],\"name\":\"NotImplemented\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"NotInRollbackHistory\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TransferOwnerToZero\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"deployer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"urlName\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"instance\",\"type\":\"address\"}],\"name\":\"MerkleDistributorDeployed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"deployer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"urlName\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"instance\",\"type\":\"address\"}],\"name\":\"MerkleVestingDeployed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"migrator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"Migrated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"oldImpl\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newImpl\",\"type\":\"address\"}],\"name\":\"ProxyFunctionUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"deployer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"urlName\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"name\":\"TokenDeployed\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"urlName\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"merkleRoot\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"distributionDuration\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"createAirdrop\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"urlName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"tokenName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"tokenSymbol\",\"type\":\"string\"},{\"internalType\":\"uint8\",\"name\":\"tokenDecimals\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"initialSupply\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxSupply\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"firstOwner\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"mintable\",\"type\":\"bool\"}],\"name\":\"createToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"urlName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"tokenName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"tokenSymbol\",\"type\":\"string\"},{\"internalType\":\"uint8\",\"name\":\"tokenDecimals\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"initialSupply\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxSupply\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"firstOwner\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"mintable\",\"type\":\"bool\"}],\"name\":\"createTokenWithRoles\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"urlName\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"createVesting\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"internalType\":\"address\",\"name\":\"impl\",\"type\":\"address\"}],\"name\":\"extend\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"urlName\",\"type\":\"string\"}],\"name\":\"getDeployedAirdrops\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"airdropAddresses\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"urlName\",\"type\":\"string\"}],\"name\":\"getDeployedTokens\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"tokenAddresses\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"urlName\",\"type\":\"string\"}],\"name\":\"getDeployedVestings\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"vestingAddresses\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"internalType\":\"uint256\",\"name\":\"idx\",\"type\":\"uint256\"}],\"name\":\"getRollbackEntryAtIndex\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"impl\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"}],\"name\":\"getRollbackLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"rollbackLength\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"migrate\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes[]\",\"name\":\"data\",\"type\":\"bytes[]\"}],\"name\":\"multicall\",\"outputs\":[{\"internalType\":\"bytes[]\",\"name\":\"results\",\"type\":\"bytes[]\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"ownerAddress\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"internalType\":\"address\",\"name\":\"targetImpl\",\"type\":\"address\"}],\"name\":\"rollback\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}],\"devdoc\":{\"errors\":{\"NotImplemented(bytes4)\":[{\"params\":{\"selector\":\"The function's selector that was attempted to be called.\"}}],\"NotInRollbackHistory(bytes4,address)\":[{\"params\":{\"implementation\":\"The address supposed to include an older implementation of the function.\",\"selector\":\"The function selector.\"}}]},\"kind\":\"dev\",\"methods\":{\"createAirdrop(string,address,bytes32,uint256,address)\":{\"params\":{\"distributionDuration\":\"The time interval while the distribution lasts in seconds.\",\"merkleRoot\":\"The root of the merkle tree generated from the distribution list.\",\"owner\":\"The owner address of the contract to be deployed. Will have special access to some functions.\",\"token\":\"The address of the token to distribute.\",\"urlName\":\"The url name used by the frontend, kind of an id of the creator.\"}},\"createToken(string,string,string,uint8,uint256,uint256,address,bool)\":{\"params\":{\"firstOwner\":\"The first address to assign ownership/minting rights to (if mintable). The recipient of the initial supply.\",\"initialSupply\":\"The initial amount of tokens to mint.\",\"maxSupply\":\"The maximum amount of tokens that can ever be minted. Unlimited if set to zero.\",\"mintable\":\"Whether to create a mintable token.\",\"tokenDecimals\":\"The token's number of decimals.\",\"tokenName\":\"The token's name.\",\"tokenSymbol\":\"The token's symbol.\",\"urlName\":\"The url name used by the frontend, kind of an id of the creator.\"}},\"createTokenWithRoles(string,string,string,uint8,uint256,uint256,address,bool)\":{\"params\":{\"firstOwner\":\"The first address to assign ownership/minting rights to (if mintable). The recipient of the initial supply.\",\"initialSupply\":\"The initial amount of tokens to mint.\",\"maxSupply\":\"The maximum amount of tokens that can ever be minted. Unlimited if set to zero.\",\"mintable\":\"Whether to create a mintable token.\",\"tokenDecimals\":\"The token's number of decimals.\",\"tokenName\":\"The token's name.\",\"tokenSymbol\":\"The token's symbol.\",\"urlName\":\"The url name used by the frontend, kind of an id of the creator.\"}},\"createVesting(string,address,address)\":{\"params\":{\"owner\":\"The owner address of the contract to be deployed. Will have special access to some functions.\",\"token\":\"The address of the token to distribute.\",\"urlName\":\"The url name used by the frontend, kind of an id of the creator.\"}},\"extend(bytes4,address)\":{\"params\":{\"impl\":\"The implementation contract for the function.\",\"selector\":\"The function selector.\"}},\"getDeployedAirdrops(string)\":{\"params\":{\"urlName\":\"The url name used by the frontend, kind of an id of the creator.\"},\"returns\":{\"airdropAddresses\":\"The requested array of contract addresses.\"}},\"getDeployedTokens(string)\":{\"params\":{\"urlName\":\"The url name used by the frontend, kind of an id of the creator.\"},\"returns\":{\"tokenAddresses\":\"The requested array of token addresses.\"}},\"getDeployedVestings(string)\":{\"params\":{\"urlName\":\"The url name used by the frontend, kind of an id of the creator.\"},\"returns\":{\"vestingAddresses\":\"The requested array of contract addresses.\"}},\"getRollbackEntryAtIndex(bytes4,uint256)\":{\"params\":{\"idx\":\"The index in the rollback history.\",\"selector\":\"The function selector.\"},\"returns\":{\"impl\":\"An implementation address for the function at         index `idx`.\"}},\"getRollbackLength(bytes4)\":{\"params\":{\"selector\":\"The function selector.\"},\"returns\":{\"rollbackLength\":\"The number of items in the rollback history for         the function.\"}},\"migrate(address,bytes,address)\":{\"params\":{\"data\":\"The call data.\",\"newOwner\":\"The address of the new owner.\",\"target\":\"The migrator contract address.\"}},\"multicall(bytes[])\":{\"params\":{\"data\":\"An array of the encoded function call data.\"}},\"owner()\":{\"returns\":{\"ownerAddress\":\"The owner address.\"}},\"rollback(bytes4,address)\":{\"params\":{\"selector\":\"The function selector.\",\"targetImpl\":\"The address of an older implementation of the function.\"}},\"transferOwnership(address)\":{\"params\":{\"newOwner\":\"The address that will become the owner.\"}}},\"title\":\"Interface for a fully featured token.xyz Proxy.\",\"version\":1},\"userdoc\":{\"errors\":{\"NotImplemented(bytes4)\":[{\"notice\":\"Error thrown when the requested function is not found in any features.\"}],\"NotInRollbackHistory(bytes4,address)\":[{\"notice\":\"Error thrown when the requested function selector is not in the target implementation.\"}],\"TransferOwnerToZero()\":[{\"notice\":\"Error thrown when attempting to transfer the ownership to the zero address.\"}]},\"events\":{\"MerkleDistributorDeployed(address,string,address)\":{\"notice\":\"Event emitted when creating a new airdrop contract.\"},\"MerkleVestingDeployed(address,string,address)\":{\"notice\":\"Event emitted when creating a new vesting contract.\"},\"Migrated(address,address,address)\":{\"notice\":\"Emitted when `migrate()` is called.\"},\"OwnershipTransferred(address,address)\":{\"notice\":\"Emitted by Ownable when ownership is transferred.\"},\"ProxyFunctionUpdated(bytes4,address,address)\":{\"notice\":\"A function implementation was updated via `extend()` or `rollback()`.\"},\"TokenDeployed(address,string,address)\":{\"notice\":\"Event emitted when creating a token.\"}},\"kind\":\"user\",\"methods\":{\"createAirdrop(string,address,bytes32,uint256,address)\":{\"notice\":\"Deploys a new Merkle Distributor contract.\"},\"createToken(string,string,string,uint8,uint256,uint256,address,bool)\":{\"notice\":\"Deploys a new ERC20 token contract.\"},\"createTokenWithRoles(string,string,string,uint8,uint256,uint256,address,bool)\":{\"notice\":\"Deploys a new ERC20 token contract.\"},\"createVesting(string,address,address)\":{\"notice\":\"Deploys a new Merkle Vesting contract.\"},\"extend(bytes4,address)\":{\"notice\":\"Register or replace a function.\"},\"getDeployedAirdrops(string)\":{\"notice\":\"Returns all the deployed airdrop contract addresses by a specific creator.\"},\"getDeployedTokens(string)\":{\"notice\":\"Returns all the deployed token addresses by a specific creator.\"},\"getDeployedVestings(string)\":{\"notice\":\"Returns all the deployed vesting contract addresses by a specific creator.\"},\"getRollbackEntryAtIndex(bytes4,uint256)\":{\"notice\":\"Retrieve an entry in the rollback history for a function.\"},\"getRollbackLength(bytes4)\":{\"notice\":\"Retrieve the length of the rollback history for a function.\"},\"migrate(address,bytes,address)\":{\"notice\":\"Execute a migration function in the context of the TokenXyz contract.      The result of the function being called should be the magic bytes      0x2c64c5ef (`keccak('MIGRATE_SUCCESS')`). Only callable by the owner.      The owner will be temporarily set to `address(this)` inside the call.      Before returning, the owner will be set to `newOwner`.\"},\"multicall(bytes[])\":{\"notice\":\"Receives and executes a batch of function calls on this contract.\"},\"owner()\":{\"notice\":\"The owner of this contract.\"},\"rollback(bytes4,address)\":{\"notice\":\"Roll back to a prior implementation of a function.\"},\"transferOwnership(address)\":{\"notice\":\"Transfers ownership of the contract to a new address.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/ITokenXyz.sol\":\"ITokenXyz\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/ITokenXyz.sol\":{\"keccak256\":\"0xcee0cd26f912b6401f19997cb9206d61705a32915ad211f98aad6b02e782fa54\",\"license\":\"Apache-2.0\",\"urls\":[\"bzz-raw://102668589e0aee767ce203b4a1608cf0c1cb96ebf69ebf2345960e7e3d498b44\",\"dweb:/ipfs/Qmewuwqzw1Yr6UXXdYzB1AocqHu8BRTsUWxthjUmSsHPGe\"]},\"project:/contracts/features/interfaces/IMerkleDistributorFactoryFeature.sol\":{\"keccak256\":\"0xc34a8294c4beaad735bad89e91612c18d615d9505ebf39e4cb6b183fe0b7c3e9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8035e9a52ec63ca6ce2c94fea29245ccccf0c4b9bd022f50fb81dc09283dd66d\",\"dweb:/ipfs/QmYm94UQ3JJLHoAbi6v5B47oB29gm9pzzjUcBjWiuBDtPg\"]},\"project:/contracts/features/interfaces/IMerkleVestingFactoryFeature.sol\":{\"keccak256\":\"0xfcd522668640ec3ae90b7500ed5cb4b4c8e4a130132d2e850e157d6b379517e9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://63121818ea16dd1b30107b232bb38129e712c7b4959485204181a5dbc1d45c94\",\"dweb:/ipfs/QmNohovw8PrBussbHiofUwzugL6dHWqBM2BjPyZNdswCgL\"]},\"project:/contracts/features/interfaces/IMulticallFeature.sol\":{\"keccak256\":\"0x7fc00b003a3d66e5d93dcea741070b6c3858c708beed854f364b312d30d809e7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://0ccc52038bc15717dd0e0629dcf2232334231fccbfcdd4955434f9c0e788ebaa\",\"dweb:/ipfs/QmfNJcNfyM9hZ6PjHATbTVLZub6Cx1wGB1U5pWUCTMoR4e\"]},\"project:/contracts/features/interfaces/IOwnableFeature.sol\":{\"keccak256\":\"0x466563ac09db5511e5b48261d78e948e66f1851330a3f1973ec25982ae0bc7d6\",\"license\":\"Apache-2.0\",\"urls\":[\"bzz-raw://65b899a587bcc0b631473ce5a7537f9b106ff198f864871a2c8e967c368486ab\",\"dweb:/ipfs/QmY8KvHu4dfvLrG9RSrEuv3PaizpBNQ6sbNMeDnLrMd4GZ\"]},\"project:/contracts/features/interfaces/ISimpleFunctionRegistryFeature.sol\":{\"keccak256\":\"0x3c6b5e94b80174be93a5310c332b8f4e69b9f5304aba9deac36936cf0dd9e8ab\",\"license\":\"Apache-2.0\",\"urls\":[\"bzz-raw://1625e0b94cfac971ed1ebf5fad4d555352f2d31d05c8b510bb45f180240a0eb3\",\"dweb:/ipfs/QmTVLzxzubHTnSdzc7SRB3xvfH8BVNj15UNW4aP3pbaNMs\"]},\"project:/contracts/features/interfaces/ITokenFactoryBase.sol\":{\"keccak256\":\"0xefd61b62dd18ce6fa0d092ccf9a0bfd5e51836b11217e77604e7e2c759e8dc24\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://7d2ab39c95721161e1a0349829e2bd39347c2b79acf071944998994b30d926eb\",\"dweb:/ipfs/QmfR7jcCzKYTq8Us81aCxNJqPYWkrxNzyGYxMe7N3wLtee\"]},\"project:/contracts/features/interfaces/ITokenFactoryFeature.sol\":{\"keccak256\":\"0x544b29c0489a18a5043e9a1a6c88d6ed42869f6872750f7c00f05148b9bea973\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://7ecd57229c5846d1716903c46ec352eee8bf82b016930989b283760e792b6d7c\",\"dweb:/ipfs/QmSte4uEWxnDrJtTdBk8HtRbG2j5gb1v3JNXTdwXt46jW5\"]},\"project:/contracts/features/interfaces/ITokenWithRolesFactoryFeature.sol\":{\"keccak256\":\"0x9467b4fcf88131eb20369b141693333bd2a293c9dd2f9aa7168dabac71214e05\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4ad33ae80026cb27342cac15d3de31e9a9b2547d2a6f8ca27b784d079e48443c\",\"dweb:/ipfs/QmUNnQrbVvxzLUKMtkVzSRAuD3dLGD1EpVEPp5SKBnREvT\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.12+commit.f00d7308\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"maxSupply\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"initialSupply\",\"type\":\"uint256\"}],\"name\":\"MaxSupplyTooLow\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"}],\"name\":\"NotImplemented\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"NotInRollbackHistory\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TransferOwnerToZero\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"deployer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"urlName\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"instance\",\"type\":\"address\"}],\"name\":\"MerkleDistributorDeployed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"deployer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"urlName\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"instance\",\"type\":\"address\"}],\"name\":\"MerkleVestingDeployed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"migrator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"Migrated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"oldImpl\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newImpl\",\"type\":\"address\"}],\"name\":\"ProxyFunctionUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"deployer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"urlName\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"name\":\"TokenDeployed\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"urlName\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"merkleRoot\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"distributionDuration\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"createAirdrop\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"urlName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"tokenName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"tokenSymbol\",\"type\":\"string\"},{\"internalType\":\"uint8\",\"name\":\"tokenDecimals\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"initialSupply\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxSupply\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"firstOwner\",\"type\":\"address\"}],\"name\":\"createToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"urlName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"tokenName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"tokenSymbol\",\"type\":\"string\"},{\"internalType\":\"uint8\",\"name\":\"tokenDecimals\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"initialSupply\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxSupply\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"firstOwner\",\"type\":\"address\"}],\"name\":\"createTokenWithRoles\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"urlName\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"createVesting\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"internalType\":\"address\",\"name\":\"impl\",\"type\":\"address\"}],\"name\":\"extend\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"urlName\",\"type\":\"string\"}],\"name\":\"getDeployedAirdrops\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"airdropAddresses\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"urlName\",\"type\":\"string\"}],\"name\":\"getDeployedTokens\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"tokenAddresses\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"urlName\",\"type\":\"string\"}],\"name\":\"getDeployedVestings\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"vestingAddresses\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"internalType\":\"uint256\",\"name\":\"idx\",\"type\":\"uint256\"}],\"name\":\"getRollbackEntryAtIndex\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"impl\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"}],\"name\":\"getRollbackLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"rollbackLength\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"migrate\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes[]\",\"name\":\"data\",\"type\":\"bytes[]\"}],\"name\":\"multicall\",\"outputs\":[{\"internalType\":\"bytes[]\",\"name\":\"results\",\"type\":\"bytes[]\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"ownerAddress\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\"},{\"internalType\":\"address\",\"name\":\"targetImpl\",\"type\":\"address\"}],\"name\":\"rollback\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}],\"devdoc\":{\"errors\":{\"MaxSupplyTooLow(uint256,uint256)\":[{\"params\":{\"initialSupply\":\"The desired initial supply, that cannot be higher than the max.\",\"maxSupply\":\"The desired max supply.\"}}],\"NotImplemented(bytes4)\":[{\"params\":{\"selector\":\"The function's selector that was attempted to be called.\"}}],\"NotInRollbackHistory(bytes4,address)\":[{\"params\":{\"implementation\":\"The address supposed to include an older implementation of the function.\",\"selector\":\"The function selector.\"}}]},\"kind\":\"dev\",\"methods\":{\"createAirdrop(string,address,bytes32,uint256,address)\":{\"params\":{\"distributionDuration\":\"The time interval while the distribution lasts in seconds.\",\"merkleRoot\":\"The root of the merkle tree generated from the distribution list.\",\"owner\":\"The owner address of the contract to be deployed. Will have special access to some functions.\",\"token\":\"The address of the token to distribute.\",\"urlName\":\"The url name used by the frontend, kind of an id of the creator.\"}},\"createToken(string,string,string,uint8,uint256,uint256,address)\":{\"params\":{\"firstOwner\":\"The first address to assign ownership/minting rights to (if mintable). The recipient of the initial supply.\",\"initialSupply\":\"The initial amount of tokens to mint.\",\"maxSupply\":\"The maximum amount of tokens that can ever be minted. Unlimited if set to zero.\",\"tokenDecimals\":\"The token's number of decimals.\",\"tokenName\":\"The token's name.\",\"tokenSymbol\":\"The token's symbol.\",\"urlName\":\"The url name used by the frontend, kind of an id of the creator.\"}},\"createTokenWithRoles(string,string,string,uint8,uint256,uint256,address)\":{\"params\":{\"firstOwner\":\"The first address to assign ownership/minting rights to (if mintable). The recipient of the initial supply.\",\"initialSupply\":\"The initial amount of tokens to mint.\",\"maxSupply\":\"The maximum amount of tokens that can ever be minted. Unlimited if set to zero.\",\"tokenDecimals\":\"The token's number of decimals.\",\"tokenName\":\"The token's name.\",\"tokenSymbol\":\"The token's symbol.\",\"urlName\":\"The url name used by the frontend, kind of an id of the creator.\"}},\"createVesting(string,address,address)\":{\"params\":{\"owner\":\"The owner address of the contract to be deployed. Will have special access to some functions.\",\"token\":\"The address of the token to distribute.\",\"urlName\":\"The url name used by the frontend, kind of an id of the creator.\"}},\"extend(bytes4,address)\":{\"params\":{\"impl\":\"The implementation contract for the function.\",\"selector\":\"The function selector.\"}},\"getDeployedAirdrops(string)\":{\"params\":{\"urlName\":\"The url name used by the frontend, kind of an id of the creator.\"},\"returns\":{\"airdropAddresses\":\"The requested array of contract addresses.\"}},\"getDeployedTokens(string)\":{\"params\":{\"urlName\":\"The url name used by the frontend, kind of an id of the creator.\"},\"returns\":{\"tokenAddresses\":\"The requested array of token addresses.\"}},\"getDeployedVestings(string)\":{\"params\":{\"urlName\":\"The url name used by the frontend, kind of an id of the creator.\"},\"returns\":{\"vestingAddresses\":\"The requested array of contract addresses.\"}},\"getRollbackEntryAtIndex(bytes4,uint256)\":{\"params\":{\"idx\":\"The index in the rollback history.\",\"selector\":\"The function selector.\"},\"returns\":{\"impl\":\"An implementation address for the function at         index `idx`.\"}},\"getRollbackLength(bytes4)\":{\"params\":{\"selector\":\"The function selector.\"},\"returns\":{\"rollbackLength\":\"The number of items in the rollback history for         the function.\"}},\"migrate(address,bytes,address)\":{\"params\":{\"data\":\"The call data.\",\"newOwner\":\"The address of the new owner.\",\"target\":\"The migrator contract address.\"}},\"multicall(bytes[])\":{\"params\":{\"data\":\"An array of the encoded function call data.\"}},\"owner()\":{\"returns\":{\"ownerAddress\":\"The owner address.\"}},\"rollback(bytes4,address)\":{\"params\":{\"selector\":\"The function selector.\",\"targetImpl\":\"The address of an older implementation of the function.\"}},\"transferOwnership(address)\":{\"params\":{\"newOwner\":\"The address that will become the owner.\"}}},\"title\":\"Interface for a fully featured token.xyz Proxy.\",\"version\":1},\"userdoc\":{\"errors\":{\"MaxSupplyTooLow(uint256,uint256)\":[{\"notice\":\"Error thrown when the max supply is attempted to be set lower than the initial supply.\"}],\"NotImplemented(bytes4)\":[{\"notice\":\"Error thrown when the requested function is not found in any features.\"}],\"NotInRollbackHistory(bytes4,address)\":[{\"notice\":\"Error thrown when the requested function selector is not in the target implementation.\"}],\"TransferOwnerToZero()\":[{\"notice\":\"Error thrown when attempting to transfer the ownership to the zero address.\"}]},\"events\":{\"MerkleDistributorDeployed(address,string,address)\":{\"notice\":\"Event emitted when creating a new airdrop contract.\"},\"MerkleVestingDeployed(address,string,address)\":{\"notice\":\"Event emitted when creating a new vesting contract.\"},\"Migrated(address,address,address)\":{\"notice\":\"Emitted when `migrate()` is called.\"},\"OwnershipTransferred(address,address)\":{\"notice\":\"Emitted by Ownable when ownership is transferred.\"},\"ProxyFunctionUpdated(bytes4,address,address)\":{\"notice\":\"A function implementation was updated via `extend()` or `rollback()`.\"},\"TokenDeployed(address,string,address)\":{\"notice\":\"Event emitted when creating a token.\"}},\"kind\":\"user\",\"methods\":{\"createAirdrop(string,address,bytes32,uint256,address)\":{\"notice\":\"Deploys a new Merkle Distributor contract.\"},\"createToken(string,string,string,uint8,uint256,uint256,address)\":{\"notice\":\"Deploys a new ERC20 token contract.\"},\"createTokenWithRoles(string,string,string,uint8,uint256,uint256,address)\":{\"notice\":\"Deploys a new ERC20 token contract.\"},\"createVesting(string,address,address)\":{\"notice\":\"Deploys a new Merkle Vesting contract.\"},\"extend(bytes4,address)\":{\"notice\":\"Register or replace a function.\"},\"getDeployedAirdrops(string)\":{\"notice\":\"Returns all the deployed airdrop contract addresses by a specific creator.\"},\"getDeployedTokens(string)\":{\"notice\":\"Returns all the deployed token addresses by a specific creator.\"},\"getDeployedVestings(string)\":{\"notice\":\"Returns all the deployed vesting contract addresses by a specific creator.\"},\"getRollbackEntryAtIndex(bytes4,uint256)\":{\"notice\":\"Retrieve an entry in the rollback history for a function.\"},\"getRollbackLength(bytes4)\":{\"notice\":\"Retrieve the length of the rollback history for a function.\"},\"migrate(address,bytes,address)\":{\"notice\":\"Execute a migration function in the context of the TokenXyz contract.      The result of the function being called should be the magic bytes      0x2c64c5ef (`keccak('MIGRATE_SUCCESS')`). Only callable by the owner.      The owner will be temporarily set to `address(this)` inside the call.      Before returning, the owner will be set to `newOwner`.\"},\"multicall(bytes[])\":{\"notice\":\"Receives and executes a batch of function calls on this contract.\"},\"owner()\":{\"notice\":\"The owner of this contract.\"},\"rollback(bytes4,address)\":{\"notice\":\"Roll back to a prior implementation of a function.\"},\"transferOwnership(address)\":{\"notice\":\"Transfers ownership of the contract to a new address.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/ITokenXyz.sol\":\"ITokenXyz\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/ITokenXyz.sol\":{\"keccak256\":\"0xcee0cd26f912b6401f19997cb9206d61705a32915ad211f98aad6b02e782fa54\",\"license\":\"Apache-2.0\",\"urls\":[\"bzz-raw://102668589e0aee767ce203b4a1608cf0c1cb96ebf69ebf2345960e7e3d498b44\",\"dweb:/ipfs/Qmewuwqzw1Yr6UXXdYzB1AocqHu8BRTsUWxthjUmSsHPGe\"]},\"project:/contracts/features/interfaces/IMerkleDistributorFactoryFeature.sol\":{\"keccak256\":\"0xc34a8294c4beaad735bad89e91612c18d615d9505ebf39e4cb6b183fe0b7c3e9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8035e9a52ec63ca6ce2c94fea29245ccccf0c4b9bd022f50fb81dc09283dd66d\",\"dweb:/ipfs/QmYm94UQ3JJLHoAbi6v5B47oB29gm9pzzjUcBjWiuBDtPg\"]},\"project:/contracts/features/interfaces/IMerkleVestingFactoryFeature.sol\":{\"keccak256\":\"0xfcd522668640ec3ae90b7500ed5cb4b4c8e4a130132d2e850e157d6b379517e9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://63121818ea16dd1b30107b232bb38129e712c7b4959485204181a5dbc1d45c94\",\"dweb:/ipfs/QmNohovw8PrBussbHiofUwzugL6dHWqBM2BjPyZNdswCgL\"]},\"project:/contracts/features/interfaces/IMulticallFeature.sol\":{\"keccak256\":\"0x7fc00b003a3d66e5d93dcea741070b6c3858c708beed854f364b312d30d809e7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://0ccc52038bc15717dd0e0629dcf2232334231fccbfcdd4955434f9c0e788ebaa\",\"dweb:/ipfs/QmfNJcNfyM9hZ6PjHATbTVLZub6Cx1wGB1U5pWUCTMoR4e\"]},\"project:/contracts/features/interfaces/IOwnableFeature.sol\":{\"keccak256\":\"0x466563ac09db5511e5b48261d78e948e66f1851330a3f1973ec25982ae0bc7d6\",\"license\":\"Apache-2.0\",\"urls\":[\"bzz-raw://65b899a587bcc0b631473ce5a7537f9b106ff198f864871a2c8e967c368486ab\",\"dweb:/ipfs/QmY8KvHu4dfvLrG9RSrEuv3PaizpBNQ6sbNMeDnLrMd4GZ\"]},\"project:/contracts/features/interfaces/ISimpleFunctionRegistryFeature.sol\":{\"keccak256\":\"0x3c6b5e94b80174be93a5310c332b8f4e69b9f5304aba9deac36936cf0dd9e8ab\",\"license\":\"Apache-2.0\",\"urls\":[\"bzz-raw://1625e0b94cfac971ed1ebf5fad4d555352f2d31d05c8b510bb45f180240a0eb3\",\"dweb:/ipfs/QmTVLzxzubHTnSdzc7SRB3xvfH8BVNj15UNW4aP3pbaNMs\"]},\"project:/contracts/features/interfaces/ITokenFactoryBase.sol\":{\"keccak256\":\"0x5d5bf7b54268e30893fc159606e128fcf86151ac100f76c40ad85b1ff59f3d5d\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f5ed0079ad562f1ebba800acab9f1ee2e58c10e4eaa997c56c13be542b256695\",\"dweb:/ipfs/Qmayth7ty1h5CrNCUd3mrRUR5AyTzx3ZHpeBnKCe44FvuA\"]},\"project:/contracts/features/interfaces/ITokenFactoryFeature.sol\":{\"keccak256\":\"0x064973c15aa89100c7676a86d6f11b7325db6d4996a52bdeb2e77d342a85ba4f\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8809b0a309ce31b48a2d321932c9a132f17576aa70d7a5785387ea41393790f0\",\"dweb:/ipfs/QmW6E6UaN8LDReGuszkx8KkDZyqrDYSZgU69FMcrmNpjdP\"]},\"project:/contracts/features/interfaces/ITokenWithRolesFactoryFeature.sol\":{\"keccak256\":\"0xb60ce418037ac119516cbf607f5c295b0823ccafa00691dbc0b05693ea13e23a\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://9ea266e3aca92e9d543a2dd3cc0994d68cbcbde84374c189be8f535b5939df6c\",\"dweb:/ipfs/QmeLcrz9McpoYtQgMJJQsEUTTc82dEvPqd73rji4SVrJiP\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "immutableReferences": {},
@@ -551,108 +557,108 @@
   "ast": {
     "absolutePath": "project:/contracts/ITokenXyz.sol",
     "exportedSymbols": {
-      "IMerkleDistributorFactoryFeature": [479],
-      "IMerkleVestingFactoryFeature": [511],
-      "IMulticallFeature": [525],
-      "IOwnableFeature": [573],
-      "IOwnableV06": [547],
-      "ISimpleFunctionRegistryFeature": [627],
-      "ITokenFactoryBase": [649],
-      "ITokenFactoryFeature": [676],
-      "ITokenWithRolesFactoryFeature": [703],
-      "ITokenXyz": [383]
+      "IMerkleDistributorFactoryFeature": [4919],
+      "IMerkleVestingFactoryFeature": [4951],
+      "IMulticallFeature": [4965],
+      "IOwnableFeature": [5013],
+      "IOwnableV06": [4987],
+      "ISimpleFunctionRegistryFeature": [5067],
+      "ITokenFactoryBase": [5096],
+      "ITokenFactoryFeature": [5121],
+      "ITokenWithRolesFactoryFeature": [5146],
+      "ITokenXyz": [1915]
     },
-    "id": 384,
+    "id": 1916,
     "license": "Apache-2.0",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 351,
+        "id": 1883,
         "literals": ["solidity", "^", "0.8", ".0"],
         "nodeType": "PragmaDirective",
-        "src": "685:23:2"
+        "src": "685:23:13"
       },
       {
         "absolutePath": "project:/contracts/features/interfaces/IOwnableFeature.sol",
         "file": "./features/interfaces/IOwnableFeature.sol",
-        "id": 352,
+        "id": 1884,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 384,
-        "sourceUnit": 574,
-        "src": "710:51:2",
+        "scope": 1916,
+        "sourceUnit": 5014,
+        "src": "710:51:13",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "absolutePath": "project:/contracts/features/interfaces/ISimpleFunctionRegistryFeature.sol",
         "file": "./features/interfaces/ISimpleFunctionRegistryFeature.sol",
-        "id": 353,
+        "id": 1885,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 384,
-        "sourceUnit": 628,
-        "src": "762:66:2",
+        "scope": 1916,
+        "sourceUnit": 5068,
+        "src": "762:66:13",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "absolutePath": "project:/contracts/features/interfaces/IMulticallFeature.sol",
         "file": "./features/interfaces/IMulticallFeature.sol",
-        "id": 354,
+        "id": 1886,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 384,
-        "sourceUnit": 526,
-        "src": "829:53:2",
+        "scope": 1916,
+        "sourceUnit": 4966,
+        "src": "829:53:13",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "absolutePath": "project:/contracts/features/interfaces/ITokenFactoryFeature.sol",
         "file": "./features/interfaces/ITokenFactoryFeature.sol",
-        "id": 355,
+        "id": 1887,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 384,
-        "sourceUnit": 677,
-        "src": "883:56:2",
+        "scope": 1916,
+        "sourceUnit": 5122,
+        "src": "883:56:13",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "absolutePath": "project:/contracts/features/interfaces/ITokenWithRolesFactoryFeature.sol",
         "file": "./features/interfaces/ITokenWithRolesFactoryFeature.sol",
-        "id": 356,
+        "id": 1888,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 384,
-        "sourceUnit": 704,
-        "src": "940:65:2",
+        "scope": 1916,
+        "sourceUnit": 5147,
+        "src": "940:65:13",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "absolutePath": "project:/contracts/features/interfaces/IMerkleDistributorFactoryFeature.sol",
         "file": "./features/interfaces/IMerkleDistributorFactoryFeature.sol",
-        "id": 357,
+        "id": 1889,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 384,
-        "sourceUnit": 480,
-        "src": "1006:68:2",
+        "scope": 1916,
+        "sourceUnit": 4920,
+        "src": "1006:68:13",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "absolutePath": "project:/contracts/features/interfaces/IMerkleVestingFactoryFeature.sol",
         "file": "./features/interfaces/IMerkleVestingFactoryFeature.sol",
-        "id": 358,
+        "id": 1890,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 384,
-        "sourceUnit": 512,
-        "src": "1075:64:2",
+        "scope": 1916,
+        "sourceUnit": 4952,
+        "src": "1075:64:13",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -661,131 +667,131 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 360,
+              "id": 1892,
               "name": "IOwnableFeature",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 573,
-              "src": "1227:15:2"
+              "referencedDeclaration": 5013,
+              "src": "1227:15:13"
             },
-            "id": 361,
+            "id": 1893,
             "nodeType": "InheritanceSpecifier",
-            "src": "1227:15:2"
+            "src": "1227:15:13"
           },
           {
             "baseName": {
-              "id": 362,
+              "id": 1894,
               "name": "ISimpleFunctionRegistryFeature",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 627,
-              "src": "1248:30:2"
+              "referencedDeclaration": 5067,
+              "src": "1248:30:13"
             },
-            "id": 363,
+            "id": 1895,
             "nodeType": "InheritanceSpecifier",
-            "src": "1248:30:2"
+            "src": "1248:30:13"
           },
           {
             "baseName": {
-              "id": 364,
+              "id": 1896,
               "name": "IMulticallFeature",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 525,
-              "src": "1284:17:2"
+              "referencedDeclaration": 4965,
+              "src": "1284:17:13"
             },
-            "id": 365,
+            "id": 1897,
             "nodeType": "InheritanceSpecifier",
-            "src": "1284:17:2"
+            "src": "1284:17:13"
           },
           {
             "baseName": {
-              "id": 366,
+              "id": 1898,
               "name": "ITokenFactoryFeature",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 676,
-              "src": "1307:20:2"
+              "referencedDeclaration": 5121,
+              "src": "1307:20:13"
             },
-            "id": 367,
+            "id": 1899,
             "nodeType": "InheritanceSpecifier",
-            "src": "1307:20:2"
+            "src": "1307:20:13"
           },
           {
             "baseName": {
-              "id": 368,
+              "id": 1900,
               "name": "ITokenWithRolesFactoryFeature",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 703,
-              "src": "1333:29:2"
+              "referencedDeclaration": 5146,
+              "src": "1333:29:13"
             },
-            "id": 369,
+            "id": 1901,
             "nodeType": "InheritanceSpecifier",
-            "src": "1333:29:2"
+            "src": "1333:29:13"
           },
           {
             "baseName": {
-              "id": 370,
+              "id": 1902,
               "name": "IMerkleDistributorFactoryFeature",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 479,
-              "src": "1368:32:2"
+              "referencedDeclaration": 4919,
+              "src": "1368:32:13"
             },
-            "id": 371,
+            "id": 1903,
             "nodeType": "InheritanceSpecifier",
-            "src": "1368:32:2"
+            "src": "1368:32:13"
           },
           {
             "baseName": {
-              "id": 372,
+              "id": 1904,
               "name": "IMerkleVestingFactoryFeature",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 511,
-              "src": "1406:28:2"
+              "referencedDeclaration": 4951,
+              "src": "1406:28:13"
             },
-            "id": 373,
+            "id": 1905,
             "nodeType": "InheritanceSpecifier",
-            "src": "1406:28:2"
+            "src": "1406:28:13"
           }
         ],
         "canonicalName": "ITokenXyz",
         "contractDependencies": [],
         "contractKind": "interface",
         "documentation": {
-          "id": 359,
+          "id": 1891,
           "nodeType": "StructuredDocumentation",
-          "src": "1141:59:2",
+          "src": "1141:59:13",
           "text": "@title Interface for a fully featured token.xyz Proxy."
         },
         "fullyImplemented": false,
-        "id": 383,
+        "id": 1915,
         "linearizedBaseContracts": [
-          383, 511, 479, 703, 676, 649, 525, 627, 573, 547
+          1915, 4951, 4919, 5146, 5121, 5096, 4965, 5067, 5013, 4987
         ],
         "name": "ITokenXyz",
-        "nameLocation": "1210:9:2",
+        "nameLocation": "1210:9:13",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "documentation": {
-              "id": 374,
+              "id": 1906,
               "nodeType": "StructuredDocumentation",
-              "src": "1441:163:2",
+              "src": "1441:163:13",
               "text": "@notice Error thrown when the requested function is not found in any features.\n @param selector The function's selector that was attempted to be called."
             },
-            "id": 378,
+            "id": 1910,
             "name": "NotImplemented",
-            "nameLocation": "1615:14:2",
+            "nameLocation": "1615:14:13",
             "nodeType": "ErrorDefinition",
             "parameters": {
-              "id": 377,
+              "id": 1909,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 376,
+                  "id": 1908,
                   "mutability": "mutable",
                   "name": "selector",
-                  "nameLocation": "1637:8:2",
+                  "nameLocation": "1637:8:13",
                   "nodeType": "VariableDeclaration",
-                  "scope": 378,
-                  "src": "1630:15:2",
+                  "scope": 1910,
+                  "src": "1630:15:13",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -793,10 +799,10 @@
                     "typeString": "bytes4"
                   },
                   "typeName": {
-                    "id": 375,
+                    "id": 1907,
                     "name": "bytes4",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1630:6:2",
+                    "src": "1630:6:13",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes4",
                       "typeString": "bytes4"
@@ -805,18 +811,18 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1629:17:2"
+              "src": "1629:17:13"
             },
-            "src": "1609:38:2"
+            "src": "1609:38:13"
           },
           {
             "documentation": {
-              "id": 379,
+              "id": 1911,
               "nodeType": "StructuredDocumentation",
-              "src": "1653:46:2",
+              "src": "1653:46:13",
               "text": "@notice Fallback for just receiving ether."
             },
-            "id": 382,
+            "id": 1914,
             "implemented": false,
             "kind": "receive",
             "modifiers": [],
@@ -824,136 +830,136 @@
             "nameLocation": "-1:-1:-1",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 380,
+              "id": 1912,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1711:2:2"
+              "src": "1711:2:13"
             },
             "returnParameters": {
-              "id": 381,
+              "id": 1913,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1730:0:2"
+              "src": "1730:0:13"
             },
-            "scope": 383,
-            "src": "1704:27:2",
+            "scope": 1915,
+            "src": "1704:27:13",
             "stateMutability": "payable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 384,
-        "src": "1200:533:2",
-        "usedErrors": [378, 562, 583]
+        "scope": 1916,
+        "src": "1200:533:13",
+        "usedErrors": [1910, 5002, 5023, 5095]
       }
     ],
-    "src": "685:1049:2"
+    "src": "685:1049:13"
   },
   "legacyAST": {
     "absolutePath": "project:/contracts/ITokenXyz.sol",
     "exportedSymbols": {
-      "IMerkleDistributorFactoryFeature": [479],
-      "IMerkleVestingFactoryFeature": [511],
-      "IMulticallFeature": [525],
-      "IOwnableFeature": [573],
-      "IOwnableV06": [547],
-      "ISimpleFunctionRegistryFeature": [627],
-      "ITokenFactoryBase": [649],
-      "ITokenFactoryFeature": [676],
-      "ITokenWithRolesFactoryFeature": [703],
-      "ITokenXyz": [383]
+      "IMerkleDistributorFactoryFeature": [4919],
+      "IMerkleVestingFactoryFeature": [4951],
+      "IMulticallFeature": [4965],
+      "IOwnableFeature": [5013],
+      "IOwnableV06": [4987],
+      "ISimpleFunctionRegistryFeature": [5067],
+      "ITokenFactoryBase": [5096],
+      "ITokenFactoryFeature": [5121],
+      "ITokenWithRolesFactoryFeature": [5146],
+      "ITokenXyz": [1915]
     },
-    "id": 384,
+    "id": 1916,
     "license": "Apache-2.0",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 351,
+        "id": 1883,
         "literals": ["solidity", "^", "0.8", ".0"],
         "nodeType": "PragmaDirective",
-        "src": "685:23:2"
+        "src": "685:23:13"
       },
       {
         "absolutePath": "project:/contracts/features/interfaces/IOwnableFeature.sol",
         "file": "./features/interfaces/IOwnableFeature.sol",
-        "id": 352,
+        "id": 1884,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 384,
-        "sourceUnit": 574,
-        "src": "710:51:2",
+        "scope": 1916,
+        "sourceUnit": 5014,
+        "src": "710:51:13",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "absolutePath": "project:/contracts/features/interfaces/ISimpleFunctionRegistryFeature.sol",
         "file": "./features/interfaces/ISimpleFunctionRegistryFeature.sol",
-        "id": 353,
+        "id": 1885,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 384,
-        "sourceUnit": 628,
-        "src": "762:66:2",
+        "scope": 1916,
+        "sourceUnit": 5068,
+        "src": "762:66:13",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "absolutePath": "project:/contracts/features/interfaces/IMulticallFeature.sol",
         "file": "./features/interfaces/IMulticallFeature.sol",
-        "id": 354,
+        "id": 1886,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 384,
-        "sourceUnit": 526,
-        "src": "829:53:2",
+        "scope": 1916,
+        "sourceUnit": 4966,
+        "src": "829:53:13",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "absolutePath": "project:/contracts/features/interfaces/ITokenFactoryFeature.sol",
         "file": "./features/interfaces/ITokenFactoryFeature.sol",
-        "id": 355,
+        "id": 1887,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 384,
-        "sourceUnit": 677,
-        "src": "883:56:2",
+        "scope": 1916,
+        "sourceUnit": 5122,
+        "src": "883:56:13",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "absolutePath": "project:/contracts/features/interfaces/ITokenWithRolesFactoryFeature.sol",
         "file": "./features/interfaces/ITokenWithRolesFactoryFeature.sol",
-        "id": 356,
+        "id": 1888,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 384,
-        "sourceUnit": 704,
-        "src": "940:65:2",
+        "scope": 1916,
+        "sourceUnit": 5147,
+        "src": "940:65:13",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "absolutePath": "project:/contracts/features/interfaces/IMerkleDistributorFactoryFeature.sol",
         "file": "./features/interfaces/IMerkleDistributorFactoryFeature.sol",
-        "id": 357,
+        "id": 1889,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 384,
-        "sourceUnit": 480,
-        "src": "1006:68:2",
+        "scope": 1916,
+        "sourceUnit": 4920,
+        "src": "1006:68:13",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "absolutePath": "project:/contracts/features/interfaces/IMerkleVestingFactoryFeature.sol",
         "file": "./features/interfaces/IMerkleVestingFactoryFeature.sol",
-        "id": 358,
+        "id": 1890,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 384,
-        "sourceUnit": 512,
-        "src": "1075:64:2",
+        "scope": 1916,
+        "sourceUnit": 4952,
+        "src": "1075:64:13",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -962,131 +968,131 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 360,
+              "id": 1892,
               "name": "IOwnableFeature",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 573,
-              "src": "1227:15:2"
+              "referencedDeclaration": 5013,
+              "src": "1227:15:13"
             },
-            "id": 361,
+            "id": 1893,
             "nodeType": "InheritanceSpecifier",
-            "src": "1227:15:2"
+            "src": "1227:15:13"
           },
           {
             "baseName": {
-              "id": 362,
+              "id": 1894,
               "name": "ISimpleFunctionRegistryFeature",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 627,
-              "src": "1248:30:2"
+              "referencedDeclaration": 5067,
+              "src": "1248:30:13"
             },
-            "id": 363,
+            "id": 1895,
             "nodeType": "InheritanceSpecifier",
-            "src": "1248:30:2"
+            "src": "1248:30:13"
           },
           {
             "baseName": {
-              "id": 364,
+              "id": 1896,
               "name": "IMulticallFeature",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 525,
-              "src": "1284:17:2"
+              "referencedDeclaration": 4965,
+              "src": "1284:17:13"
             },
-            "id": 365,
+            "id": 1897,
             "nodeType": "InheritanceSpecifier",
-            "src": "1284:17:2"
+            "src": "1284:17:13"
           },
           {
             "baseName": {
-              "id": 366,
+              "id": 1898,
               "name": "ITokenFactoryFeature",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 676,
-              "src": "1307:20:2"
+              "referencedDeclaration": 5121,
+              "src": "1307:20:13"
             },
-            "id": 367,
+            "id": 1899,
             "nodeType": "InheritanceSpecifier",
-            "src": "1307:20:2"
+            "src": "1307:20:13"
           },
           {
             "baseName": {
-              "id": 368,
+              "id": 1900,
               "name": "ITokenWithRolesFactoryFeature",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 703,
-              "src": "1333:29:2"
+              "referencedDeclaration": 5146,
+              "src": "1333:29:13"
             },
-            "id": 369,
+            "id": 1901,
             "nodeType": "InheritanceSpecifier",
-            "src": "1333:29:2"
+            "src": "1333:29:13"
           },
           {
             "baseName": {
-              "id": 370,
+              "id": 1902,
               "name": "IMerkleDistributorFactoryFeature",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 479,
-              "src": "1368:32:2"
+              "referencedDeclaration": 4919,
+              "src": "1368:32:13"
             },
-            "id": 371,
+            "id": 1903,
             "nodeType": "InheritanceSpecifier",
-            "src": "1368:32:2"
+            "src": "1368:32:13"
           },
           {
             "baseName": {
-              "id": 372,
+              "id": 1904,
               "name": "IMerkleVestingFactoryFeature",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 511,
-              "src": "1406:28:2"
+              "referencedDeclaration": 4951,
+              "src": "1406:28:13"
             },
-            "id": 373,
+            "id": 1905,
             "nodeType": "InheritanceSpecifier",
-            "src": "1406:28:2"
+            "src": "1406:28:13"
           }
         ],
         "canonicalName": "ITokenXyz",
         "contractDependencies": [],
         "contractKind": "interface",
         "documentation": {
-          "id": 359,
+          "id": 1891,
           "nodeType": "StructuredDocumentation",
-          "src": "1141:59:2",
+          "src": "1141:59:13",
           "text": "@title Interface for a fully featured token.xyz Proxy."
         },
         "fullyImplemented": false,
-        "id": 383,
+        "id": 1915,
         "linearizedBaseContracts": [
-          383, 511, 479, 703, 676, 649, 525, 627, 573, 547
+          1915, 4951, 4919, 5146, 5121, 5096, 4965, 5067, 5013, 4987
         ],
         "name": "ITokenXyz",
-        "nameLocation": "1210:9:2",
+        "nameLocation": "1210:9:13",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "documentation": {
-              "id": 374,
+              "id": 1906,
               "nodeType": "StructuredDocumentation",
-              "src": "1441:163:2",
+              "src": "1441:163:13",
               "text": "@notice Error thrown when the requested function is not found in any features.\n @param selector The function's selector that was attempted to be called."
             },
-            "id": 378,
+            "id": 1910,
             "name": "NotImplemented",
-            "nameLocation": "1615:14:2",
+            "nameLocation": "1615:14:13",
             "nodeType": "ErrorDefinition",
             "parameters": {
-              "id": 377,
+              "id": 1909,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 376,
+                  "id": 1908,
                   "mutability": "mutable",
                   "name": "selector",
-                  "nameLocation": "1637:8:2",
+                  "nameLocation": "1637:8:13",
                   "nodeType": "VariableDeclaration",
-                  "scope": 378,
-                  "src": "1630:15:2",
+                  "scope": 1910,
+                  "src": "1630:15:13",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1094,10 +1100,10 @@
                     "typeString": "bytes4"
                   },
                   "typeName": {
-                    "id": 375,
+                    "id": 1907,
                     "name": "bytes4",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1630:6:2",
+                    "src": "1630:6:13",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes4",
                       "typeString": "bytes4"
@@ -1106,18 +1112,18 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1629:17:2"
+              "src": "1629:17:13"
             },
-            "src": "1609:38:2"
+            "src": "1609:38:13"
           },
           {
             "documentation": {
-              "id": 379,
+              "id": 1911,
               "nodeType": "StructuredDocumentation",
-              "src": "1653:46:2",
+              "src": "1653:46:13",
               "text": "@notice Fallback for just receiving ether."
             },
-            "id": 382,
+            "id": 1914,
             "implemented": false,
             "kind": "receive",
             "modifiers": [],
@@ -1125,30 +1131,30 @@
             "nameLocation": "-1:-1:-1",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 380,
+              "id": 1912,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1711:2:2"
+              "src": "1711:2:13"
             },
             "returnParameters": {
-              "id": 381,
+              "id": 1913,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1730:0:2"
+              "src": "1730:0:13"
             },
-            "scope": 383,
-            "src": "1704:27:2",
+            "scope": 1915,
+            "src": "1704:27:13",
             "stateMutability": "payable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 384,
-        "src": "1200:533:2",
-        "usedErrors": [378, 562, 583]
+        "scope": 1916,
+        "src": "1200:533:13",
+        "usedErrors": [1910, 5002, 5023, 5095]
       }
     ],
-    "src": "685:1049:2"
+    "src": "685:1049:13"
   },
   "compiler": {
     "name": "solc",
@@ -1156,9 +1162,17 @@
   },
   "networks": {},
   "schemaVersion": "3.4.5",
-  "updatedAt": "2022-03-08T12:25:18.514Z",
+  "updatedAt": "2022-03-11T08:55:23.565Z",
   "devdoc": {
     "errors": {
+      "MaxSupplyTooLow(uint256,uint256)": [
+        {
+          "params": {
+            "initialSupply": "The desired initial supply, that cannot be higher than the max.",
+            "maxSupply": "The desired max supply."
+          }
+        }
+      ],
       "NotImplemented(bytes4)": [
         {
           "params": {
@@ -1186,24 +1200,22 @@
           "urlName": "The url name used by the frontend, kind of an id of the creator."
         }
       },
-      "createToken(string,string,string,uint8,uint256,uint256,address,bool)": {
+      "createToken(string,string,string,uint8,uint256,uint256,address)": {
         "params": {
           "firstOwner": "The first address to assign ownership/minting rights to (if mintable). The recipient of the initial supply.",
           "initialSupply": "The initial amount of tokens to mint.",
           "maxSupply": "The maximum amount of tokens that can ever be minted. Unlimited if set to zero.",
-          "mintable": "Whether to create a mintable token.",
           "tokenDecimals": "The token's number of decimals.",
           "tokenName": "The token's name.",
           "tokenSymbol": "The token's symbol.",
           "urlName": "The url name used by the frontend, kind of an id of the creator."
         }
       },
-      "createTokenWithRoles(string,string,string,uint8,uint256,uint256,address,bool)": {
+      "createTokenWithRoles(string,string,string,uint8,uint256,uint256,address)": {
         "params": {
           "firstOwner": "The first address to assign ownership/minting rights to (if mintable). The recipient of the initial supply.",
           "initialSupply": "The initial amount of tokens to mint.",
           "maxSupply": "The maximum amount of tokens that can ever be minted. Unlimited if set to zero.",
-          "mintable": "Whether to create a mintable token.",
           "tokenDecimals": "The token's number of decimals.",
           "tokenName": "The token's name.",
           "tokenSymbol": "The token's symbol.",
@@ -1298,6 +1310,11 @@
   },
   "userdoc": {
     "errors": {
+      "MaxSupplyTooLow(uint256,uint256)": [
+        {
+          "notice": "Error thrown when the max supply is attempted to be set lower than the initial supply."
+        }
+      ],
       "NotImplemented(bytes4)": [
         {
           "notice": "Error thrown when the requested function is not found in any features."
@@ -1339,10 +1356,10 @@
       "createAirdrop(string,address,bytes32,uint256,address)": {
         "notice": "Deploys a new Merkle Distributor contract."
       },
-      "createToken(string,string,string,uint8,uint256,uint256,address,bool)": {
+      "createToken(string,string,string,uint8,uint256,uint256,address)": {
         "notice": "Deploys a new ERC20 token contract."
       },
-      "createTokenWithRoles(string,string,string,uint8,uint256,uint256,address,bool)": {
+      "createTokenWithRoles(string,string,string,uint8,uint256,uint256,address)": {
         "notice": "Deploys a new ERC20 token contract."
       },
       "createVesting(string,address,address)": {
