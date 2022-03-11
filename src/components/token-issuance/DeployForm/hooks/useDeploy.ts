@@ -30,7 +30,6 @@ const useDeploy = () => {
     initialSupply,
     maxSupply,
     transferOwnershipTo,
-    mintable,
     distributionData,
   ] = getValues([
     "urlName",
@@ -41,7 +40,6 @@ const useDeploy = () => {
     "initialSupply",
     "maxSupply",
     "transferOwnershipTo",
-    "mintable",
     "distributionData",
   ])
 
@@ -194,8 +192,7 @@ const useDeploy = () => {
             decimals || 18,
             utils.parseEther(initialSupply?.toString()).toString(),
             maxSupply ? utils.parseEther(maxSupply.toString()).toString() : null,
-            transferOwnershipTo || accountData?.address,
-            mintable
+            transferOwnershipTo || accountData?.address
           )
           .then((res) => res.wait()),
       createMerkleContracts: async (_context) => {

@@ -27,7 +27,6 @@ type TokenIssuanceFormType = {
   initialSupply?: number
   maxSupply?: number
   transferOwnershipTo?: string
-  mintable: boolean
   multiOwner: boolean
   canPause: boolean
   enableBlacklists: boolean

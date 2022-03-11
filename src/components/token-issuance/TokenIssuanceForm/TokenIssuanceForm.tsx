@@ -23,7 +23,6 @@ import {
   Select,
   SimpleGrid,
   Stack,
-  Switch,
   Tooltip,
 } from "@chakra-ui/react"
 import { useTimeline } from "components/common/Timeline/components/TimelineContext"
@@ -182,16 +181,6 @@ const TokenIssuanceForm = (): JSX.Element => {
               </FormControl>
 
               <SimpleGrid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
-                <FormControl isInvalid={!!errors?.mintable}>
-                  <FormLabel>Mintable</FormLabel>
-                  <Switch
-                    {...register("mintable")}
-                    variant="strong"
-                    colorScheme="cyan"
-                  />
-                  <FormErrorMessage>{errors?.mintable?.message}</FormErrorMessage>
-                </FormControl>
-
                 {/* <FormControl isInvalid={!!errors?.multiOwner}>
                   <FormLabel>Multiple owners</FormLabel>
                   <Switch
