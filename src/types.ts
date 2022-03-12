@@ -21,15 +21,13 @@ type TimelineSteps = Array<{
 type TokenIssuanceFormType = {
   tokenName: string
   tokenTicker: string
+  urlNameSelect: string
   urlName: string
   icon: File
   economyModel: "FIXED" | "UNLIMITED"
   initialSupply?: number
   maxSupply?: number
   transferOwnershipTo?: string
-  multiOwner: boolean
-  canPause: boolean
-  enableBlacklists: boolean
   decimals: number
   chain: "GOERLI" | "ETHEREUM"
   distributionData?: Array<AllocationFormType>

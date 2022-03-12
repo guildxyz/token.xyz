@@ -27,6 +27,7 @@ import {
 } from "@chakra-ui/react"
 import { useTimeline } from "components/common/Timeline/components/TimelineContext"
 import FormSection from "components/forms/FormSection"
+import useMyUrlNames from "hooks/useMyUrlNames"
 import { Question } from "phosphor-react"
 import { useEffect } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
@@ -39,6 +40,8 @@ import IconPicker from "./components/IconPicker"
 
 const TokenIssuanceForm = (): JSX.Element => {
   const [{ data: accountData }] = useAccount()
+  const { data: reusableUrlNames, isValidating: reusableUrlNamesLoading } =
+    useMyUrlNames()
 
   const { next } = useTimeline()
 
@@ -58,11 +61,19 @@ const TokenIssuanceForm = (): JSX.Element => {
 
   const tokenName = useWatch({ control, name: "tokenName" })
 
+  const urlNameSelect = useWatch({ control, name: "urlNameSelect" })
+  useEffect(() => {
+    if (urlNameSelect === "GENERATE") return
+    setValue("urlName", urlNameSelect)
+  }, [urlNameSelect])
+
   // TODO: check if the urlName already exists, and ask for another token name if needed!
   useEffect(() => {
-    if (touchedFields.urlName) return
+    if (touchedFields.urlName || urlNameSelect !== "GENERATE") return
     setValue("urlName", slugify(tokenName || ""))
-  }, [tokenName])
+  }, [tokenName, urlNameSelect])
+
+  const urlName = useWatch({ control, name: "urlName" })
 
   const isNextButtonDisabled = () =>
     !getValues("tokenName") ||
@@ -114,6 +125,50 @@ const TokenIssuanceForm = (): JSX.Element => {
               </InputGroup>
               <FormErrorMessage>{errors?.tokenTicker?.message}</FormErrorMessage>
             </FormControl>
+          </GridItem>
+        </SimpleGrid>
+      </FormSection>
+
+      <FormSection
+        title="URL name"
+        description="Choose a unique identifier for your token or generate a new one"
+      >
+        <SimpleGrid columns={3} gap={4}>
+          <GridItem colSpan={{ base: 3, md: 1 }}>
+            <FormControl>
+              <Controller
+                control={control}
+                name="urlNameSelect"
+                defaultValue="GENERATE"
+                render={({ field: { ref, value, onChange, onBlur } }) => (
+                  <Select
+                    ref={ref}
+                    value={value}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    isDisabled={reusableUrlNamesLoading || !reusableUrlNames}
+                    size="lg"
+                  >
+                    {reusableUrlNames?.length ? (
+                      <>
+                        <option value="GENERATE">Generate new</option>
+                        {reusableUrlNames.map((reusableUrlName) => (
+                          <option key={reusableUrlName} value={reusableUrlName}>
+                            {reusableUrlName}
+                          </option>
+                        ))}
+                      </>
+                    ) : (
+                      <option>Loading...</option>
+                    )}
+                  </Select>
+                )}
+              />
+            </FormControl>
+          </GridItem>
+
+          <GridItem colSpan={{ base: 3, md: 2 }}>
+            <Input value={urlName} size="lg" disabled />
           </GridItem>
         </SimpleGrid>
       </FormSection>
@@ -179,40 +234,6 @@ const TokenIssuanceForm = (): JSX.Element => {
                   {errors?.transferOwnershipTo?.message}
                 </FormErrorMessage>
               </FormControl>
-
-              <SimpleGrid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
-                {/* <FormControl isInvalid={!!errors?.multiOwner}>
-                  <FormLabel>Multiple owners</FormLabel>
-                  <Switch
-                    {...register("multiOwner")}
-                    variant="strong"
-                    colorScheme="cyan"
-                  />
-                  <FormErrorMessage>{errors?.multiOwner?.message}</FormErrorMessage>
-                </FormControl> */}
-
-                {/* <FormControl isInvalid={!!errors?.canPause}>
-                  <FormLabel>Can pause</FormLabel>
-                  <Switch
-                    {...register("canPause")}
-                    variant="strong"
-                    colorScheme="cyan"
-                  />
-                  <FormErrorMessage>{errors?.canPause?.message}</FormErrorMessage>
-                </FormControl> */}
-
-                {/* <FormControl isInvalid={!!errors?.enableBlacklists}>
-                  <FormLabel>Enable blacklists</FormLabel>
-                  <Switch
-                    {...register("enableBlacklists")}
-                    variant="strong"
-                    colorScheme="cyan"
-                  />
-                  <FormErrorMessage>
-                    {errors?.enableBlacklists?.message}
-                  </FormErrorMessage>
-                </FormControl> */}
-              </SimpleGrid>
 
               <FormControl
                 maxW={{ base: "full", md: "50%" }}
