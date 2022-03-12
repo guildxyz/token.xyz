@@ -146,7 +146,7 @@ const TokenIssuanceForm = (): JSX.Element => {
                     value={value}
                     onChange={onChange}
                     onBlur={onBlur}
-                    isDisabled={reusableUrlNamesLoading || !reusableUrlNames}
+                    isDisabled={reusableUrlNamesLoading || !reusableUrlNames?.length}
                     size="lg"
                   >
                     {reusableUrlNames?.length ? (
@@ -159,7 +159,9 @@ const TokenIssuanceForm = (): JSX.Element => {
                         ))}
                       </>
                     ) : (
-                      <option>Loading...</option>
+                      <option>
+                        {reusableUrlNamesLoading ? "Loading..." : "No options"}
+                      </option>
                     )}
                   </Select>
                 )}
