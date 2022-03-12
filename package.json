@@ -31,7 +31,9 @@
     "focus-visible": "^5.2.0",
     "framer-motion": "^6.2.8",
     "moment": "^2.29.1",
+    "multer": "^1.4.4",
     "next": "^12.1.0",
+    "next-connect": "^0.12.2",
     "papaparse": "^5.3.1",
     "phosphor-react": "^1.4.0",
     "react": "^17.0.2",
@@ -47,6 +49,7 @@
   },
   "devDependencies": {
     "@hookform/devtools": "^4.0.2",
+    "@types/multer": "^1.4.7",
     "@types/node": "^17.0.21",
     "@types/papaparse": "^5.3.2",
     "@types/react": "^17.0.39",
