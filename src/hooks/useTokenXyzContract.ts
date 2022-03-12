@@ -7,7 +7,7 @@ const useTokenXyzContract = (): ethers.Contract => {
 
   return useContract({
     addressOrName: process.env.NEXT_PUBLIC_TOKENXYZ_CONTRACT_ADDRESS,
-    contractInterface: TokenXyzABI.abi,
+    contractInterface: TokenXyzABI,
     signerOrProvider: signerData,
   })
 }

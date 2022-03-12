@@ -280,7 +280,7 @@ const useDeploy = () => {
 
         const merkleVestingContract = new ethers.Contract(
           merkleVestingContractAddress,
-          MerkleVestingABI.abi,
+          MerkleVestingABI,
           signerData
         )
 
