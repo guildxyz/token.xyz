@@ -207,7 +207,11 @@ const useDeploy = () => {
 
         // Assinging the data to the context, so we can use these in the upcoming machine states
         send("UPDATE_CONTEXT", {
-          data: { tokenDeployer, tokenUrlName, tokenAddress },
+          data: {
+            tokenDeployer,
+            tokenUrlName,
+            tokenAddress: tokenAddress?.toLowerCase(),
+          },
         })
 
         // If there's no distribution data, we can skip this step

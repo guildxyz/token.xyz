@@ -8,7 +8,7 @@ import { useToken } from "wagmi"
 
 const Page = (): JSX.Element => {
   const router = useRouter()
-  const tokenAddress = router.query.token?.toString()
+  const tokenAddress = router.query.token?.toString()?.toLowerCase()
 
   const [{ data: tokenContractData, loading }] = useToken({ address: tokenAddress })
   const { data, isValidating } = useTokenDataFromIpfs(tokenAddress)

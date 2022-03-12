@@ -14,7 +14,7 @@ const useMyTokens = (): {
   } = useTokenDeployedEvents()
 
   const data: Array<string> =
-    tokenDeployedEvents?.map((event) => event.args?.[2]) ?? []
+    tokenDeployedEvents?.map((event) => event.args?.[2]?.toLowerCase()) ?? []
 
   return {
     ...swrResponse,
