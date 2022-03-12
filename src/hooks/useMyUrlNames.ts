@@ -1,6 +1,6 @@
 import useTokenDeployedEvents from "./useTokenDeployedEvents"
 
-const useMyTokens = (): {
+const useMyUrlNames = (): {
   data: Array<string>
   error?: any
   isValidating: boolean
@@ -14,7 +14,7 @@ const useMyTokens = (): {
   } = useTokenDeployedEvents()
 
   const data: Array<string> =
-    tokenDeployedEvents?.map((event) => event.args?.[2]) ?? []
+    tokenDeployedEvents?.map((event) => event.args?.[1]) ?? []
 
   return {
     ...swrResponse,
@@ -22,4 +22,4 @@ const useMyTokens = (): {
   }
 }
 
-export default useMyTokens
+export default useMyUrlNames
