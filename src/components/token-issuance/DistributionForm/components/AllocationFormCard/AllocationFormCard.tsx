@@ -41,6 +41,7 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
     formState: { errors },
   } = useFormContext<TokenIssuanceFormType>()
 
+  const distributionData = useWatch({ name: "distributionData", control })
   const allocationAddressesAmounts = useWatch({
     name: `distributionData.${index}.allocationAddressesAmounts`,
     control,
@@ -82,7 +83,9 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
             type: "validate",
           })
           return
-        } else if (!results.data.map(([address]) => address).every(unique)) {
+        } else if (
+          !results.data.map(([address]) => address?.toLowerCase()).every(unique)
+        ) {
           setError(`distributionData.${index}.allocationCsv`, {
             message: "The CSV contains duplicate addresses",
             type: "validate",
@@ -90,10 +93,35 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
           return
         }
 
-        setValue(
-          `distributionData.${index}.allocationAddressesAmounts`,
-          results.data.map(([address, amount]) => ({ address, amount }))
-        )
+        const mappedData = results.data.map(([address, amount]) => ({
+          address,
+          amount,
+        }))
+
+        const filteredAllocations = distributionData
+          ?.filter((_, i) => i !== index)
+          ?.map((alloc) => alloc.allocationAddressesAmounts)
+          ?.filter((alloc) => alloc.length === results?.data?.length)
+
+        // Check if the uploaded CSVs are actually different CSV files
+        for (const addressesAmountsArray of filteredAllocations) {
+          if (
+            !addressesAmountsArray?.some(
+              ({ address, amount }, i) =>
+                address?.toLowerCase() !== mappedData?.[i]?.address?.toLowerCase() ||
+                amount !== mappedData?.[i]?.amount
+            )
+          ) {
+            setError(`distributionData.${index}.allocationCsv`, {
+              message:
+                "You can't upload the same CSV to multiple vestings or airdrops",
+              type: "validate",
+            })
+            return
+          }
+        }
+
+        setValue(`distributionData.${index}.allocationAddressesAmounts`, mappedData)
       },
     })
   }
