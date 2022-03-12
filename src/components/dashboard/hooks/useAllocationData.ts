@@ -1,12 +1,12 @@
 import useSWR from "swr"
 
-const fetchData = (hash: string, name: string) =>
-  fetch(`${process.env.NEXT_PUBLIC_IPFS_GATEWAY}/${hash}/${name}`).then((res) =>
+const fetchData = (fileName: string) =>
+  fetch(`${process.env.NEXT_PUBLIC_FLEEK_BUCKET}/${fileName}`).then((res) =>
     res.json()
   )
 
-const useAllocationData = (ipfsHash: string, fileName: string) =>
-  useSWR(ipfsHash && fileName ? [ipfsHash, fileName] : null, fetchData, {
+const useAllocationData = (fileName: string) =>
+  useSWR(fileName ? [fileName] : null, fetchData, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     shouldRetryOnError: false,

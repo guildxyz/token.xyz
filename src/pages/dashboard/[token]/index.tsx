@@ -8,10 +8,10 @@ import { useToken } from "wagmi"
 
 const Page = (): JSX.Element => {
   const router = useRouter()
-  const [{ data: tokenContractData, loading }] = useToken({
-    address: router.query.token?.toString(),
-  })
-  const { data, isValidating } = useTokenDataFromIpfs(router.query.token?.toString())
+  const tokenAddress = router.query.token?.toString()
+
+  const [{ data: tokenContractData, loading }] = useToken({ address: tokenAddress })
+  const { data, isValidating } = useTokenDataFromIpfs(tokenAddress)
 
   return (
     <Layout title="Token page">
@@ -22,7 +22,7 @@ const Page = (): JSX.Element => {
           <HStack spacing={4}>
             {data?.icon && (
               <Img
-                src={`${process.env.NEXT_PUBLIC_IPFS_GATEWAY}/${data?.hash}/${data?.icon}`}
+                src={`${process.env.NEXT_PUBLIC_FLEEK_BUCKET}/${tokenAddress}/${data?.icon}`}
                 alt={`${tokenContractData?.symbol} icon`}
                 boxSize={12}
               />
@@ -38,11 +38,10 @@ const Page = (): JSX.Element => {
                 columns={{ base: 1, sm: 2, lg: 3 }}
                 gap={{ base: 4, md: 6 }}
               >
-                {data.airdrops.map((vesting) => (
+                {data.airdrops.map((airdrop) => (
                   <AllocationCard
-                    key={vesting}
-                    ipfsHash={data.hash}
-                    fileName={vesting}
+                    key={airdrop}
+                    fileName={`${tokenAddress}/${airdrop}`}
                   />
                 ))}
               </SimpleGrid>
@@ -58,8 +57,7 @@ const Page = (): JSX.Element => {
                 {data.vestings.map((vesting) => (
                   <AllocationCard
                     key={vesting}
-                    ipfsHash={data.hash}
-                    fileName={vesting}
+                    fileName={`${tokenAddress}/${vesting}`}
                   />
                 ))}
               </SimpleGrid>

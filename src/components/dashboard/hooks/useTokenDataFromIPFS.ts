@@ -4,8 +4,6 @@ const fetchTokenData = (address: string) =>
   fetch(`/api/token/${address}`).then((data) => data.json())
 
 type ResponseType = {
-  hash: string
-  name: string
   icon?: string
   airdrops?: Array<string>
   vestings?: Array<string>
