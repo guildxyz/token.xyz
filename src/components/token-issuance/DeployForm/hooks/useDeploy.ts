@@ -170,7 +170,7 @@ const useDeploy = () => {
               status: "success",
               title: "Successful token issuance!",
             }),
-          onError: (_context, event) =>
+          onError: (_context) =>
             toast({
               status: "error",
               title: "Uh-oh!",
@@ -319,21 +319,16 @@ const useDeploy = () => {
         if (!icon && !distributionData?.length) return send("SKIP")
 
         const ipfsData = new FormData()
+        ipfsData.append("dirName", _context.tokenAddress)
 
-        const rawMetadata: {
-          name: string
-          keyvalues?: {
-            icon?: string
-            airdrops: Array<string>
-            vestings: Array<string>
-          }
+        const info: {
+          icon?: string
+          airdrops: Array<string>
+          vestings: Array<string>
         } = {
-          name: _context.tokenAddress,
-          keyvalues: {
-            icon: null,
-            airdrops: [],
-            vestings: [],
-          },
+          icon: null,
+          airdrops: [],
+          vestings: [],
         }
 
         distributionData.forEach((allocation, index) => {
@@ -359,62 +354,21 @@ const useDeploy = () => {
             name: allocation.allocationName,
           }
 
-          ipfsData.append(
-            "file",
-            new Blob([JSON.stringify(merkleData)]),
-            `${_context.tokenAddress}/allocation${index}.json`
-          )
+          ipfsData.append(`allocation${index}.json`, JSON.stringify(merkleData))
 
           const metadataAttribute =
             allocation.vestingType === "NO_VESTING" ? "airdrops" : "vestings"
-          rawMetadata.keyvalues[metadataAttribute].push(`allocation${index}.json`)
+          info[metadataAttribute].push(`allocation${index}.json`)
         })
 
         if (icon) {
-          ipfsData.append(
-            "file",
-            icon,
-            `${_context.tokenAddress}/icon.${icon.name.split(".").pop()}`
-          )
-          rawMetadata.keyvalues.icon = `icon.${icon.name.split(".").pop()}`
+          ipfsData.append("icon", icon, `icon.${icon.name.split(".").pop()}`)
+          info.icon = `icon.${icon.name.split(".").pop()}`
         }
 
-        // Converting the metadata to the proper format
-        const metadata = {
-          name: rawMetadata.name,
-          keyvalues: {
-            icon: rawMetadata.keyvalues.icon || undefined,
-            airdrops:
-              rawMetadata.keyvalues.airdrops?.length > 0
-                ? rawMetadata.keyvalues.airdrops.toString()
-                : undefined,
-            vestings:
-              rawMetadata.keyvalues.vestings?.length > 0
-                ? rawMetadata.keyvalues.vestings.toString()
-                : undefined,
-          },
-        }
+        ipfsData.append("info.json", JSON.stringify(info))
 
-        ipfsData.append("pinataMetadata", JSON.stringify(metadata))
-
-        const apiKey = await fetch("/api/pinata-key").then((response) =>
-          response.json().then((body) => ({ jwt: body.jwt, key: body.key }))
-        )
-
-        await fetch(`${process.env.NEXT_PUBLIC_PINATA_API}/pinning/pinFileToIPFS`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${apiKey.jwt}`,
-          },
-          body: ipfsData,
-        })
-        // .then((res) => res?.json())
-
-        await fetch("/api/pinata-key", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ key: apiKey.key }),
-        }).catch(() => console.error("Failed to revoke API key after request"))
+        return fetch("/api/upload-to-ipfs", { method: "POST", body: ipfsData })
       },
     },
   })
