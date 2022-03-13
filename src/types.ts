@@ -52,6 +52,21 @@ type TokenInfoJSON = {
   vestings: Array<{ fileName: string; prettyUrl: string }>
 }
 
+type AllocationJSON = {
+  merkleRoot: string
+  tokenTotal: string
+  claims: Record<string, { index: number; amount: string; proof: Array<string> }>
+  vestingType: VestingTypes
+  distributionEnd: number
+  vestingEnd?: number
+  vestingPeriod?: number
+  cliffPeriod?: number
+  createdBy: string
+  tokenAddress: string
+  vestingContract?: string
+  name: string
+}
+
 export type {
   WalletError,
   Rest,
@@ -60,4 +75,5 @@ export type {
   VestingTypes,
   TokenIssuanceFormType,
   TokenInfoJSON,
+  AllocationJSON,
 }

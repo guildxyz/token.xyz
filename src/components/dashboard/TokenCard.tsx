@@ -11,7 +11,7 @@ const TokenCard = ({ address }: Props): JSX.Element => {
   const [{ data, error, loading }] = useToken({ address })
 
   return (
-    <Link href={`/dashboard/${address}`} _hover={{ textDecoration: "none" }}>
+    <Link href={`/token/${address}`} _hover={{ textDecoration: "none" }}>
       <DisplayCard
         title={loading ? shortenHex(address, 4) : error ? "ERROR" : data?.symbol}
       />

@@ -41,6 +41,7 @@ const Page = (): JSX.Element => {
                 {data.airdrops.map((airdrop) => (
                   <AllocationCard
                     key={airdrop.prettyUrl}
+                    prettyUrl={airdrop.prettyUrl}
                     fileName={`${tokenAddress}/${airdrop.fileName}`}
                   />
                 ))}
@@ -57,6 +58,7 @@ const Page = (): JSX.Element => {
                 {data.vestings.map((vesting) => (
                   <AllocationCard
                     key={vesting.prettyUrl}
+                    prettyUrl={vesting.prettyUrl}
                     fileName={`${tokenAddress}/${vesting.fileName}`}
                   />
                 ))}
