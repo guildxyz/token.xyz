@@ -5,9 +5,10 @@ import useTokenXyzContract from "hooks/useTokenXyzContract"
 import { useMemo, useRef } from "react"
 import { useFormContext } from "react-hook-form"
 import MerkleVestingABI from "static/abis/MerkleVestingABI.json"
-import { TokenIssuanceFormType } from "types"
+import { TokenInfoJSON, TokenIssuanceFormType } from "types"
 import generateMerkleTree from "utils/merkle/generateMerkleTree"
 import { MerkleDistributorInfo, parseBalanceMap } from "utils/merkle/parseBalanceMap"
+import slugify from "utils/slugify"
 import { useAccount, useSigner } from "wagmi"
 import { assign, createMachine } from "xstate"
 
@@ -325,11 +326,7 @@ const useDeploy = () => {
         const ipfsData = new FormData()
         ipfsData.append("dirName", _context.tokenAddress)
 
-        const info: {
-          icon?: string
-          airdrops: Array<string>
-          vestings: Array<string>
-        } = {
+        const info: TokenInfoJSON = {
           icon: null,
           airdrops: [],
           vestings: [],
@@ -362,7 +359,10 @@ const useDeploy = () => {
 
           const metadataAttribute =
             allocation.vestingType === "NO_VESTING" ? "airdrops" : "vestings"
-          info[metadataAttribute].push(`allocation${index}.json`)
+          info[metadataAttribute].push({
+            fileName: `allocation${index}.json`,
+            prettyUrl: slugify(allocation.allocationName),
+          })
         })
 
         if (icon) {

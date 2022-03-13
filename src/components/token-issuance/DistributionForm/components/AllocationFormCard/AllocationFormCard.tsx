@@ -35,6 +35,7 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
   const {
     control,
     register,
+    getValues,
     setValue,
     setError,
     clearErrors,
@@ -101,6 +102,7 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
         const filteredAllocations = distributionData
           ?.filter((_, i) => i !== index)
           ?.map((alloc) => alloc.allocationAddressesAmounts)
+          ?.filter((alloc) => !!alloc)
           ?.filter((alloc) => alloc.length === results?.data?.length)
 
         // Check if the uploaded CSVs are actually different CSV files
@@ -147,6 +149,12 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
           <Input
             {...register(`distributionData.${index}.allocationName`, {
               required: "This field is required!",
+              validate: (value) =>
+                !getValues("distributionData")
+                  ?.filter((_, i) => i !== index)
+                  ?.map((form) => form.allocationName?.toLowerCase())
+                  ?.includes(value?.toLowerCase()) ||
+                "Every airdrop/vesting name must be unique",
             })}
             placeholder="Choose a name for your group"
           />

@@ -46,6 +46,12 @@ type AllocationFormType = {
   cliff?: number // In months
 }
 
+type TokenInfoJSON = {
+  icon?: string
+  airdrops: Array<{ fileName: string; prettyUrl: string }>
+  vestings: Array<{ fileName: string; prettyUrl: string }>
+}
+
 export type {
   WalletError,
   Rest,
@@ -53,4 +59,5 @@ export type {
   TimelineSteps,
   VestingTypes,
   TokenIssuanceFormType,
+  TokenInfoJSON,
 }

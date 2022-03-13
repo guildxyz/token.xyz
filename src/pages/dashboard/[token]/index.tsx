@@ -40,8 +40,8 @@ const Page = (): JSX.Element => {
               >
                 {data.airdrops.map((airdrop) => (
                   <AllocationCard
-                    key={airdrop}
-                    fileName={`${tokenAddress}/${airdrop}`}
+                    key={airdrop.prettyUrl}
+                    fileName={`${tokenAddress}/${airdrop.fileName}`}
                   />
                 ))}
               </SimpleGrid>
@@ -56,8 +56,8 @@ const Page = (): JSX.Element => {
               >
                 {data.vestings.map((vesting) => (
                   <AllocationCard
-                    key={vesting}
-                    fileName={`${tokenAddress}/${vesting}`}
+                    key={vesting.prettyUrl}
+                    fileName={`${tokenAddress}/${vesting.fileName}`}
                   />
                 ))}
               </SimpleGrid>
