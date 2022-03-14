@@ -63,6 +63,7 @@ type AllocationJSON = {
   cliffPeriod?: number
   createdBy: string
   tokenAddress: string
+  merkleDistributorContract?: string
   vestingContract?: string
   name: string
 }

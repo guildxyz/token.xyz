@@ -1,0 +1,100 @@
+import { Button, Flex, Heading, Skeleton, Stack, Text } from "@chakra-ui/react"
+import Card from "components/common/Card"
+import { useMemo } from "react"
+import { useAccount, useToken } from "wagmi"
+import { useAllocation } from "../common/AllocationContext"
+import Countdown from "../common/Countdown"
+import useAirdropDataWithIndex from "./hooks/useAirdropDataWithIndex"
+
+const Airdrop = (): JSX.Element => {
+  const { name, tokenAddress, claims, distributionEnd, merkleDistributorContract } =
+    useAllocation()
+  const [{ data: tokenData, error: tokenError, loading: tokenLoading }] = useToken({
+    address: tokenAddress,
+  })
+
+  const [{ data: accountData, error: accountError, loading: accountLoading }] =
+    useAccount()
+
+  const isEligible = useMemo(
+    () =>
+      !claims || !accountData
+        ? false
+        : Object.keys(claims)
+            ?.map((address) => address?.toLowerCase())
+            ?.includes(accountData.address?.toLowerCase()),
+    [claims, accountData]
+  )
+
+  const userMerkleData = useMemo(
+    () =>
+      !claims || !accountData || !isEligible ? null : claims[accountData.address],
+    [claims, accountData, isEligible]
+  )
+
+  const airdropEnded = useMemo(
+    () =>
+      distributionEnd && distributionEnd < Math.round(new Date().getTime() / 1000),
+    [distributionEnd]
+  )
+
+  const {
+    data: { isClaimed, owner },
+    error: airdropDataWithIndexError,
+    isValidating: isAirdropDataWithIndexLoading,
+  } = useAirdropDataWithIndex(merkleDistributorContract, userMerkleData?.index)
+
+  return (
+    <Card
+      mx="auto"
+      px={{ base: 8, sm: 16 }}
+      py={{ base: 6, sm: 12 }}
+      maxW="container.sm"
+    >
+      <Flex alignItems="center" direction="column" minH="60vh">
+        <Stack mb={8}>
+          <Heading as="h2" mb={2} fontFamily="display">
+            {name}
+          </Heading>
+          <Skeleton width="max-content" isLoaded={!tokenLoading}>
+            <Text as="span" fontSize="lg" fontWeight="medium" colorScheme="gray">
+              Claim your ${tokenData?.symbol || "TOKENSYMBOL"}
+            </Text>
+          </Skeleton>
+        </Stack>
+
+        {airdropEnded ? (
+          <Text colorScheme="gray" textAlign="center">
+            Sorry, this airdrop has ended!
+          </Text>
+        ) : (
+          <>
+            <Stack mb={8}>
+              <Countdown expiryTimestamp={distributionEnd * 1000} />
+            </Stack>
+
+            <Stack mb={8}>
+              <Text colorScheme="gray" textAlign="center">
+                This is the airdrop's description. Lorem ipsum dolor sit amet,
+                consectetur adipiscing elit. Vivamus et bibendum massa, eu porta
+                sapien. Pellentesque leo ex, interdum vel ultrices sit amet,
+                tincidunt sed nisl.
+              </Text>
+            </Stack>
+          </>
+        )}
+
+        <Button
+          colorScheme="primary"
+          isDisabled={airdropEnded || isClaimed}
+          mt="auto"
+          maxW="max-content"
+        >
+          Claim my tokens
+        </Button>
+      </Flex>
+    </Card>
+  )
+}
+
+export default Airdrop
