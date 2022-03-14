@@ -1,4 +1,6 @@
+import { useAllocation } from "components/[allocation]/common/AllocationContext"
 import { Contract } from "ethers"
+import { useMemo } from "react"
 import MerkleDistributorABI from "static/abis/MerkleDistributorABI.json"
 import useSWR, { SWRResponse } from "swr"
 import { useAccount, useContract, useProvider } from "wagmi"
@@ -17,12 +19,20 @@ const getMerkleData = (
       return { owner: null, isClaimed: null }
     })
 
-const useAirdropDataWithIndex = (
-  contractAddress: string,
-  index: number
-): SWRResponse<{ owner: string; isClaimed: boolean }> => {
+const useAirdropDataWithIndex = (): SWRResponse<{
+  owner: string
+  isClaimed: boolean
+}> => {
   const provider = useProvider()
   const [{ data: accountData, error, loading }] = useAccount()
+
+  const { claims, merkleDistributorContract: contractAddress } = useAllocation()
+
+  const index = useMemo(
+    () => (!accountData || !claims ? null : claims[accountData.address]?.index),
+    [accountData, claims]
+  )
+
   const merkleDistributorContract = useContract({
     addressOrName: contractAddress,
     contractInterface: MerkleDistributorABI,

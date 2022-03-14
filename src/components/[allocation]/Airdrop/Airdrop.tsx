@@ -7,8 +7,7 @@ import Countdown from "../common/Countdown"
 import useAirdropDataWithIndex from "./hooks/useAirdropDataWithIndex"
 
 const Airdrop = (): JSX.Element => {
-  const { name, tokenAddress, claims, distributionEnd, merkleDistributorContract } =
-    useAllocation()
+  const { name, tokenAddress, claims, distributionEnd } = useAllocation()
   const [{ data: tokenData, error: tokenError, loading: tokenLoading }] = useToken({
     address: tokenAddress,
   })
@@ -26,12 +25,6 @@ const Airdrop = (): JSX.Element => {
     [claims, accountData]
   )
 
-  const userMerkleData = useMemo(
-    () =>
-      !claims || !accountData || !isEligible ? null : claims[accountData.address],
-    [claims, accountData, isEligible]
-  )
-
   const airdropEnded = useMemo(
     () =>
       distributionEnd && distributionEnd < Math.round(new Date().getTime() / 1000),
@@ -42,7 +35,7 @@ const Airdrop = (): JSX.Element => {
     data: { isClaimed, owner },
     error: airdropDataWithIndexError,
     isValidating: isAirdropDataWithIndexLoading,
-  } = useAirdropDataWithIndex(merkleDistributorContract, userMerkleData?.index)
+  } = useAirdropDataWithIndex()
 
   return (
     <Card
