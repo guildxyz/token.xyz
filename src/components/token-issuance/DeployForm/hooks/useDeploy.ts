@@ -5,7 +5,7 @@ import useTokenXyzContract from "hooks/useTokenXyzContract"
 import { useMemo, useRef } from "react"
 import { useFormContext } from "react-hook-form"
 import MerkleVestingABI from "static/abis/MerkleVestingABI.json"
-import { TokenInfoJSON, TokenIssuanceFormType } from "types"
+import { AllocationJSON, TokenInfoJSON, TokenIssuanceFormType } from "types"
 import generateMerkleTree from "utils/merkle/generateMerkleTree"
 import { MerkleDistributorInfo, parseBalanceMap } from "utils/merkle/parseBalanceMap"
 import slugify from "utils/slugify"
@@ -340,7 +340,7 @@ const useDeploy = () => {
           const cliffInSeconds = monthsToSecond(allocation.cliff)
           const vestingPeriodInSeconds = monthsToSecond(allocation.vestingPeriod)
 
-          const merkleData = {
+          const merkleData: AllocationJSON = {
             ..._context.merkleTrees?.[index],
             vestingType: allocation.vestingType,
             distributionEnd: Math.round(
@@ -353,6 +353,15 @@ const useDeploy = () => {
             tokenAddress: _context.tokenAddress,
             vestingContract: _context.merkleVestingContractAddress,
             name: allocation.allocationName,
+          }
+
+          if (allocation.vestingType === "NO_VESTING") {
+            const merkleDistributorDeployedEvent = _context?.response?.events?.find(
+              (event) => event.event === "MerkleDistributorDeployed"
+            )
+            const [, , merkleDistributorContractAddress] =
+              merkleDistributorDeployedEvent?.args
+            merkleData.merkleDistributorContract = merkleDistributorContractAddress
           }
 
           ipfsData.append(`allocation${index}.json`, JSON.stringify(merkleData))
