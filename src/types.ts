@@ -76,5 +76,6 @@ export type {
   VestingTypes,
   TokenIssuanceFormType,
   TokenInfoJSON,
+  AllocationFormType,
   AllocationJSON,
 }

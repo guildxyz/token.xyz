@@ -21,7 +21,7 @@ import { TokenIssuanceFormType } from "types"
 import useDeploy from "../hooks/useDeploy"
 
 const DeployButtons = (): JSX.Element => {
-  const { control } = useFormContext<TokenIssuanceFormType>()
+  const { control, handleSubmit } = useFormContext<TokenIssuanceFormType>()
   const correct = useWatch({ control, name: "correct" })
 
   const { startDeploy, isLoading, loadingText, finished } = useDeploy()
@@ -68,8 +68,7 @@ const DeployButtons = (): JSX.Element => {
               isLoading={isLoading}
               loadingText={loadingText}
               // TODO error handler
-              // onClick={handleSubmit(onSubmit, console.log)}
-              onClick={startDeploy}
+              onClick={handleSubmit(startDeploy, console.log)}
             >
               Deploy to mainnet
             </Button>

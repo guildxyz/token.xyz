@@ -2,14 +2,19 @@ import { useMachine } from "@xstate/react"
 import { ethers, utils } from "ethers"
 import useToast from "hooks/useToast"
 import useTokenXyzContract from "hooks/useTokenXyzContract"
-import { useMemo, useRef } from "react"
+import { useEffect, useMemo, useRef } from "react"
 import { useFormContext } from "react-hook-form"
 import MerkleVestingABI from "static/abis/MerkleVestingABI.json"
-import { AllocationJSON, TokenInfoJSON, TokenIssuanceFormType } from "types"
+import {
+  AllocationFormType,
+  AllocationJSON,
+  TokenInfoJSON,
+  TokenIssuanceFormType,
+} from "types"
 import generateMerkleTree from "utils/merkle/generateMerkleTree"
 import { MerkleDistributorInfo, parseBalanceMap } from "utils/merkle/parseBalanceMap"
 import slugify from "utils/slugify"
-import { useAccount, useSigner } from "wagmi"
+import { erc20ABI, useAccount, useSigner } from "wagmi"
 import { assign, createMachine } from "xstate"
 
 const monthsToSecond = (months: number): number =>
@@ -54,6 +59,7 @@ const useDeploy = () => {
       tokenUrlName?: string
       tokenAddress?: string
       merkleVestingContractAddress?: string
+      merkleDistributorContractAddress?: string
       merkleTrees?: Array<MerkleDistributorInfo>
     }>(
       {
@@ -71,7 +77,7 @@ const useDeploy = () => {
               src: "createToken",
               onDone: {
                 target: "creatingMerkleContracts",
-                actions: ["assignResponseToContext", "logResponse"],
+                actions: ["assignResponseToContext", "logResponse"], // Debug
               },
               onError: {
                 target: "idle",
@@ -104,8 +110,29 @@ const useDeploy = () => {
             invoke: {
               src: "addCohorts",
               onDone: {
-                target: "ipfs",
+                target: "fundingContracts",
                 actions: ["logResponse"], // Debug...
+              },
+              onError: {
+                target: "idle",
+                actions: ["assignErrorToContext", "onError"],
+              },
+            },
+            on: {
+              SKIP: {
+                target: "fundingContracts",
+              },
+              UPDATE_CONTEXT: {
+                actions: ["assignDataToContext"],
+              },
+            },
+          },
+          fundingContracts: {
+            invoke: {
+              src: "fundContracts",
+              onDone: {
+                target: "ipfs",
+                actions: ["logResponse"], // Debug
               },
               onError: {
                 target: "idle",
@@ -201,9 +228,6 @@ const useDeploy = () => {
           (event) => event.event === "TokenDeployed"
         )
 
-        // TODO: Maybe we don't event need this here, since if the deployment was successful, we should know the token data already...
-        if (!tokenDeployedEvent) Promise.reject("Could not deploy token contract.")
-
         const [tokenDeployer, tokenUrlName, tokenAddress] = tokenDeployedEvent.args
 
         // Assinging the data to the context, so we can use these in the upcoming machine states
@@ -273,6 +297,17 @@ const useDeploy = () => {
           (allocation) => allocation.vestingType === "LINEAR_VESTING"
         )
 
+        // If the user deployed a MerkleDistributor contract, save it to the context
+        const merkleDistributorDeployedEvent = _context?.response?.events?.find(
+          (event) => event.event === "MerkleDistributorDeployed"
+        )
+        if (merkleDistributorDeployedEvent) {
+          const [, , merkleDistributorContractAddress] =
+            merkleDistributorDeployedEvent.args
+          send("UPDATE_CONTEXT", { data: { merkleDistributorContractAddress } })
+        }
+
+        // Check if the user deployed a MerkleVesting contract. If so, save its data to the context and prepare the `addCohort` calls.
         const merkleVestingDeployedEvent = _context?.response?.events?.find(
           (event) => event.event === "MerkleVestingDeployed"
         )
@@ -320,7 +355,73 @@ const useDeploy = () => {
           .multicall(addCohortCalls)
           .then((addCohortCallsRes) => addCohortCallsRes?.wait())
       },
+      fundContracts: async (_context) => {
+        // Converter function which returns the amount of tokens needed to be sent to each vesting/distributor contract
+        const converter = (input: Array<AllocationFormType>): number => {
+          if (!input) return 0
+          return input
+            .map((allocation) => allocation.allocationAddressesAmounts)
+            ?.reduce((arr1, arr2) => arr1.concat(arr2), [])
+            ?.filter((item) => !!item)
+            ?.map((data) => parseInt(data.amount))
+            ?.reduce((amount1, amount2) => amount1 + amount2, 0)
+        }
+
+        const airdropAmount = converter(
+          distributionData?.filter(
+            (allocation) => allocation.vestingType === "NO_VESTING"
+          )
+        )
+        const vestingAmount = converter(
+          distributionData?.filter(
+            (allocation) => allocation.vestingType === "NO_VESTING"
+          )
+        )
+
+        if (process.env.NODE_ENV === "development")
+          console.log(`Airdrop funding amount: ${airdropAmount}`)
+        if (process.env.NODE_ENV === "development")
+          console.log(`Vesting funding amount: ${vestingAmount}`)
+        // This should not happen, but in case something goes wrong, we can skip this step (and maybe fund the contracts manually later)
+        if (!airdropAmount && !vestingAmount) return send("SKIP")
+
+        const deployedTokenContract = new ethers.Contract(
+          _context.tokenAddress,
+          erc20ABI,
+          signerData
+        )
+
+        const transfers = []
+
+        if (_context.merkleDistributorContractAddress && airdropAmount) {
+          transfers.push(
+            deployedTokenContract
+              ?.transfer(
+                _context.merkleDistributorContractAddress,
+                ethers.utils.parseUnits(airdropAmount.toString(), 18)
+              )
+              .then((res) => res.wait())
+          )
+        }
+
+        if (_context.merkleVestingContractAddress && vestingAmount) {
+          transfers.push(
+            deployedTokenContract
+              ?.transfer(
+                _context.merkleVestingContractAddress,
+                ethers.utils.parseUnits(vestingAmount.toString(), 18)
+              )
+              .then((res) => res.wait())
+          )
+        }
+
+        return Promise.all(transfers)
+      },
       uploadToIpfs: async (_context) => {
+        console.log(
+          `DEPLOYED CONTRACTS:\n--------------------\nToken: ${_context.tokenAddress}\nMerkleDistributor: ${_context.merkleDistributorContractAddress}\nMerkleVesting:${_context.merkleVestingContractAddress}\n----------`
+        )
+
         if (!icon && !distributionData?.length) return send("SKIP")
 
         const ipfsData = new FormData()
@@ -356,12 +457,8 @@ const useDeploy = () => {
           }
 
           if (allocation.vestingType === "NO_VESTING") {
-            const merkleDistributorDeployedEvent = _context?.response?.events?.find(
-              (event) => event.event === "MerkleDistributorDeployed"
-            )
-            const [, , merkleDistributorContractAddress] =
-              merkleDistributorDeployedEvent?.args
-            merkleData.merkleDistributorContract = merkleDistributorContractAddress
+            merkleData.merkleDistributorContract =
+              _context?.merkleDistributorContractAddress
           }
 
           ipfsData.append(`allocation${index}.json`, JSON.stringify(merkleData))
@@ -387,9 +484,9 @@ const useDeploy = () => {
   })
 
   // DEBUG
-  // useEffect(() => {
-  //   if (process.env.NODE_ENV === "development") console.log("MACHINE STATE", state)
-  // }, [state])
+  useEffect(() => {
+    if (process.env.NODE_ENV === "development") console.log("MACHINE STATE", state)
+  }, [state])
 
   const startDeploy = () => send("DEPLOY")
 
@@ -405,6 +502,8 @@ const useDeploy = () => {
     if (state.matches("deploying")) return "Creating token"
     else if (state.matches("creatingMerkleContracts")) return "Deploying contracts"
     else if (state.matches("creatingCohorts")) return "Creating cohorts"
+    else if (state.matches("fundingContracts"))
+      return "Funding airdrop/vesting contracts"
     else if (state.matches("ipfs")) return "Uploading data to IPFS"
     else return "Loading"
   }, [state])
