@@ -42,6 +42,7 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
     formState: { errors },
   } = useFormContext<TokenIssuanceFormType>()
 
+  const initialSupply = useWatch({ name: "initialSupply", control })
   const distributionData = useWatch({ name: "distributionData", control })
   const allocationAddressesAmounts = useWatch({
     name: `distributionData.${index}.allocationAddressesAmounts`,
@@ -110,17 +111,37 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
           if (
             !addressesAmountsArray?.some(
               ({ address, amount }, i) =>
-                address?.toLowerCase() !== mappedData?.[i]?.address?.toLowerCase() ||
+                address?.toLowerCase() !== mappedData?.[i]?.address?.toLowerCase() &&
                 amount !== mappedData?.[i]?.amount
             )
           ) {
             setError(`distributionData.${index}.allocationCsv`, {
               message:
-                "You can't upload the same CSV to multiple vestings or airdrops",
+                "You can't upload the same list to multiple vestings or airdrops",
               type: "validate",
             })
             return
           }
+        }
+
+        // Sum the amount in every allocation CSV. If it's greater than the token supply, show an error message to the user
+        const otherAllocations = distributionData
+          ?.map((allocation) => allocation.allocationAddressesAmounts)
+          ?.reduce((arr1, arr2) => arr1.concat(arr2), [])
+        const fullArray = mappedData.concat(otherAllocations)
+
+        const sum = fullArray
+          ?.filter((item) => !!item)
+          ?.map((data) => parseInt(data.amount))
+          ?.reduce((amount1, amount2) => amount1 + amount2, 0)
+
+        if (sum > initialSupply) {
+          setError(`distributionData.${index}.allocationCsv`, {
+            message:
+              "You're trying to allocate more tokens than your initial supply!",
+            type: "validate",
+          })
+          return
         }
 
         setValue(`distributionData.${index}.allocationAddressesAmounts`, mappedData)
