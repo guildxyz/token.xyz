@@ -1,7 +1,7 @@
 import DisplayCard from "components/common/DisplayCard"
 import Link from "components/common/Link"
+import useAllocationData from "hooks/useAllocationData"
 import { useRouter } from "next/router"
-import useAllocationData from "./hooks/useAllocationData"
 
 type Props = {
   fileName: string

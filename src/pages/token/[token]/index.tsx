@@ -2,7 +2,7 @@ import { Heading, HStack, Img, SimpleGrid, Spinner, Stack } from "@chakra-ui/rea
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import AllocationCard from "components/dashboard/AllocationCard"
-import useTokenDataFromIpfs from "components/dashboard/hooks/useTokenDataFromIPFS"
+import useTokenDataFromIpfs from "hooks/useTokenDataFromIPFS"
 import { useRouter } from "next/router"
 import { useToken } from "wagmi"
 
