@@ -374,7 +374,7 @@ const useDeploy = () => {
         )
         const vestingAmount = converter(
           distributionData?.filter(
-            (allocation) => allocation.vestingType === "NO_VESTING"
+            (allocation) => allocation.vestingType === "LINEAR_VESTING"
           )
         )
 
