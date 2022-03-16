@@ -29,7 +29,7 @@ const useAirdropDataWithIndex = (): SWRResponse<{
   const { claims, merkleDistributorContract: contractAddress } = useAllocation()
 
   const index = useMemo(
-    () => (!accountData || !claims ? null : claims[accountData.address]?.index),
+    () => (accountData && claims ? claims[accountData.address]?.index : null),
     [accountData, claims]
   )
 

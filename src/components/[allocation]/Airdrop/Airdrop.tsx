@@ -5,6 +5,7 @@ import { useAccount, useToken } from "wagmi"
 import { useAllocation } from "../common/AllocationContext"
 import Countdown from "../common/Countdown"
 import useAirdropDataWithIndex from "./hooks/useAirdropDataWithIndex"
+import useClaim from "./hooks/useClaim"
 
 const Airdrop = (): JSX.Element => {
   const { name, tokenAddress, claims, distributionEnd } = useAllocation()
@@ -19,9 +20,7 @@ const Airdrop = (): JSX.Element => {
     () =>
       !claims || !accountData
         ? false
-        : Object.keys(claims)
-            ?.map((address) => address?.toLowerCase())
-            ?.includes(accountData.address?.toLowerCase()),
+        : Object.keys(claims)?.includes(accountData.address),
     [claims, accountData]
   )
 
@@ -36,6 +35,8 @@ const Airdrop = (): JSX.Element => {
     error: airdropDataWithIndexError,
     isValidating: isAirdropDataWithIndexLoading,
   } = useAirdropDataWithIndex()
+
+  const { onSubmit, isLoading: isClaimLoading } = useClaim()
 
   return (
     <Card
@@ -79,9 +80,12 @@ const Airdrop = (): JSX.Element => {
 
         <Button
           colorScheme="primary"
-          isDisabled={airdropEnded || isClaimed}
+          isDisabled={airdropEnded || isClaimed || !isEligible}
+          isLoading={isClaimLoading}
+          loadingText="Claiming tokens"
           mt="auto"
           maxW="max-content"
+          onClick={onSubmit}
         >
           Claim my tokens
         </Button>
