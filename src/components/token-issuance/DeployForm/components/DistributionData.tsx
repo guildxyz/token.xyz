@@ -49,19 +49,6 @@ const DistributionData = (): JSX.Element => {
 
   const shouldShortenAddresses = useBreakpointValue({ base: true, md: false })
 
-  const Row = ({ index, style }) => (
-    <HStack style={style}>
-      <pre>
-        {shouldShortenAddresses
-          ? shortenHex(addressList[index]?.address, 4)
-          : addressList[index]?.address}
-      </pre>
-      <Text as="span" w="full" textAlign="right">
-        {addressList[index]?.amount}
-      </Text>
-    </HStack>
-  )
-
   return (
     <>
       <SimpleGrid columns={2} gap={4}>
@@ -130,39 +117,71 @@ const DistributionData = (): JSX.Element => {
       <Modal isOpen={isOpen} onClose={onClose} size="xl">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Eligible addresses</ModalHeader>
+          <ModalHeader>{`${addressList?.length} eligible addresses`}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             {addressList?.length && (
-              <>
-                <HStack
-                  mb={1}
-                  fontWeight="bold"
-                  letterSpacing="wider"
-                  textTransform="uppercase"
-                  textColor="gray"
-                  fontSize="sm"
-                >
-                  <Text as="span">Address</Text>
-                  <Text as="span" w="full" textAlign="right">
-                    Amount
-                  </Text>
-                </HStack>
-                <Box
-                  sx={{
-                    "> div": { width: "100%", overflow: "hidden auto !important" },
-                  }}
-                >
-                  <FixedSizeList
-                    height={350}
-                    itemCount={addressList.length}
-                    itemSize={32}
-                    className="custom-scrollbar"
-                  >
-                    {Row}
-                  </FixedSizeList>
-                </Box>
-              </>
+              <Stack spacing={8}>
+                {distributionData?.map((allocation) => {
+                  const Row = ({ index, style }) => (
+                    <HStack style={style}>
+                      <pre>
+                        {shouldShortenAddresses
+                          ? shortenHex(
+                              allocation?.allocationAddressesAmounts?.[index]
+                                ?.address,
+                              4
+                            )
+                          : allocation?.allocationAddressesAmounts?.[index]?.address}
+                      </pre>
+                      <Text as="span" w="full" textAlign="right">
+                        {allocation?.allocationAddressesAmounts?.[index]?.amount}
+                      </Text>
+                    </HStack>
+                  )
+
+                  return (
+                    <Stack key={allocation.allocationName}>
+                      <Heading as="h3" fontSize="md">
+                        {allocation.allocationName}
+                      </Heading>
+                      <HStack
+                        mb={1}
+                        fontWeight="bold"
+                        letterSpacing="wider"
+                        textTransform="uppercase"
+                        textColor="gray"
+                        fontSize="sm"
+                      >
+                        <Text as="span">Address</Text>
+                        <Text as="span" w="full" textAlign="right">
+                          Amount
+                        </Text>
+                      </HStack>
+                      <Box
+                        sx={{
+                          "> div": {
+                            width: "100%",
+                            overflow: "hidden auto !important",
+                          },
+                        }}
+                      >
+                        <FixedSizeList
+                          height={Math.min(
+                            allocation?.allocationAddressesAmounts?.length * 32,
+                            160
+                          )}
+                          itemCount={allocation?.allocationAddressesAmounts?.length}
+                          itemSize={32}
+                          className="custom-scrollbar"
+                        >
+                          {Row}
+                        </FixedSizeList>
+                      </Box>
+                    </Stack>
+                  )
+                })}
+              </Stack>
             )}
           </ModalBody>
         </ModalContent>

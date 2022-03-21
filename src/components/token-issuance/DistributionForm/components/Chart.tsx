@@ -31,7 +31,11 @@ ChartJS.register(
 
 const getCurrentMonth = (index: number) => {
   const date = new Date()
-  return new Date(date.getFullYear(), date.getMonth() + index, 1).toString()
+  return new Date(
+    date.getFullYear(),
+    date.getMonth() + index,
+    date.getDate()
+  ).toString()
 }
 
 // TODO: generate colors dynamicall?

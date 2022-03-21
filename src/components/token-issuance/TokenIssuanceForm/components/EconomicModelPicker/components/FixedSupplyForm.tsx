@@ -66,8 +66,8 @@ const FixedSupplyForm = (): JSX.Element => {
                 onChange={(newValue) => {
                   onChange(newValue)
                   const parsedValue = parseInt(newValue)
-                  if (parsedValue > getValues("maxSupply"))
-                    setValue("maxSupply", parsedValue)
+                  if (parsedValue >= getValues("maxSupply"))
+                    setValue("maxSupply", parsedValue + 1)
                 }}
                 onBlur={onBlur}
                 min={0}

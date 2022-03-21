@@ -16,7 +16,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react"
 import { Question } from "phosphor-react"
-import { Controller, useFormContext } from "react-hook-form"
+import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
 
 type Props = {
@@ -31,14 +31,17 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
     formState: { errors },
   } = useFormContext<TokenIssuanceFormType>()
 
+  const vestingType = useWatch({
+    name: `distributionData.${index}.vestingType`,
+    control,
+  })
+
   return (
     <SimpleGrid columns={2} gap={4} px={5} pb={4}>
       <GridItem colSpan={{ base: 2, sm: 1 }}>
         <FormControl
           isInvalid={!!errors?.distributionData?.[index]?.cliff}
-          isRequired={
-            getValues(`distributionData.${index}.vestingType`) === "LINEAR_VESTING"
-          }
+          isRequired={vestingType === "LINEAR_VESTING"}
         >
           <HStack alignItems="center" spacing={0}>
             <FormLabel>Cliff</FormLabel>
@@ -59,11 +62,14 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
               name={`distributionData.${index}.cliff`}
               rules={{
                 required:
-                  getValues(`distributionData.${index}.vestingType`) ===
-                    "LINEAR_VESTING" && "This field is required!",
+                  vestingType === "LINEAR_VESTING" && "This field is required!",
                 min: {
                   value: 0,
                   message: "Cliff must be positive",
+                },
+                max: {
+                  value: getValues(`distributionData.${index}.vestingPeriod`) - 1,
+                  message: "Cliff must be less than vesting",
                 },
               }}
               defaultValue={0}
@@ -71,7 +77,19 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                 <NumberInput
                   ref={ref}
                   value={value}
-                  onChange={onChange}
+                  onChange={(newValue) => {
+                    onChange(newValue)
+                    const parsedValue = parseInt(newValue)
+                    if (
+                      parsedValue >=
+                      getValues(`distributionData.${index}.vestingPeriod`)
+                    )
+                      setValue(
+                        `distributionData.${index}.vestingPeriod`,
+                        parsedValue + 1,
+                        { shouldValidate: true }
+                      )
+                  }}
                   onBlur={onBlur}
                   min={0}
                 >
@@ -94,9 +112,7 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
       <GridItem colSpan={{ base: 2, sm: 1 }}>
         <FormControl
           isInvalid={!!errors?.distributionData?.[index]?.vestingPeriod}
-          isRequired={
-            getValues(`distributionData.${index}.vestingType`) === "LINEAR_VESTING"
-          }
+          isRequired={vestingType === "LINEAR_VESTING"}
         >
           <HStack alignItems="center" spacing={0}>
             <FormLabel>Vesting</FormLabel>
@@ -117,12 +133,12 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
               name={`distributionData.${index}.vestingPeriod`}
               rules={{
                 required:
-                  getValues(`distributionData.${index}.vestingType`) ===
-                    "LINEAR_VESTING" && "This field is required!",
+                  vestingType === "LINEAR_VESTING" && "This field is required!",
                 min: {
-                  value: 1,
-                  message: "Vesting must be positive",
+                  value: +getValues(`distributionData.${index}.cliff`) + 1,
+                  message: "Vesting must be greater than cliff",
                 },
+
                 max: {
                   value: 120,
                   message: "Maximum vesting time is 120 months",
@@ -136,13 +152,15 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                     onChange(newValue)
                     const parsedValue = parseInt(newValue)
                     if (
-                      parsedValue >
+                      parsedValue >=
                       getValues(`distributionData.${index}.distributionDuration`)
-                    )
+                    ) {
                       setValue(
                         `distributionData.${index}.distributionDuration`,
-                        parsedValue
+                        parsedValue + 1,
+                        { shouldValidate: true }
                       )
+                    }
                   }}
                   onBlur={onBlur}
                   min={1}
@@ -177,7 +195,7 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
               rules={{
                 required: "This field is required!",
                 min: {
-                  value: getValues(`distributionData.${index}.vestingPeriod`),
+                  value: +getValues(`distributionData.${index}.vestingPeriod`) + 1,
                   message: "Must be greater than vesting period",
                 },
                 max: {

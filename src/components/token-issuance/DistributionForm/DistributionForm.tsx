@@ -19,7 +19,14 @@ const DistributionForm = (): JSX.Element => {
   const isNextButtonDisabled = useMemo(() => {
     if (!distributionData) return false
     return !distributionData.every(
-      (allocationData) => !!(allocationData.allocationAddressesAmounts?.length > 0)
+      (allocationData) =>
+        !!(allocationData.allocationAddressesAmounts?.length > 0) &&
+        distributionData.every((allocation) =>
+          allocation.vestingType === "LINEAR_VESTING"
+            ? allocation.cliff < allocation.vestingPeriod &&
+              allocation.vestingPeriod < allocation.distributionDuration
+            : true
+        )
     )
   }, [distributionData])
 

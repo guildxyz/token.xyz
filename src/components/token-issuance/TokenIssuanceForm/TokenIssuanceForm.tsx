@@ -9,6 +9,7 @@ import {
   Flex,
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
   GridItem,
   Icon,
@@ -20,6 +21,8 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  Radio,
+  RadioGroup,
   Select,
   SimpleGrid,
   Stack,
@@ -78,7 +81,7 @@ const TokenIssuanceForm = (): JSX.Element => {
   const isNextButtonDisabled = () =>
     !getValues("tokenName") ||
     !getValues("tokenTicker") ||
-    getValues("initialSupply") < 1 ||
+    (getValues("economyModel") !== "UNLIMITED" && getValues("initialSupply") < 1) ||
     !!errors.tokenName ||
     !!errors.tokenTicker ||
     !!errors.initialSupply ||
@@ -131,7 +134,7 @@ const TokenIssuanceForm = (): JSX.Element => {
 
       <FormSection
         title="URL name"
-        description="Choose a unique identifier for your token or generate a new one"
+        description="Choose a unique identifier for your token or generate a new one. If this is your first token, we'll generate a new URL name automatically"
       >
         <SimpleGrid columns={3} gap={4}>
           <GridItem colSpan={{ base: 3, md: 1 }}>
@@ -238,13 +241,16 @@ const TokenIssuanceForm = (): JSX.Element => {
               </FormControl>
 
               <FormControl
-                maxW={{ base: "full", md: "50%" }}
                 pr={{ base: 2, md: 8 }}
                 pb={4}
                 isRequired
                 isInvalid={!!errors?.decimals}
               >
                 <FormLabel>Decimals</FormLabel>
+                <FormHelperText mb={4}>
+                  Most widely supported is 18, but you can set another value here if
+                  you wish.
+                </FormHelperText>
                 <Controller
                   control={control}
                   name="decimals"
@@ -255,8 +261,8 @@ const TokenIssuanceForm = (): JSX.Element => {
                       message: "Must positive",
                     },
                     max: {
-                      value: 18,
-                      message: "Maximum 18",
+                      value: 255,
+                      message: "Maximum 255",
                     },
                   }}
                   defaultValue={18}
@@ -267,8 +273,9 @@ const TokenIssuanceForm = (): JSX.Element => {
                       onChange={onChange}
                       onBlur={onBlur}
                       min={0}
-                      max={18}
+                      max={255}
                       size="lg"
+                      maxW={{ base: "full", md: "50%" }}
                     >
                       <NumberInputField />
                       <NumberInputStepper>
@@ -279,6 +286,29 @@ const TokenIssuanceForm = (): JSX.Element => {
                   )}
                 />
                 <FormErrorMessage>{errors?.decimals?.message}</FormErrorMessage>
+              </FormControl>
+
+              <FormControl>
+                <FormLabel>Ownable / access control</FormLabel>
+                <Controller
+                  control={control}
+                  name="ownable"
+                  defaultValue={true}
+                  render={({ field: { ref, value, onChange, onBlur } }) => (
+                    <RadioGroup
+                      ref={ref}
+                      value={value.toString()}
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      colorScheme="primary"
+                    >
+                      <Stack spacing={2}>
+                        <Radio value="true">Ownable</Radio>
+                        <Radio value="false">Access control</Radio>
+                      </Stack>
+                    </RadioGroup>
+                  )}
+                />
               </FormControl>
             </Stack>
           </AccordionPanel>

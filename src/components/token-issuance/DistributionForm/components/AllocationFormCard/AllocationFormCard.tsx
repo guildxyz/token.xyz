@@ -43,6 +43,7 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
   } = useFormContext<TokenIssuanceFormType>()
 
   const initialSupply = useWatch({ name: "initialSupply", control })
+  const economyModel = useWatch({ name: "economyModel", control })
   const distributionData = useWatch({ name: "distributionData", control })
   const allocationAddressesAmounts = useWatch({
     name: `distributionData.${index}.allocationAddressesAmounts`,
@@ -62,6 +63,7 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
     setIsParseLoading(true)
     parse(file, {
+      skipEmptyLines: true,
       complete: (results) => {
         clearErrors(`distributionData.${index}.allocationCsv`)
         setIsParseLoading(false)
@@ -73,9 +75,15 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
           return
         }
 
+        // Data cleanup
+        const data = results.data?.map(([address, amount]) => [
+          address?.trim(),
+          parseFloat(amount?.toString()?.replaceAll(",", "")?.trim() || 0),
+        ])
+
         // If we could parse the CSV, check if the data is actually valid
         if (
-          !results.data.every(
+          !data.every(
             ([address, amount]) =>
               ADDRESS_REGEX.test(address) && typeof parseInt(amount) === "number"
           )
@@ -85,9 +93,7 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
             type: "validate",
           })
           return
-        } else if (
-          !results.data.map(([address]) => address?.toLowerCase()).every(unique)
-        ) {
+        } else if (!data.map(([address]) => address?.toLowerCase()).every(unique)) {
           setError(`distributionData.${index}.allocationCsv`, {
             message: "The CSV contains duplicate addresses",
             type: "validate",
@@ -95,13 +101,20 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
           return
         }
 
-        const mappedData = results.data.map(([address, amount]) => ({
+        const mappedData = data.map(([address, amount]) => ({
           address,
           amount,
         }))
 
+        /**
+         * TODO: maybe extract this into a function, and call that function when the
+         * vesting type changes too!
+         */
         const filteredAllocations = distributionData
           ?.filter((_, i) => i !== index)
+          ?.filter(
+            (alloc) => alloc.vestingType === distributionData?.[index]?.vestingType
+          )
           ?.map((alloc) => alloc.allocationAddressesAmounts)
           ?.filter((alloc) => !!alloc)
           ?.filter((alloc) => alloc.length === results?.data?.length)
@@ -109,10 +122,10 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
         // Check if the uploaded CSVs are actually different CSV files
         for (const addressesAmountsArray of filteredAllocations) {
           if (
-            !addressesAmountsArray?.some(
+            addressesAmountsArray?.every(
               ({ address, amount }, i) =>
-                address?.toLowerCase() !== mappedData?.[i]?.address?.toLowerCase() &&
-                amount !== mappedData?.[i]?.amount
+                address?.toLowerCase() === mappedData?.[i]?.address?.toLowerCase() &&
+                amount === mappedData?.[i]?.amount
             )
           ) {
             setError(`distributionData.${index}.allocationCsv`, {
@@ -123,7 +136,6 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
             return
           }
         }
-
         // Sum the amount in every allocation CSV. If it's greater than the token supply, show an error message to the user
         const otherAllocations = distributionData
           ?.map((allocation) => allocation.allocationAddressesAmounts)
@@ -132,10 +144,10 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
         const sum = fullArray
           ?.filter((item) => !!item)
-          ?.map((data) => parseInt(data.amount))
+          ?.map((item) => item.amount)
           ?.reduce((amount1, amount2) => amount1 + amount2, 0)
 
-        if (sum > initialSupply) {
+        if (sum > initialSupply && economyModel !== "UNLIMITED") {
           setError(`distributionData.${index}.allocationCsv`, {
             message:
               "You're trying to allocate more tokens than your initial supply!",

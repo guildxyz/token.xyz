@@ -20,7 +20,8 @@ const OPTIONS: Array<{
   {
     value: "NO_VESTING",
     title: "No vesting",
-    description: "Tokens will be available in the recipients addresses instantly.",
+    description:
+      "Tokens will be available to your recipients for claiming right after the minting event.",
     disabled: false,
     children: NoVestingForm,
   },
@@ -40,8 +41,14 @@ const OPTIONS: Array<{
 ]
 
 const VestingTypePicker = ({ index }: Props): JSX.Element => {
-  const { control, setValue, getValues, clearErrors, trigger } =
-    useFormContext<TokenIssuanceFormType>()
+  const {
+    control,
+    setValue,
+    getValues,
+    clearErrors,
+    trigger,
+    formState: { touchedFields },
+  } = useFormContext<TokenIssuanceFormType>()
 
   const { field } = useController({
     control,
@@ -63,10 +70,10 @@ const VestingTypePicker = ({ index }: Props): JSX.Element => {
   const vestingType = getValues(`distributionData.${index}.vestingType`)
   useEffect(() => {
     if (vestingType !== "NO_VESTING") {
-      trigger([
-        `distributionData.${index}.vestingPeriod`,
-        `distributionData.${index}.cliff`,
-      ])
+      if (touchedFields.distributionData?.[index]?.vestingPeriod)
+        trigger(`distributionData.${index}.vestingPeriod`)
+      if (touchedFields.distributionData?.[index]?.cliff)
+        trigger(`distributionData.${index}.cliff`)
       return
     }
 
