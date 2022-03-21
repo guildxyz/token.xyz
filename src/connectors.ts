@@ -10,6 +10,12 @@ const provider = ({ chainId }) =>
 const supportedChainIds = [/* 1,*/ 3]
 const chains = defaultChains.filter((c) => supportedChainIds.includes(c.id))
 
+const TOKEN_XYZ_CONTRACT = {
+  1: "",
+  3: "",
+  5: "0x7cedb7C3532589b7b622676c49759ee87929878B",
+}
+
 const injected = new InjectedConnector({
   chains,
   options: { shimDisconnect: true },
@@ -41,4 +47,4 @@ const iconUrls = {
   3: "/networkLogos/ethereum.svg",
 }
 
-export { provider, chains, connectors, injected, iconUrls }
+export { TOKEN_XYZ_CONTRACT, provider, chains, connectors, injected, iconUrls }
