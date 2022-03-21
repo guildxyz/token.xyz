@@ -46,7 +46,7 @@ const Airdrop = (): JSX.Element => {
       maxW="container.sm"
     >
       <Flex alignItems="center" direction="column" minH="60vh">
-        <Stack mb={8}>
+        <Stack mb={8} alignItems="center">
           <Heading as="h2" mb={2} fontFamily="display">
             {name}
           </Heading>

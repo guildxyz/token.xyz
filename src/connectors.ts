@@ -7,12 +7,12 @@ import { WalletLinkConnector } from "wagmi/connectors/walletLink"
 const provider = ({ chainId }) =>
   new providers.InfuraProvider(chainId, process.env.NEXT_PUBLIC_INFURA_ID)
 
-const supportedChainIds = [/* 1,*/ 3]
+const supportedChainIds = [/* 1,*/ 3, 5]
 const chains = defaultChains.filter((c) => supportedChainIds.includes(c.id))
 
 const TOKEN_XYZ_CONTRACT = {
-  1: "",
-  3: "",
+  1: "0x0000000000000000000000000000000000000000",
+  3: "0x0000000000000000000000000000000000000000",
   5: "0x7cedb7C3532589b7b622676c49759ee87929878B",
 }
 
@@ -45,6 +45,7 @@ const connectors = ({ chainId }) => {
 const iconUrls = {
   1: "/networkLogos/ethereum.svg",
   3: "/networkLogos/ethereum.svg",
+  5: "/networkLogos/ethereum.svg",
 }
 
 export { TOKEN_XYZ_CONTRACT, provider, chains, connectors, injected, iconUrls }

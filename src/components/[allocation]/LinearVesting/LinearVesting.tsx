@@ -1,11 +1,15 @@
 import { Button, Flex, Heading, Skeleton, Stack, Text } from "@chakra-ui/react"
 import Card from "components/common/Card"
+import { BigNumber, utils } from "ethers"
 import { useMemo } from "react"
 import { useAccount, useToken } from "wagmi"
 import { useAllocation } from "../common/AllocationContext"
 import Countdown from "../common/Countdown"
 import useClaim from "./hooks/useClaim"
 import useCohort from "./hooks/useCohort"
+
+const formatAmount = (amount: BigNumber, decimals: number): string =>
+  parseFloat(utils.formatUnits(amount ?? 0, decimals ?? 18)).toFixed(2)
 
 const LinearVesting = (): JSX.Element => {
   const { name, tokenAddress, claims, distributionEnd } = useAllocation()
@@ -42,7 +46,7 @@ const LinearVesting = (): JSX.Element => {
       maxW="container.sm"
     >
       <Flex alignItems="center" direction="column" minH="60vh">
-        <Stack mb={8}>
+        <Stack mb={8} alignItems="center">
           <Heading as="h2" mb={2} fontFamily="display">
             {name}
           </Heading>
@@ -65,13 +69,22 @@ const LinearVesting = (): JSX.Element => {
 
             <Stack mb={8} alignItems="start">
               <Text colorScheme="gray" textAlign="center">
-                {`Claimable amount: ${claims?.[accountData?.address]?.amount}`}
+                {`Total claimable amount: ${formatAmount(
+                  BigNumber.from(claims?.[accountData?.address]?.amount || "0"),
+                  tokenData?.decimals
+                )}`}
               </Text>
               <Text colorScheme="gray" textAlign="center">
-                {`Claimable now: ${cohortData?.claimableAmount?.toString()}`}
+                {`Claimable now: ${formatAmount(
+                  cohortData?.claimableAmount,
+                  tokenData?.decimals
+                )}`}
               </Text>
               <Text colorScheme="gray" textAlign="center">
-                {`Already claimed: ${cohortData?.claimed?.toString()}`}
+                {`Already claimed: ${formatAmount(
+                  cohortData?.claimed,
+                  tokenData?.decimals
+                )}`}
               </Text>
             </Stack>
           </>

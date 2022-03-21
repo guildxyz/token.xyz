@@ -8,7 +8,9 @@ const useTokenXyzContract = (): ethers.Contract => {
   const [{ data: signerData }] = useSigner()
 
   return useContract({
-    addressOrName: TOKEN_XYZ_CONTRACT[networkData?.chain?.id],
+    addressOrName:
+      TOKEN_XYZ_CONTRACT[networkData?.chain?.id] ||
+      "0x0000000000000000000000000000000000000000",
     contractInterface: TokenXyzABI,
     signerOrProvider: signerData,
   })
