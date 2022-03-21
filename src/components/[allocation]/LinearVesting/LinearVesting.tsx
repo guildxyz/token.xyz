@@ -97,7 +97,13 @@ const LinearVesting = (): JSX.Element => {
 
         <Button
           colorScheme="primary"
-          isDisabled={vestingEnded || /* isClaimed || */ !isEligible}
+          isDisabled={
+            vestingEnded ||
+            !isEligible ||
+            parseFloat(
+              formatAmount(cohortData?.claimableAmount, tokenData?.decimals)
+            ) < 0.01
+          }
           isLoading={isClaimLoading}
           loadingText="Claiming tokens"
           mt="auto"
