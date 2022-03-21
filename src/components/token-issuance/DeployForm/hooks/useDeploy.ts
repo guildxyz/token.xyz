@@ -37,6 +37,7 @@ const useDeploy = () => {
     decimals,
     initialSupply,
     maxSupply,
+    economyModel,
     transferOwnershipTo,
     ownable,
     distributionData,
@@ -48,6 +49,7 @@ const useDeploy = () => {
     "decimals",
     "initialSupply",
     "maxSupply",
+    "economyModel",
     "transferOwnershipTo",
     "ownable",
     "distributionData",
@@ -238,7 +240,10 @@ const useDeploy = () => {
             tokenTicker,
             decimals,
             utils.parseUnits(initialSupply.toString(), decimals),
-            maxSupply ? utils.parseUnits(maxSupply.toString(), decimals) : null,
+            utils.parseUnits(
+              economyModel === "FIXED" && maxSupply ? maxSupply.toString() : "0",
+              decimals
+            ),
             transferOwnershipTo || accountData?.address
           )
           .then((res) => res.wait()),
@@ -290,7 +295,7 @@ const useDeploy = () => {
             .encode(
               // address token, address owner
               ["address", "address"],
-              [_context.tokenAddress, _context.tokenDeployer]
+              [tokenAddress, tokenDeployer]
             )
             ?.replace("0x", "")
         }
@@ -367,7 +372,7 @@ const useDeploy = () => {
         }
 
         // Check if the user deployed a MerkleVesting contract. If so, save its data to the context and prepare the `addCohort` calls.
-        const merkleVestingDeployedEvent = _context?.response?.events?.find(
+        const merkleVestingDeployedEvent: Event = _context?.response?.events?.find(
           (event) => event.event === "MerkleVestingDeployed"
         )
 
