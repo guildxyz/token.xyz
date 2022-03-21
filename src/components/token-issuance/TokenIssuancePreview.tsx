@@ -11,6 +11,7 @@ const TokenIssuancePreview = (): JSX.Element => {
   const tokenTicker = useWatch({ control, name: "tokenTicker" })
   const economyModel = useWatch({ control, name: "economyModel" })
   const initialSupply = useWatch({ control, name: "initialSupply" })
+  const maxSupply = useWatch({ control, name: "maxSupply" })
   const transferOwnershipTo = useWatch({ control, name: "transferOwnershipTo" })
   const chain = useWatch({ control, name: "chain" })
 
@@ -24,8 +25,12 @@ const TokenIssuancePreview = (): JSX.Element => {
       <Tag size="sm">
         Supply:{" "}
         {economyModel === "UNLIMITED"
-          ? "unlimited"
-          : !isNaN(initialSupply) && Number(initialSupply).toLocaleString("en")}
+          ? !isNaN(initialSupply) && Number(initialSupply).toLocaleString("en")
+          : !isNaN(initialSupply) &&
+            !isNaN(maxSupply) &&
+            `${Number(initialSupply).toLocaleString("en")} - ${Number(
+              maxSupply
+            ).toLocaleString("en")}`}
       </Tag>
       <Tag size="sm">
         Owner: {shortenHex(transferOwnershipTo || accountData?.address, 3)}
