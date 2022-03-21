@@ -1,5 +1,5 @@
 import { useMachine } from "@xstate/react"
-import { ethers, utils } from "ethers"
+import { Contract, Event, utils } from "ethers"
 import useToast from "hooks/useToast"
 import useTokenXyzContract from "hooks/useTokenXyzContract"
 import { useEffect, useMemo, useRef } from "react"
@@ -8,19 +8,21 @@ import MerkleVestingABI from "static/abis/MerkleVestingABI.json"
 import {
   AllocationFormType,
   AllocationJSON,
+  ContractType,
   TokenInfoJSON,
   TokenIssuanceFormType,
 } from "types"
 import generateMerkleTree from "utils/merkle/generateMerkleTree"
 import { MerkleDistributorInfo, parseBalanceMap } from "utils/merkle/parseBalanceMap"
 import slugify from "utils/slugify"
-import { erc20ABI, useAccount, useSigner } from "wagmi"
+import { erc20ABI, useAccount, useNetwork, useSigner } from "wagmi"
 import { assign, createMachine } from "xstate"
 
 const monthsToSecond = (months: number): number =>
   months ? Math.floor(months * 2629743.83) : 0
 
 const useDeploy = () => {
+  const [{ data: networkData }] = useNetwork()
   const [{ data: accountData }] = useAccount()
   const [{ data: signerData }] = useSigner()
   const tokenXyzContract = useTokenXyzContract()
@@ -36,6 +38,7 @@ const useDeploy = () => {
     initialSupply,
     maxSupply,
     transferOwnershipTo,
+    ownable,
     distributionData,
   ] = getValues([
     "urlName",
@@ -46,6 +49,7 @@ const useDeploy = () => {
     "initialSupply",
     "maxSupply",
     "transferOwnershipTo",
+    "ownable",
     "distributionData",
   ])
 
@@ -59,8 +63,10 @@ const useDeploy = () => {
       tokenUrlName?: string
       tokenAddress?: string
       merkleVestingContractAddress?: string
-      merkleDistributorContractAddress?: string
+      merkleDistributorContractAddresses?: Array<string>
       merkleTrees?: Array<MerkleDistributorInfo>
+      abiEncodedMerkleVestingArgs?: string
+      abiEncodedMerkleDistributorArgs?: Array<string>
     }>(
       {
         id: "deployMachine",
@@ -131,7 +137,7 @@ const useDeploy = () => {
             invoke: {
               src: "fundContracts",
               onDone: {
-                target: "ipfs",
+                target: "verifyingContracts",
                 actions: ["logResponse"], // Debug
               },
               onError: {
@@ -141,10 +147,23 @@ const useDeploy = () => {
             },
             on: {
               SKIP: {
-                target: "ipfs",
+                target: "verifyingContracts",
               },
               UPDATE_CONTEXT: {
                 actions: ["assignDataToContext"],
+              },
+            },
+          },
+          verifyingContracts: {
+            invoke: {
+              src: "verifyContracts",
+              onDone: {
+                target: "ipfs",
+                actions: ["logResponse"], // Debug...
+              },
+              onError: {
+                target: "idle",
+                actions: ["assignErrorToContext", "onError"],
               },
             },
           },
@@ -217,9 +236,9 @@ const useDeploy = () => {
             urlName,
             tokenName,
             tokenTicker,
-            decimals || 18,
-            utils.parseEther(initialSupply?.toString()).toString(),
-            maxSupply ? utils.parseEther(maxSupply.toString()).toString() : null,
+            decimals,
+            utils.parseUnits(initialSupply.toString(), decimals),
+            maxSupply ? utils.parseUnits(maxSupply.toString(), decimals) : null,
             transferOwnershipTo || accountData?.address
           )
           .then((res) => res.wait()),
@@ -251,19 +270,30 @@ const useDeploy = () => {
 
         // Preparing the contract calls
         const contractCalls = []
+        let abiEncodedMerkleVestingArgs
+        const abiEncodedMerkleDistributorArgs = []
 
         // Deploying 1 vesting contract if needed
         const shouldCreateVesting = distributionData.some(
           (allocation) => allocation.vestingType === "LINEAR_VESTING"
         )
 
-        if (shouldCreateVesting)
+        if (shouldCreateVesting) {
           contractCalls.push(
             tokenXyzContract.interface.encodeFunctionData(
               "createVesting(string,address,address)",
               [tokenUrlName, tokenAddress, tokenDeployer]
             )
           )
+
+          abiEncodedMerkleVestingArgs = utils.defaultAbiCoder
+            .encode(
+              // address token, address owner
+              ["address", "address"],
+              [_context.tokenAddress, _context.tokenDeployer]
+            )
+            ?.replace("0x", "")
+        }
 
         // Preparing the "createAirdrop" call(s)
         distributionData?.forEach((allocation, index) => {
@@ -286,6 +316,26 @@ const useDeploy = () => {
               ]
             )
           )
+
+          abiEncodedMerkleDistributorArgs.push(
+            utils.defaultAbiCoder
+              .encode(
+                // address token, bytes32 merkleRoot, uint256 distributionDuration, address owner
+                ["address", "bytes32", "uint256", "address"],
+                [
+                  tokenAddress,
+                  merkleTrees?.[index]?.merkleRoot,
+                  distributionDuration,
+                  tokenDeployer,
+                ]
+              )
+              ?.replace("0x", "")
+          )
+        })
+
+        // Saving encoded data to the context, because we'll use it for contract verification
+        send("UPDATE_CONTEXT", {
+          data: { abiEncodedMerkleVestingArgs, abiEncodedMerkleDistributorArgs },
         })
 
         return tokenXyzContract
@@ -297,14 +347,23 @@ const useDeploy = () => {
           (allocation) => allocation.vestingType === "LINEAR_VESTING"
         )
 
-        // If the user deployed a MerkleDistributor contract, save it to the context
-        const merkleDistributorDeployedEvent = _context?.response?.events?.find(
-          (event) => event.event === "MerkleDistributorDeployed"
-        )
-        if (merkleDistributorDeployedEvent) {
-          const [, , merkleDistributorContractAddress] =
-            merkleDistributorDeployedEvent.args
-          send("UPDATE_CONTEXT", { data: { merkleDistributorContractAddress } })
+        // If the user deployed MerkleDistributor contracts, save them to the context
+        const merkleDistributorDeployedEvents: Array<Event> =
+          _context?.response?.events?.filter(
+            (event) => event.event === "MerkleDistributorDeployed"
+          )
+        if (merkleDistributorDeployedEvents?.length) {
+          const merkleDistributorContractAddresses: Array<string> = []
+
+          merkleDistributorDeployedEvents.forEach((event) => {
+            const [, , merkleDistributorContractAddress] = event.args
+
+            merkleDistributorContractAddresses.push(merkleDistributorContractAddress)
+          })
+
+          send("UPDATE_CONTEXT", {
+            data: { merkleDistributorContractAddresses },
+          })
         }
 
         // Check if the user deployed a MerkleVesting contract. If so, save its data to the context and prepare the `addCohort` calls.
@@ -318,7 +377,7 @@ const useDeploy = () => {
 
         send("UPDATE_CONTEXT", { data: { merkleVestingContractAddress } })
 
-        const merkleVestingContract = new ethers.Contract(
+        const merkleVestingContract = new Contract(
           merkleVestingContractAddress,
           MerkleVestingABI,
           signerData
@@ -356,6 +415,20 @@ const useDeploy = () => {
           .then((addCohortCallsRes) => addCohortCallsRes?.wait())
       },
       fundContracts: async (_context) => {
+        // If the token owner won't be the current user, skip this step and allow the owner to fund the contracts later.
+        if (
+          transferOwnershipTo &&
+          transferOwnershipTo?.toLowerCase() !== accountData?.address?.toLowerCase()
+        ) {
+          toast({
+            title: "Can't fund contracts",
+            description:
+              "Since you won't be the owner of this token, the token owner will need to fund the airdrop/vesting contracts later in the dashboard!",
+          })
+
+          return send("SKIP")
+        }
+
         // Converter function which returns the amount of tokens needed to be sent to each vesting/distributor contract
         const converter = (input: Array<AllocationFormType>): number => {
           if (!input) return 0
@@ -378,14 +451,10 @@ const useDeploy = () => {
           )
         )
 
-        if (process.env.NODE_ENV === "development")
-          console.log(`Airdrop funding amount: ${airdropAmount}`)
-        if (process.env.NODE_ENV === "development")
-          console.log(`Vesting funding amount: ${vestingAmount}`)
         // This should not happen, but in case something goes wrong, we can skip this step (and maybe fund the contracts manually later)
         if (!airdropAmount && !vestingAmount) return send("SKIP")
 
-        const deployedTokenContract = new ethers.Contract(
+        const deployedTokenContract = new Contract(
           _context.tokenAddress,
           erc20ABI,
           signerData
@@ -393,15 +462,23 @@ const useDeploy = () => {
 
         const transfers = []
 
-        if (_context.merkleDistributorContractAddress && airdropAmount) {
-          transfers.push(
-            deployedTokenContract
-              ?.transfer(
-                _context.merkleDistributorContractAddress,
-                ethers.utils.parseUnits(airdropAmount.toString(), 18)
+        if (_context.merkleDistributorContractAddresses?.length && airdropAmount) {
+          distributionData
+            ?.filter((allocation) => allocation.vestingType === "NO_VESTING")
+            ?.forEach((allocation, index) => {
+              const fundingAmount = allocation.allocationAddressesAmounts
+                ?.map((data) => parseInt(data.amount))
+                ?.reduce((amount1, amount2) => amount1 + amount2, 0)
+
+              transfers.push(
+                deployedTokenContract
+                  ?.transfer(
+                    _context.merkleDistributorContractAddresses[index],
+                    utils.parseUnits(fundingAmount.toString(), decimals)
+                  )
+                  .then((res) => res.wait())
               )
-              .then((res) => res.wait())
-          )
+            })
         }
 
         if (_context.merkleVestingContractAddress && vestingAmount) {
@@ -409,7 +486,7 @@ const useDeploy = () => {
             deployedTokenContract
               ?.transfer(
                 _context.merkleVestingContractAddress,
-                ethers.utils.parseUnits(vestingAmount.toString(), 18)
+                utils.parseUnits(vestingAmount.toString(), decimals)
               )
               .then((res) => res.wait())
           )
@@ -417,9 +494,169 @@ const useDeploy = () => {
 
         return Promise.all(transfers)
       },
+      verifyContracts: async (_context) => {
+        const verificationRequests = []
+
+        if (_context.tokenAddress) {
+          const createType: "createToken" | "createTokenWithRoles" = ownable
+            ? "createToken"
+            : "createTokenWithRoles"
+
+          let contractType: ContractType = "erc20initialsupply"
+
+          if (initialSupply === 0 || maxSupply === 0 || initialSupply < maxSupply) {
+            if (maxSupply > 0)
+              contractType =
+                createType === "createToken"
+                  ? "erc20mintableownedmaxsupply"
+                  : "erc20mintableaccesscontrolledmaxsupply"
+            else
+              contractType =
+                createType === "createToken"
+                  ? "erc20mintableowned"
+                  : "erc20mintableaccesscontrolled"
+          } else if (initialSupply === maxSupply) {
+            contractType =
+              createType === "createToken"
+                ? "erc20initialsupply"
+                : "erc20mintableowned"
+          }
+
+          let argTypes = []
+          let args = []
+
+          switch (contractType) {
+            case "erc20mintableaccesscontrolled":
+              // string name, string symbol, uint8 tokenDecimals
+              argTypes = ["string", "string", "uint8"]
+              args = [tokenName, tokenTicker, decimals]
+              break
+            case "erc20mintableaccesscontrolledmaxsupply":
+              // string name, string symbol, uint8 tokenDecimals, address minter, uint256 initialSupply, uint256 maxSupply
+              argTypes = [
+                "string",
+                "string",
+                "uint8",
+                "address",
+                "uint256",
+                "uint256",
+              ]
+              args = [
+                tokenName,
+                tokenTicker,
+                decimals,
+                transferOwnershipTo || accountData?.address,
+                utils.parseUnits(initialSupply.toString(), decimals),
+                utils.parseUnits(maxSupply.toString(), decimals),
+              ]
+              break
+            case "erc20mintableowned":
+              // string name, string symbol, uint8 tokenDecimals, address minter, uint256 initialSupply
+              argTypes = ["string", "string", "uint8", "address", "uint256"]
+              args = [
+                tokenName,
+                tokenTicker,
+                decimals,
+                transferOwnershipTo || accountData?.address,
+                utils.parseUnits(initialSupply.toString(), decimals),
+              ]
+              break
+            case "erc20mintableownedmaxsupply":
+              // string name, string symbol, uint8 tokenDecimals, address minter, uint256 initialSupply, uint256 maxSupply
+              argTypes = [
+                "string",
+                "string",
+                "uint8",
+                "address",
+                "uint256",
+                "uint256",
+              ]
+              args = [
+                tokenName,
+                tokenTicker,
+                decimals,
+                transferOwnershipTo || accountData?.address,
+                utils.parseUnits(initialSupply.toString(), decimals),
+                utils.parseUnits(maxSupply.toString(), decimals),
+              ]
+              break
+            default:
+              // string name, string symbol
+              argTypes = ["string", "string"]
+              args = [tokenName, tokenTicker]
+          }
+
+          if (maxSupply) {
+            argTypes.push("uint256")
+            args.push(utils.parseUnits(maxSupply.toString(), decimals))
+          }
+
+          const abiEncodedConstructorArguments = utils.defaultAbiCoder
+            .encode(argTypes, args)
+            ?.replace("0x", "")
+
+          console.log(
+            "TOKEN CONTRACT VERIFICATION ARGS:",
+            abiEncodedConstructorArguments,
+            contractType
+          )
+
+          verificationRequests.push(
+            fetch("/api/verify-contract", {
+              method: "POST",
+              body: JSON.stringify({
+                chain: networkData?.chain?.id,
+                contractAddress: _context.tokenAddress,
+                contractType: contractType,
+                constructorArguments: abiEncodedConstructorArguments,
+              }),
+            })
+          )
+        }
+
+        if (
+          _context.merkleDistributorContractAddresses?.length &&
+          _context.abiEncodedMerkleDistributorArgs?.length
+        ) {
+          _context.merkleDistributorContractAddresses.forEach((contract, index) => {
+            verificationRequests.push(
+              fetch("/api/verify-contract", {
+                method: "POST",
+                body: JSON.stringify({
+                  chain: networkData?.chain?.id,
+                  contractAddress: contract,
+                  contractType: "merkledistributor",
+                  constructorArguments:
+                    _context.abiEncodedMerkleDistributorArgs[index],
+                }),
+              })
+            )
+          })
+        }
+
+        if (
+          _context.merkleVestingContractAddress &&
+          _context.abiEncodedMerkleVestingArgs
+        ) {
+          verificationRequests.push(
+            fetch("/api/verify-contract", {
+              method: "POST",
+              body: JSON.stringify({
+                chain: networkData?.chain?.id,
+                contractAddress: _context.merkleVestingContractAddress,
+                contractType: "merklevesting",
+                constructorArguments: _context.abiEncodedMerkleVestingArgs,
+              }),
+            })
+          )
+        }
+
+        return Promise.all(verificationRequests)
+      },
       uploadToIpfs: async (_context) => {
+        // TEMP, only for development purposes
         console.log(
-          `DEPLOYED CONTRACTS:\n--------------------\nToken: ${_context.tokenAddress}\nMerkleDistributor: ${_context.merkleDistributorContractAddress}\nMerkleVesting:${_context.merkleVestingContractAddress}\n----------`
+          `DEPLOYED CONTRACTS:\n--------------------\nToken: ${_context.tokenAddress}\nMerkleDistributor: ${_context.merkleDistributorContractAddresses}\nMerkleVesting:${_context.merkleVestingContractAddress}\n----------`
         )
 
         if (!icon && !distributionData?.length) return send("SKIP")
@@ -432,6 +669,10 @@ const useDeploy = () => {
           airdrops: [],
           vestings: [],
         }
+
+        const airdrops = distributionData?.filter(
+          (allocation) => allocation.vestingType === "NO_VESTING"
+        )
 
         distributionData.forEach((allocation, index) => {
           const currentDateInSeconds = Date.now() / 1000
@@ -457,8 +698,11 @@ const useDeploy = () => {
           }
 
           if (allocation.vestingType === "NO_VESTING") {
+            const i = airdrops?.findIndex(
+              (airdrop) => airdrop.allocationName === allocation.allocationName
+            )
             merkleData.merkleDistributorContract =
-              _context?.merkleDistributorContractAddress
+              _context.merkleDistributorContractAddresses[i]
           }
 
           ipfsData.append(`allocation${index}.json`, JSON.stringify(merkleData))

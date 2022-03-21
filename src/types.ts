@@ -29,6 +29,7 @@ type TokenIssuanceFormType = {
   maxSupply?: number
   transferOwnershipTo?: string
   decimals: number
+  ownable: boolean // true - ownable, false - accessControl
   chain: "GOERLI" | "ETHEREUM"
   distributionData?: Array<AllocationFormType>
   correct: boolean
@@ -68,6 +69,25 @@ type AllocationJSON = {
   name: string
 }
 
+type ContractType =
+  | "erc20initialsupply"
+  | "erc20mintableaccesscontrolled"
+  | "erc20mintableaccesscontrolledmaxsupply"
+  | "erc20mintableowned"
+  | "erc20mintableownedmaxsupply"
+  | "merkledistributor"
+  | "merklevesting"
+
+enum ContractTypeNamePairs {
+  erc20initialsupply = "ERC20InitialSupply.sol:ERC20InitialSupply",
+  erc20mintableaccesscontrolled = "ERC20MintableAccessControlled.sol:ERC20MintableAccessControlled",
+  erc20mintableaccesscontrolledmaxsupply = "ERC20MintableAccessControlledMaxSupply.sol:ERC20MintableAccessControlledMaxSupply",
+  erc20mintableowned = "ERC20MintableOwned.sol:ERC20MintableOwned",
+  erc20mintableownedmaxsupply = "ERC20MintableOwnedMaxSupply.sol:ERC20MintableOwnedMaxSupply",
+  merkledistributor = "MerkleDistributor.sol:MerkleDistributor",
+  merklevesting = "MerkleVesting.sol:MerkleVesting",
+}
+
 export type {
   WalletError,
   Rest,
@@ -78,4 +98,6 @@ export type {
   TokenInfoJSON,
   AllocationFormType,
   AllocationJSON,
+  ContractType,
 }
+export { ContractTypeNamePairs }
