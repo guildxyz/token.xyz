@@ -1,6 +1,6 @@
 import { Button, Flex, Heading, Skeleton, Stack, Text } from "@chakra-ui/react"
 import Card from "components/common/Card"
-import { useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import { useAccount, useToken } from "wagmi"
 import { useAllocation } from "../common/AllocationContext"
 import Countdown from "../common/Countdown"
@@ -34,9 +34,15 @@ const Airdrop = (): JSX.Element => {
     data: { isClaimed, owner },
     error: airdropDataWithIndexError,
     isValidating: isAirdropDataWithIndexLoading,
+    mutate: mutateAirdropData,
   } = useAirdropDataWithIndex()
 
-  const { onSubmit, isLoading: isClaimLoading } = useClaim()
+  const { onSubmit, isLoading: isClaimLoading, response: claimResponse } = useClaim()
+
+  useEffect(() => {
+    if (!claimResponse) return
+    mutateAirdropData()
+  }, [claimResponse])
 
   return (
     <Card

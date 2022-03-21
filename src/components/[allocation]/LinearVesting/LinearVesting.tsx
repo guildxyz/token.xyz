@@ -1,7 +1,7 @@
 import { Button, Flex, Heading, Skeleton, Stack, Text } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { BigNumber, utils } from "ethers"
-import { useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import { useAccount, useToken } from "wagmi"
 import { useAllocation } from "../common/AllocationContext"
 import Countdown from "../common/Countdown"
@@ -17,7 +17,7 @@ const LinearVesting = (): JSX.Element => {
     address: tokenAddress,
   })
 
-  const { data: cohortData } = useCohort()
+  const { data: cohortData, mutate: mutateCohortData } = useCohort()
 
   const [{ data: accountData, error: accountError, loading: accountLoading }] =
     useAccount()
@@ -36,7 +36,12 @@ const LinearVesting = (): JSX.Element => {
     [distributionEnd]
   )
 
-  const { onSubmit, isLoading: isClaimLoading } = useClaim()
+  const { onSubmit, isLoading: isClaimLoading, response: claimResponse } = useClaim()
+
+  useEffect(() => {
+    if (!claimResponse) return
+    mutateCohortData()
+  }, [claimResponse])
 
   return (
     <Card
