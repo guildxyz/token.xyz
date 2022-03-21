@@ -78,14 +78,16 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
         // Data cleanup
         const data = results.data?.map(([address, amount]) => [
           address?.trim(),
-          parseFloat(amount?.toString()?.replaceAll(",", "")?.trim() || 0),
+          parseFloat(
+            amount?.toString()?.replaceAll(",", "")?.trim() || 0
+          )?.toString(),
         ])
 
         // If we could parse the CSV, check if the data is actually valid
         if (
           !data.every(
             ([address, amount]) =>
-              ADDRESS_REGEX.test(address) && typeof parseInt(amount) === "number"
+              ADDRESS_REGEX.test(address) && typeof parseFloat(amount) === "number"
           )
         ) {
           setError(`distributionData.${index}.allocationCsv`, {
@@ -144,7 +146,7 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
         const sum = fullArray
           ?.filter((item) => !!item)
-          ?.map((item) => item.amount)
+          ?.map((item) => parseFloat(item.amount))
           ?.reduce((amount1, amount2) => amount1 + amount2, 0)
 
         if (sum > initialSupply && economyModel !== "UNLIMITED") {

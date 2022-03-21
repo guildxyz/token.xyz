@@ -73,10 +73,11 @@ const Chart = ({ isSimple }: Props): JSX.Element => {
     const distributedSupply = distributionData?.length
       ? distributionData
           ?.map((allocationData) =>
-            allocationData.allocationAddressesAmounts?.map((data) => data.amount)
+            allocationData.allocationAddressesAmounts?.map((data) =>
+              parseFloat(data.amount)
+            )
           )
           ?.reduce((arr1, arr2) => [...(arr1 || []), ...(arr2 || [])])
-          ?.map((value) => parseInt(value))
           ?.reduce((a, b) => a + b, 0)
       : 0
 
