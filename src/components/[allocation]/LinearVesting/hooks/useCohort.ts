@@ -17,7 +17,9 @@ const getCohortDetails = (
 ) =>
   Promise.all([
     contract.owner(),
-    contract.getClaimableAmount(merkleRoot, index, address, fullAmount),
+    contract
+      .getClaimableAmount(merkleRoot, index, address, fullAmount)
+      .catch((_) => BigNumber.from(0)),
     contract.getClaimed(merkleRoot, address),
   ])
     .then(([owner, claimableAmount, claimed]) => ({
@@ -50,7 +52,7 @@ const useCohort = (): SWRResponse<ResponseType> => {
   )
 
   const shouldFetch =
-    contract && merkleRoot && accountData && userVestingData && !error
+    signerData && contract && merkleRoot && accountData && userVestingData && !error
 
   return useSWR<ResponseType>(
     shouldFetch
