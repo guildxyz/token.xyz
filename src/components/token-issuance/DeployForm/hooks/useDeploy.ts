@@ -79,7 +79,20 @@ const useDeploy = () => {
         states: {
           idle: {
             on: {
-              DEPLOY: { target: "deploying" },
+              DEPLOY: { target: "testing" },
+            },
+          },
+          testing: {
+            invoke: {
+              src: "testContractCall",
+              onDone: {
+                target: "deploying",
+                actions: ["logResponse"], // Debug
+              },
+              onError: {
+                target: "idle",
+                actions: ["assignErrorToContext", "onError"],
+              },
             },
           },
           deploying: {
@@ -234,6 +247,19 @@ const useDeploy = () => {
 
   const [state, send] = useMachine(deployMachine.current, {
     services: {
+      testContractCall: () =>
+        tokenXyzContract.callStatic.createToken(
+          urlName,
+          tokenName,
+          tokenTicker,
+          decimals,
+          utils.parseUnits(initialSupply.toString(), decimals),
+          utils.parseUnits(
+            economyModel === "FIXED" && maxSupply ? maxSupply.toString() : "0",
+            decimals
+          ),
+          transferOwnershipTo || accountData?.address
+        ),
       createToken: () =>
         tokenXyzContract
           .createToken(
@@ -753,7 +779,8 @@ const useDeploy = () => {
   )
 
   const loadingText = useMemo(() => {
-    if (state.matches("deploying")) return "Creating token"
+    if (state.matches("testing")) return "Pre-deployment test"
+    else if (state.matches("deploying")) return "Creating token"
     else if (state.matches("creatingMerkleContracts")) return "Deploying contracts"
     else if (state.matches("creatingCohorts")) return "Creating cohorts"
     else if (state.matches("fundingContracts"))
