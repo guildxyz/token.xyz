@@ -122,7 +122,7 @@ const useDeploy = () => {
             },
             on: {
               SKIP: {
-                target: "ipfs",
+                target: "verifyingContracts",
               },
               UPDATE_CONTEXT: {
                 actions: ["assignDataToContext"],
