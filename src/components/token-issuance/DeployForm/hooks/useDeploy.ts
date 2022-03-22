@@ -643,6 +643,7 @@ const useDeploy = () => {
           console.log(
             "TOKEN CONTRACT VERIFICATION ARGS:",
             abiEncodedConstructorArguments,
+            "\nContract type:",
             contractType
           )
 
@@ -655,7 +656,7 @@ const useDeploy = () => {
                 contractType: contractType,
                 constructorArguments: abiEncodedConstructorArguments,
               }),
-            })
+            }).then((res) => res.json())
           )
         }
 
@@ -674,7 +675,14 @@ const useDeploy = () => {
                   constructorArguments:
                     _context.abiEncodedMerkleDistributorArgs[index],
                 }),
-              })
+              }).then((res) => res.json())
+            )
+
+            console.log(
+              "MERKLE DISTRIBUTOR CONTRACT VERIFICATION ARGS:",
+              _context.abiEncodedMerkleDistributorArgs[index],
+              "\nContract type: merkledistributor\nContract address: ",
+              contract
             )
           })
         }
@@ -692,7 +700,14 @@ const useDeploy = () => {
                 contractType: "merklevesting",
                 constructorArguments: _context.abiEncodedMerkleVestingArgs,
               }),
-            })
+            }).then((res) => res.json())
+          )
+
+          console.log(
+            "MERKLE VESTING CONTRACT VERIFICATION ARGS:",
+            _context.abiEncodedMerkleVestingArgs,
+            "\nContract type: merkledistributor\nContract address: ",
+            _context.merkleVestingContractAddress
           )
         }
 
