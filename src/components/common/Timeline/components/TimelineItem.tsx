@@ -93,16 +93,20 @@ const TimelineItem = ({
           fontWeight="bold"
           fontSize="lg"
           fontFamily="display"
-          // cursor="pointer"
-          // onClick={onClick}
-          // tabIndex={0}
+          // cursor={completed ? "pointer" : undefined}
+          // onClick={completed ? onClick : undefined}
+          // tabIndex={completed ? 0 : -1}
           // _focus={{
           //   outline: "none",
           // }}
-          // _focusVisible={{
-          //   textDecoration: "underline",
-          // }}
-          // onKeyDown={handleTitleKeyDown}
+          // _focusVisible={
+          //   completed
+          //     ? {
+          //         textDecoration: "underline",
+          //       }
+          //     : undefined
+          // }
+          // onKeyDown={completed ? handleTitleKeyDown : undefined}
         >
           {title}
         </Text>
