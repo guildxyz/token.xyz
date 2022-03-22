@@ -9,6 +9,8 @@ import {
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { chains } from "connectors"
+import { useMemo } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
 import shortenHex from "utils/shortenHex"
@@ -25,6 +27,11 @@ const GeneralTokenData = (): JSX.Element => {
   const initialSupply = useWatch({ control, name: "initialSupply" })
   const transferOwnershipTo = useWatch({ control, name: "transferOwnershipTo" })
   const chain = useWatch({ control, name: "chain" })
+
+  const chainName = useMemo(
+    () => (chain && chains ? chains.find((c) => c.id === chain)?.name : ""),
+    [chains, chain]
+  )
 
   const displayedAddress = useBreakpointValue({
     base: shortenHex(transferOwnershipTo || accountData?.address, 3),
@@ -69,7 +76,7 @@ const GeneralTokenData = (): JSX.Element => {
               <Td fontWeight="bold" borderBottom="none">
                 Chain
               </Td>
-              <Td borderBottom="none">{chain}</Td>
+              <Td borderBottom="none">{chainName}</Td>
             </Tr>
           </Tbody>
         </Table>
