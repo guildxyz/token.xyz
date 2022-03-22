@@ -116,8 +116,8 @@ const useDeploy = () => {
                 actions: ["assignResponseToContext", "logResponse"], // Debug...
               },
               onError: {
-                target: "idle",
-                actions: ["assignErrorToContext", "onError"],
+                target: "verifyingContracts",
+                actions: ["assignErrorToContext", "onMerkleContractsError"],
               },
             },
             on: {
@@ -137,8 +137,8 @@ const useDeploy = () => {
                 actions: ["logResponse"], // Debug...
               },
               onError: {
-                target: "idle",
-                actions: ["assignErrorToContext", "onError"],
+                target: "fundingContracts",
+                actions: ["assignErrorToContext", "onCreateCohortsError"],
               },
             },
             on: {
@@ -239,6 +239,18 @@ const useDeploy = () => {
               status: "error",
               title: "Uh-oh!",
               description: _context.error,
+            }),
+          onMerkleContractsError: (_context) =>
+            toast({
+              title: "Could not deploy airdrop/vesting contracts",
+              description:
+                "Do not worry, you'll be able to create airdrops and vestings later on your dashboard!",
+            }),
+          onCreateCohortsError: (_context) =>
+            toast({
+              title: "Could not create cohorts",
+              description:
+                "Do not worry, you'll be able to add cohorts to your vesting contract later on your dashboard!",
             }),
         },
       }
@@ -738,17 +750,21 @@ const useDeploy = () => {
               (airdrop) => airdrop.allocationName === allocation.allocationName
             )
             merkleData.merkleDistributorContract =
-              _context.merkleDistributorContractAddresses[i]
+              _context.merkleDistributorContractAddresses?.[i]
           }
 
-          ipfsData.append(`allocation${index}.json`, JSON.stringify(merkleData))
+          if (merkleData.merkleDistributorContract)
+            ipfsData.append(`allocation${index}.json`, JSON.stringify(merkleData))
 
           const metadataAttribute =
             allocation.vestingType === "NO_VESTING" ? "airdrops" : "vestings"
-          info[metadataAttribute].push({
-            fileName: `allocation${index}.json`,
-            prettyUrl: slugify(allocation.allocationName),
-          })
+
+          // Only save fileName if the airdrop/vesting creation was successful and we know the contract address
+          if (merkleData?.vestingContract || merkleData?.merkleDistributorContract)
+            info[metadataAttribute].push({
+              fileName: `allocation${index}.json`,
+              prettyUrl: slugify(allocation.allocationName),
+            })
         })
 
         if (icon) {
