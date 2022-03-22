@@ -30,6 +30,7 @@ const useDeploy = () => {
   const { getValues } = useFormContext<TokenIssuanceFormType>()
 
   const [
+    chain,
     urlName,
     tokenName,
     tokenTicker,
@@ -42,6 +43,7 @@ const useDeploy = () => {
     ownable,
     distributionData,
   ] = getValues([
+    "chain",
     "urlName",
     "tokenName",
     "tokenTicker",
@@ -671,6 +673,8 @@ const useDeploy = () => {
 
         const info: TokenInfoJSON = {
           icon: null,
+          chain: chain,
+          displayInExplorer: true,
           airdrops: [],
           vestings: [],
         }
@@ -680,7 +684,7 @@ const useDeploy = () => {
         )
 
         distributionData.forEach((allocation, index) => {
-          const currentDateInSeconds = Date.now() / 1000
+          const currentDateInSeconds = Math.floor(Date.now() / 1000) + 60 // Adding 1 minute, because the deployment could take some time
           const distributionDurationInSeconds = monthsToSecond(
             allocation.distributionDuration
           )
@@ -697,6 +701,7 @@ const useDeploy = () => {
             vestingPeriod: vestingPeriodInSeconds,
             cliffPeriod: cliffInSeconds,
             createdBy: accountData?.address,
+            createdAt: currentDateInSeconds,
             tokenAddress: _context.tokenAddress,
             vestingContract: _context.merkleVestingContractAddress,
             name: allocation.allocationName,

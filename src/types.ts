@@ -49,6 +49,8 @@ type AllocationFormType = {
 
 type TokenInfoJSON = {
   icon?: string
+  chain?: number
+  displayInExplorer?: boolean
   airdrops: Array<{ fileName: string; prettyUrl: string }>
   vestings: Array<{ fileName: string; prettyUrl: string }>
 }
@@ -63,6 +65,7 @@ type AllocationJSON = {
   vestingPeriod?: number
   cliffPeriod?: number
   createdBy: string
+  createdAt: number
   tokenAddress: string
   merkleDistributorContract?: string
   vestingContract?: string
