@@ -75,7 +75,7 @@ handler.post((req: NextApiRequest, res: NextApiResponse) => {
   body.append("contractaddress", contractAddress)
   body.append("contractname", contractName)
   body.append("codeformat", "solidity-standard-json-input")
-  body.append("compilerversion", "v0.8.12+commit.f00d7308")
+  body.append("compilerversion", "v0.8.13+commit.abaa5c0e")
   body.append("licenseType", licenseType)
 
   body.append("constructorArguments ", constructorArguments)
