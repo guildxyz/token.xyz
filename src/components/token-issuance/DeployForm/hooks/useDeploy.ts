@@ -40,7 +40,7 @@ const useDeploy = () => {
     maxSupply,
     economyModel,
     transferOwnershipTo,
-    ownable,
+    tokenType,
     distributionData,
   ] = getValues([
     "chain",
@@ -53,7 +53,7 @@ const useDeploy = () => {
     "maxSupply",
     "economyModel",
     "transferOwnershipTo",
-    "ownable",
+    "tokenType",
     "distributionData",
   ])
 
@@ -543,9 +543,8 @@ const useDeploy = () => {
         const verificationRequests = []
 
         if (_context.tokenAddress) {
-          const createType: "createToken" | "createTokenWithRoles" = ownable
-            ? "createToken"
-            : "createTokenWithRoles"
+          const createType: "createToken" | "createTokenWithRoles" =
+            tokenType === "OWNABLE" ? "createToken" : "createTokenWithRoles"
 
           let contractType: ContractType = "erc20initialsupply"
 
@@ -656,7 +655,7 @@ const useDeploy = () => {
                 contractType: contractType,
                 constructorArguments: abiEncodedConstructorArguments,
               }),
-            }).then((res) => res.json())
+            })
           )
         }
 
@@ -675,7 +674,7 @@ const useDeploy = () => {
                   constructorArguments:
                     _context.abiEncodedMerkleDistributorArgs[index],
                 }),
-              }).then((res) => res.json())
+              })
             )
 
             console.log(
@@ -700,7 +699,7 @@ const useDeploy = () => {
                 contractType: "merklevesting",
                 constructorArguments: _context.abiEncodedMerkleVestingArgs,
               }),
-            }).then((res) => res.json())
+            })
           )
 
           console.log(

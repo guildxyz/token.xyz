@@ -310,8 +310,8 @@ const TokenIssuanceForm = (): JSX.Element => {
                 <FormLabel>Ownable / access control</FormLabel>
                 <Controller
                   control={control}
-                  name="ownable"
-                  defaultValue={true}
+                  name="tokenType"
+                  defaultValue="OWNABLE"
                   render={({ field: { ref, value, onChange, onBlur } }) => (
                     <RadioGroup
                       ref={ref}
@@ -321,10 +321,10 @@ const TokenIssuanceForm = (): JSX.Element => {
                       colorScheme="primary"
                     >
                       <Stack spacing={2}>
-                        <Radio value="true" maxW="max-content">
+                        <Radio value="OWNABLE" maxW="max-content">
                           Ownable
                         </Radio>
-                        <Radio value="false" maxW="max-content">
+                        <Radio value="ACCESS_CONTROL" maxW="max-content">
                           Access control
                         </Radio>
                       </Stack>
