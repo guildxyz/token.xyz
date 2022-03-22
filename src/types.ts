@@ -30,7 +30,7 @@ type TokenIssuanceFormType = {
   transferOwnershipTo?: string
   decimals: number
   ownable: boolean // true - ownable, false - accessControl
-  chain: "GOERLI" | "ETHEREUM"
+  chain: number // 1 | 3 | 5 | 56 | 137
   distributionData?: Array<AllocationFormType>
   correct: boolean
 }

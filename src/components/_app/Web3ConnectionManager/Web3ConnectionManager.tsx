@@ -28,7 +28,7 @@ const Web3ConnectionManager = ({
     onClose: closeNetworkModal,
   } = useDisclosure()
 
-  // // try to eagerly connect to an injected provider, if it exists and has granted access already
+  // try to eagerly connect to an injected provider, if it exists and has granted access already
   const triedEager = useEagerConnect()
 
   return (

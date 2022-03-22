@@ -30,6 +30,7 @@ import {
 } from "@chakra-ui/react"
 import { useTimeline } from "components/common/Timeline/components/TimelineContext"
 import FormSection from "components/forms/FormSection"
+import { chains } from "connectors"
 import useMyUrlNames from "hooks/useMyUrlNames"
 import { Question } from "phosphor-react"
 import { useEffect } from "react"
@@ -37,11 +38,12 @@ import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
 import shortenHex from "utils/shortenHex"
 import slugify from "utils/slugify"
-import { useAccount } from "wagmi"
+import { useAccount, useNetwork } from "wagmi"
 import EconomyModelPicker from "./components/EconomicModelPicker"
 import IconPicker from "./components/IconPicker"
 
 const TokenIssuanceForm = (): JSX.Element => {
+  const [{ data: networkData }, switchNetwork] = useNetwork()
   const [{ data: accountData }] = useAccount()
   const { data: reusableUrlNames, isValidating: reusableUrlNamesLoading } =
     useMyUrlNames()
@@ -186,24 +188,35 @@ const TokenIssuanceForm = (): JSX.Element => {
         <Controller
           control={control}
           name="chain"
-          defaultValue="GOERLI"
+          defaultValue={networkData?.chain?.id}
           render={({ field: { ref, value, onChange, onBlur } }) => (
             <Select
               ref={ref}
               value={value}
-              onChange={onChange}
+              onChange={(e) => {
+                switchNetwork(parseInt(e.target.value))
+                  .then((res) => {
+                    if (res.error || !res.data) return
+                    onChange(res.data.id)
+                  })
+                  .catch((_) => {})
+              }}
               onBlur={onBlur}
               size="lg"
               maxW="48"
             >
-              <option value="GOERLI">Görli</option>
-              <option value="ETHEREUM" disabled>
+              {chains?.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+              <option value={1} disabled>
                 Ethereum (soon)
               </option>
-              <option value="POLYGON" disabled>
+              <option value={137} disabled>
                 Polygon (soon)
               </option>
-              <option value="BSC" disabled>
+              <option value={56} disabled>
                 BSC (soon)
               </option>
             </Select>

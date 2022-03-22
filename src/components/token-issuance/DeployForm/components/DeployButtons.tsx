@@ -2,6 +2,7 @@ import {
   Button,
   GridItem,
   Heading,
+  Img,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -15,21 +16,42 @@ import {
 } from "@chakra-ui/react"
 import { useConfetti } from "components/common/ConfettiContext"
 import Modal from "components/common/Modal"
-import { useEffect } from "react"
+import { Web3Connection } from "components/_app/Web3ConnectionManager"
+import { iconUrls } from "connectors"
+import useToast from "hooks/useToast"
+import { useContext, useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
+import { useNetwork } from "wagmi"
 import useDeploy from "../hooks/useDeploy"
 
 const DeployButtons = (): JSX.Element => {
-  const { control, handleSubmit } = useFormContext<TokenIssuanceFormType>()
+  const { openNetworkModal, closeNetworkModal } = useContext(Web3Connection)
+  const [{ data: networkData }] = useNetwork()
+
+  const { control, setValue, handleSubmit } = useFormContext<TokenIssuanceFormType>()
+  const chain = useWatch({ control, name: "chain" })
   const correct = useWatch({ control, name: "correct" })
 
   const { startDeploy, isLoading, loadingText, finished } = useDeploy()
 
   const tokenTicker = useWatch({ control, name: "tokenTicker" })
 
+  const toast = useToast()
+
   const { isOpen, onOpen, onClose } = useDisclosure()
   const startConfetti = useConfetti()
+
+  // Change token chain if the user changes the deployment chain
+  useEffect(() => {
+    if (!networkData?.chain || networkData.chain.id === chain) return
+    setValue("chain", networkData.chain.id)
+    toast({
+      title: "Chain changed!",
+      description: `Your token will be deployed on ${networkData.chain.name}`,
+    })
+    closeNetworkModal()
+  }, [networkData])
 
   useEffect(() => {
     if (!finished) return
@@ -47,19 +69,25 @@ const DeployButtons = (): JSX.Element => {
         <Heading as="h3" mb={2} fontFamily="display" fontSize="lg">
           Deploy
         </Heading>
-        <SimpleGrid columns={2} gap={4}>
-          <GridItem colSpan={{ base: 2, lg: 1 }}>
+        <SimpleGrid columns={3} gap={4}>
+          <GridItem colSpan={{ base: 3, sm: 1 }}>
             <Button
+              leftIcon={
+                <Img
+                  src={iconUrls[networkData?.chain?.id]}
+                  boxSize={4}
+                  alt={`${networkData?.chain?.name} logo`}
+                />
+              }
               w="full"
               size="lg"
-              variant="outline"
-              disabled={!correct || isLoading}
+              onClick={openNetworkModal}
             >
-              Deploy to testnet
+              {networkData?.chain?.name}
             </Button>
           </GridItem>
 
-          <GridItem colSpan={{ base: 2, md: 1 }}>
+          <GridItem colSpan={{ base: 3, sm: 2 }}>
             <Button
               w="full"
               size="lg"
@@ -70,7 +98,7 @@ const DeployButtons = (): JSX.Element => {
               // TODO error handler
               onClick={handleSubmit(startDeploy, console.log)}
             >
-              Deploy to mainnet
+              {`Deploy to ${networkData?.chain?.name}`}
             </Button>
           </GridItem>
         </SimpleGrid>

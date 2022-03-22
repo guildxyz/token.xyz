@@ -1,4 +1,6 @@
 import { Tag, Text, VStack } from "@chakra-ui/react"
+import { chains } from "connectors"
+import { useMemo } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
 import shortenHex from "utils/shortenHex"
@@ -14,6 +16,11 @@ const TokenIssuancePreview = (): JSX.Element => {
   const maxSupply = useWatch({ control, name: "maxSupply" })
   const transferOwnershipTo = useWatch({ control, name: "transferOwnershipTo" })
   const chain = useWatch({ control, name: "chain" })
+
+  const chainName = useMemo(
+    () => (chain && chains ? chains.find((c) => c.id === chain)?.name : ""),
+    [chains, chain]
+  )
 
   if (!tokenTicker && !initialSupply) return null
 
@@ -35,7 +42,7 @@ const TokenIssuancePreview = (): JSX.Element => {
       <Tag size="sm">
         Owner: {shortenHex(transferOwnershipTo || accountData?.address, 3)}
       </Tag>
-      <Tag size="sm">Chain: {chain}</Tag>
+      <Tag size="sm">Chain: {chainName}</Tag>
     </VStack>
   )
 }
