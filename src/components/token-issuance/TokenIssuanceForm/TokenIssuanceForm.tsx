@@ -226,7 +226,12 @@ const TokenIssuanceForm = (): JSX.Element => {
 
       <Accordion allowToggle>
         <AccordionItem border="none">
-          <AccordionButton mb={4} p={0} _hover={{ bgColor: null }}>
+          <AccordionButton
+            mb={4}
+            p={0}
+            maxW="max-content"
+            _hover={{ bgColor: null }}
+          >
             <Box pr={2} textAlign="left" fontWeight="bold">
               Advanced settings
             </Box>
@@ -316,8 +321,12 @@ const TokenIssuanceForm = (): JSX.Element => {
                       colorScheme="primary"
                     >
                       <Stack spacing={2}>
-                        <Radio value="true">Ownable</Radio>
-                        <Radio value="false">Access control</Radio>
+                        <Radio value="true" maxW="max-content">
+                          Ownable
+                        </Radio>
+                        <Radio value="false" maxW="max-content">
+                          Access control
+                        </Radio>
                       </Stack>
                     </RadioGroup>
                   )}
