@@ -259,8 +259,11 @@ const useDeploy = () => {
 
   const [state, send] = useMachine(deployMachine.current, {
     services: {
-      testContractCall: () =>
-        tokenXyzContract.callStatic.createToken(
+      testContractCall: () => {
+        const createType: "createToken" | "createTokenWithRoles" =
+          tokenType === "OWNABLE" ? "createToken" : "createTokenWithRoles"
+
+        return tokenXyzContract.callStatic[createType]?.(
           urlName,
           tokenName,
           tokenTicker,
@@ -271,22 +274,25 @@ const useDeploy = () => {
             decimals
           ),
           transferOwnershipTo || accountData?.address
-        ),
-      createToken: () =>
-        tokenXyzContract
-          .createToken(
-            urlName,
-            tokenName,
-            tokenTicker,
-            decimals,
-            utils.parseUnits(initialSupply.toString(), decimals),
-            utils.parseUnits(
-              economyModel === "FIXED" && maxSupply ? maxSupply.toString() : "0",
-              decimals
-            ),
-            transferOwnershipTo || accountData?.address
-          )
-          .then((res) => res.wait()),
+        )
+      },
+      createToken: () => {
+        const createType: "createToken" | "createTokenWithRoles" =
+          tokenType === "OWNABLE" ? "createToken" : "createTokenWithRoles"
+
+        return tokenXyzContract[createType]?.(
+          urlName,
+          tokenName,
+          tokenTicker,
+          decimals,
+          utils.parseUnits(initialSupply.toString(), decimals),
+          utils.parseUnits(
+            economyModel === "FIXED" && maxSupply ? maxSupply.toString() : "0",
+            decimals
+          ),
+          transferOwnershipTo || accountData?.address
+        ).then((res) => res.wait())
+      },
       createMerkleContracts: async (_context) => {
         const tokenDeployedEvent = _context?.response?.events?.find(
           (event) => event.event === "TokenDeployed"
