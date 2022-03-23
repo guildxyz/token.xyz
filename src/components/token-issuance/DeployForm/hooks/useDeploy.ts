@@ -571,9 +571,15 @@ const useDeploy = () => {
 
           switch (contractType) {
             case "erc20mintableaccesscontrolled":
-              // string name, string symbol, uint8 tokenDecimals
-              argTypes = ["string", "string", "uint8"]
-              args = [tokenName, tokenTicker, decimals]
+              // string name, string symbol, uint8 tokenDecimals, address minter, uint256 initialSupply
+              argTypes = ["string", "string", "uint8", "address", "uint256"]
+              args = [
+                tokenName,
+                tokenTicker,
+                decimals,
+                transferOwnershipTo || accountData?.address,
+                utils.parseUnits(initialSupply.toString(), decimals),
+              ]
               break
             case "erc20mintableaccesscontrolledmaxsupply":
               // string name, string symbol, uint8 tokenDecimals, address minter, uint256 initialSupply, uint256 maxSupply
