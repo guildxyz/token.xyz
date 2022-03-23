@@ -130,10 +130,10 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
         // Check if the uploaded CSVs are actually different CSV files
         for (const addressesAmountsArray of filteredAllocations) {
           if (
-            addressesAmountsArray?.every(
+            !addressesAmountsArray?.some(
               ({ address, amount }, i) =>
-                address?.toLowerCase() === mappedData?.[i]?.address?.toLowerCase() &&
-                amount === mappedData?.[i]?.amount
+                address?.toLowerCase() !== mappedData?.[i]?.address?.toLowerCase() &&
+                amount !== mappedData?.[i]?.amount
             )
           ) {
             setError(`distributionData.${index}.allocationCsv`, {
