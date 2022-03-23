@@ -75,13 +75,19 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
           return
         }
 
+        const hasHeader =
+          !ADDRESS_REGEX.test(results.data?.[0]?.[0]?.toString()) &&
+          isNaN(parseInt(results.data?.[0]?.[1]?.toString()))
+
         // Data cleanup
-        const data = results.data?.map(([address, amount]) => [
-          address?.trim(),
-          parseFloat(
-            amount?.toString()?.replaceAll(",", "")?.trim() || 0
-          )?.toString(),
-        ])
+        const data = results.data
+          ?.slice(hasHeader ? 1 : 0)
+          ?.map(([address, amount]) => [
+            address?.trim(),
+            parseFloat(
+              amount?.toString()?.replaceAll(",", "")?.trim() || 0
+            )?.toString(),
+          ])
 
         // If we could parse the CSV, check if the data is actually valid
         if (
