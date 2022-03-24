@@ -22,7 +22,7 @@
     "@makerdao/multicall": "^0.12.0",
     "@metamask/jazzicon": "^2.0.0",
     "@metamask/onboarding": "^1.0.1",
-    "@xstate/react": "^2.0.0",
+    "@xstate/react": "^2.0.1",
     "canvas-confetti": "^1.5.1",
     "chart.js": "^3.7.1",
     "chartjs-adapter-moment": "^1.0.0",
