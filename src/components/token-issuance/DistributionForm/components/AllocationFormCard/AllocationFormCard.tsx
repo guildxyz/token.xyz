@@ -155,7 +155,7 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
           ?.map((item) => parseFloat(item.amount))
           ?.reduce((amount1, amount2) => amount1 + amount2, 0)
 
-        if (sum > initialSupply && economyModel !== "UNLIMITED") {
+        if (sum > initialSupply) {
           setError(`distributionData.${index}.allocationCsv`, {
             message:
               "You're trying to allocate more tokens than your initial supply!",

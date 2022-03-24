@@ -54,7 +54,7 @@ const FixedSupplyForm = (): JSX.Element => {
                 economyModel !== "UNLIMITED" && dirtyFields.maxSupply
                   ? {
                       value: maxSupply,
-                      message: "Must be less than max supply",
+                      message: "Must be less or equal than max supply",
                     }
                   : undefined,
             }}
@@ -67,7 +67,7 @@ const FixedSupplyForm = (): JSX.Element => {
                   onChange(newValue)
                   const parsedValue = parseInt(newValue)
                   if (parsedValue >= getValues("maxSupply"))
-                    setValue("maxSupply", parsedValue + 1)
+                    setValue("maxSupply", parsedValue)
                 }}
                 onBlur={onBlur}
                 min={0}
@@ -98,7 +98,7 @@ const FixedSupplyForm = (): JSX.Element => {
               required: economyModel !== "UNLIMITED" && "This field is required!",
               min: {
                 value: initialSupply,
-                message: "Must be greater than initial supply",
+                message: "Must be greater or equal than initial supply",
               },
             }}
             defaultValue={0}

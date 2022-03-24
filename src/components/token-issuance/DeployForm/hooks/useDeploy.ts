@@ -566,10 +566,7 @@ const useDeploy = () => {
                   ? "erc20mintableowned"
                   : "erc20mintableaccesscontrolled"
           } else if (initialSupply === maxSupply) {
-            contractType =
-              createType === "createToken"
-                ? "erc20initialsupply"
-                : "erc20mintableowned"
+            contractType = "erc20initialsupply"
           }
 
           let argTypes = []
@@ -717,7 +714,7 @@ const useDeploy = () => {
           console.log(
             "MERKLE VESTING CONTRACT VERIFICATION ARGS:",
             _context.abiEncodedMerkleVestingArgs,
-            "\nContract type: merkledistributor\nContract address: ",
+            "\nContract type: merklevesting\nContract address: ",
             _context.merkleVestingContractAddress
           )
         }
