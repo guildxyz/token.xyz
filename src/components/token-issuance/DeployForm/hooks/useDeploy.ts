@@ -554,7 +554,8 @@ const useDeploy = () => {
 
           let contractType: ContractType = "erc20initialsupply"
 
-          if (initialSupply === 0 || maxSupply === 0 || initialSupply < maxSupply) {
+          // Using `==` here, because react-hook-form stores these values as strings!
+          if (initialSupply == 0 || maxSupply == 0 || initialSupply < maxSupply) {
             if (maxSupply > 0)
               contractType =
                 createType === "createToken"
