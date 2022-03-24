@@ -777,18 +777,18 @@ const useDeploy = () => {
               _context.merkleDistributorContractAddresses?.[i]
           }
 
-          if (merkleData.merkleDistributorContract)
+          // Only save fileName if the airdrop/vesting creation was successful and we know the contract address
+          if (merkleData?.vestingContract || merkleData?.merkleDistributorContract) {
             ipfsData.append(`allocation${index}.json`, JSON.stringify(merkleData))
 
-          const metadataAttribute =
-            allocation.vestingType === "NO_VESTING" ? "airdrops" : "vestings"
+            const metadataAttribute =
+              allocation.vestingType === "NO_VESTING" ? "airdrops" : "vestings"
 
-          // Only save fileName if the airdrop/vesting creation was successful and we know the contract address
-          if (merkleData?.vestingContract || merkleData?.merkleDistributorContract)
             info[metadataAttribute].push({
               fileName: `allocation${index}.json`,
               prettyUrl: slugify(allocation.allocationName),
             })
+          }
         })
 
         if (icon) {
