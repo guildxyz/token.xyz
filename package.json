@@ -46,7 +46,7 @@
     "slugify": "^1.6.5",
     "swr": "^1.2.2",
     "wagmi": "^0.2.16",
-    "xstate": "^4.30.2"
+    "xstate": "^4.30.3"
   },
   "devDependencies": {
     "@hookform/devtools": "^4.0.2",
