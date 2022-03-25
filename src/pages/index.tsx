@@ -1,28 +1,22 @@
-import { Button } from "@chakra-ui/react"
+import { SimpleGrid, Spinner, Text } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
-import useTokenXyzContract from "hooks/useTokenXyzContract"
-import { useEffect } from "react"
-import { useAccount } from "wagmi"
+import TokenCard from "components/dashboard/TokenCard"
+import useAllTokens from "hooks/useAllTokens"
 
 const Page = (): JSX.Element => {
-  const [{ data: accountData }] = useAccount()
-  const tokenXyzContract = useTokenXyzContract()
-
-  const logDeployedTokens = async () => {
-    const res = await tokenXyzContract.getDeployedTokens("test")
-    console.log(res)
-  }
-
-  useEffect(() => {
-    if (!tokenXyzContract) return
-    console.log(tokenXyzContract)
-  }, [tokenXyzContract])
+  const { data, isValidating } = useAllTokens()
 
   return (
     <Layout title="Home">
-      {accountData?.address && (
-        <Button onClick={logDeployedTokens}>Log deployed tokens</Button>
-      )}
+      <SimpleGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={{ base: 4, md: 6 }}>
+        {isValidating ? (
+          <Spinner />
+        ) : !data?.length ? (
+          <Text>0 deployed tokens. :(</Text>
+        ) : (
+          data.map((token) => <TokenCard key={token} address={token} />)
+        )}
+      </SimpleGrid>
     </Layout>
   )
 }
