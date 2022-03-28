@@ -4,8 +4,9 @@ import { InjectedConnector } from "wagmi/connectors/injected"
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect"
 import { WalletLinkConnector } from "wagmi/connectors/walletLink"
 
+// Default chain is Ropsten for now
 const provider = ({ chainId }) =>
-  new providers.InfuraProvider(chainId, process.env.NEXT_PUBLIC_INFURA_ID)
+  new providers.InfuraProvider(chainId ?? 3, process.env.NEXT_PUBLIC_INFURA_ID)
 
 const supportedChainIds = [/* 1,*/ 3, 5]
 const chains = defaultChains.filter((c) => supportedChainIds.includes(c.id))

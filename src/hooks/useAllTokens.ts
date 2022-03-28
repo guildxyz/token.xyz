@@ -13,8 +13,6 @@ const useAllTokens = (): {
     ...swrResponse
   } = useTokenDeployedEvents("ALL")
 
-  console.log("TOKENDEPLOYEDEVENTS", tokenDeployedEvents)
-
   const data: Array<string> =
     tokenDeployedEvents?.map((event) => event.args?.[2]?.toLowerCase()) ?? []
 
