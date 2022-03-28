@@ -167,7 +167,7 @@ const DistributionData = (): JSX.Element => {
 
                   return (
                     <Stack key={allocation.allocationName}>
-                      <Heading as="h3" fontSize="md">
+                      <Heading as="h3" fontSize="lg" color="tokenxyz.blue.500">
                         {allocation.allocationName}
                       </Heading>
                       <HStack
@@ -175,7 +175,7 @@ const DistributionData = (): JSX.Element => {
                         fontWeight="bold"
                         letterSpacing="wider"
                         textTransform="uppercase"
-                        textColor="gray"
+                        textColor="tokenxyz.rosybrown.500"
                         fontSize="sm"
                       >
                         <Text as="span">Address</Text>
