@@ -5,17 +5,21 @@ import shortenHex from "utils/shortenHex"
 import { useToken } from "wagmi"
 
 type Props = {
+  chain: string
   address: string
 }
 
-const TokenCard = ({ address }: Props): JSX.Element => {
+const TokenCard = ({ chain, address }: Props): JSX.Element => {
   const [{ data, error, loading }] = useToken({ address })
-  const { data: tokenDataFromIpfs, isValidating } = useTokenDataFromIpfs(address)
+  const { data: tokenDataFromIpfs, isValidating } = useTokenDataFromIpfs(
+    chain,
+    address
+  )
 
   // if (tokenDataFromIpfs && !tokenDataFromIpfs?.displayInExplorer) return null
 
   return (
-    <Link href={`/token/${address}`} _hover={{ textDecoration: "none" }}>
+    <Link href={`/token/${chain}/${address}`} _hover={{ textDecoration: "none" }}>
       <DisplayCard
         title={
           loading || isValidating
@@ -26,7 +30,7 @@ const TokenCard = ({ address }: Props): JSX.Element => {
         }
         image={
           tokenDataFromIpfs?.icon
-            ? `${process.env.NEXT_PUBLIC_FLEEK_BUCKET}/${address}/${tokenDataFromIpfs.icon}`
+            ? `${process.env.NEXT_PUBLIC_FLEEK_BUCKET}/${chain}/${address}/${tokenDataFromIpfs.icon}`
             : undefined
         }
       />

@@ -14,7 +14,7 @@ const AllocationCard = ({ fileName, prettyUrl }: Props): JSX.Element => {
 
   return (
     <Link
-      href={`/token/${router.query?.token?.toString()}/${prettyUrl}`}
+      href={`/token/${router.query?.chain?.toString()}/${router.query?.token?.toString()}/${prettyUrl}`}
       _hover={{ textDecoration: "none" }}
     >
       <DisplayCard

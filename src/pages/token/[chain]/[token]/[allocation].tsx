@@ -12,10 +12,11 @@ import { VestingTypes } from "types"
 
 const Page = (): JSX.Element => {
   const router = useRouter()
+  const chain = router.query?.chain?.toString()
   const tokenAddress = router.query?.token?.toString()
   const allocationPrettyUrl = router.query?.allocation?.toString()
 
-  const { data: tokenInfo } = useTokenDataFromIpfs(tokenAddress)
+  const { data: tokenInfo } = useTokenDataFromIpfs(chain, tokenAddress)
 
   const vestingTypesComponents: Record<VestingTypes, JSX.Element> = {
     NO_VESTING: <Airdrop />,
@@ -24,7 +25,7 @@ const Page = (): JSX.Element => {
   }
 
   const generateFilePath = (fileName: string) =>
-    fileName ? `${tokenAddress}/${fileName}` : null
+    fileName ? `${chain}/${tokenAddress}/${fileName}` : null
 
   const { data, error } = useAllocationData(
     tokenInfo

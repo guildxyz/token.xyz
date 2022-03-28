@@ -8,10 +8,11 @@ import { useToken } from "wagmi"
 
 const Page = (): JSX.Element => {
   const router = useRouter()
+  const chain = router.query.chain?.toString()
   const tokenAddress = router.query.token?.toString()?.toLowerCase()
 
   const [{ data: tokenContractData, loading }] = useToken({ address: tokenAddress })
-  const { data, isValidating } = useTokenDataFromIpfs(tokenAddress)
+  const { data, isValidating } = useTokenDataFromIpfs(chain, tokenAddress)
 
   return (
     <Layout title="Token page">
@@ -22,7 +23,7 @@ const Page = (): JSX.Element => {
           <HStack spacing={4}>
             {data?.icon && (
               <Img
-                src={`${process.env.NEXT_PUBLIC_FLEEK_BUCKET}/${tokenAddress}/${data?.icon}`}
+                src={`${process.env.NEXT_PUBLIC_FLEEK_BUCKET}/${chain}/${tokenAddress}/${data?.icon}`}
                 alt={`${tokenContractData?.symbol} icon`}
                 boxSize={12}
               />
@@ -42,7 +43,7 @@ const Page = (): JSX.Element => {
                   <AllocationCard
                     key={airdrop.prettyUrl}
                     prettyUrl={airdrop.prettyUrl}
-                    fileName={`${tokenAddress}/${airdrop.fileName}`}
+                    fileName={`${chain}/${tokenAddress}/${airdrop.fileName}`}
                   />
                 ))}
               </SimpleGrid>
@@ -59,7 +60,7 @@ const Page = (): JSX.Element => {
                   <AllocationCard
                     key={vesting.prettyUrl}
                     prettyUrl={vesting.prettyUrl}
-                    fileName={`${tokenAddress}/${vesting.fileName}`}
+                    fileName={`${chain}/${tokenAddress}/${vesting.fileName}`}
                   />
                 ))}
               </SimpleGrid>

@@ -1,4 +1,5 @@
 import { useMachine } from "@xstate/react"
+import { chainSlugs } from "connectors"
 import { Contract, Event, utils } from "ethers"
 import useToast from "hooks/useToast"
 import useTokenXyzContract from "hooks/useTokenXyzContract"
@@ -15,14 +16,13 @@ import {
 import generateMerkleTree from "utils/merkle/generateMerkleTree"
 import { MerkleDistributorInfo, parseBalanceMap } from "utils/merkle/parseBalanceMap"
 import slugify from "utils/slugify"
-import { erc20ABI, useAccount, useNetwork, useSigner } from "wagmi"
+import { erc20ABI, useAccount, useSigner } from "wagmi"
 import { assign, createMachine } from "xstate"
 
 const monthsToSecond = (months: number): number =>
   months ? Math.floor(months * 2629743.83) : 0
 
 const useDeploy = () => {
-  const [{ data: networkData }] = useNetwork()
   const [{ data: accountData }] = useAccount()
   const [{ data: signerData }] = useSigner()
   const tokenXyzContract = useTokenXyzContract()
@@ -660,7 +660,7 @@ const useDeploy = () => {
             fetch("/api/verify-contract", {
               method: "POST",
               body: JSON.stringify({
-                chain: networkData?.chain?.id,
+                chain: chain,
                 contractAddress: _context.tokenAddress,
                 contractType: contractType,
                 constructorArguments: abiEncodedConstructorArguments,
@@ -678,7 +678,7 @@ const useDeploy = () => {
               fetch("/api/verify-contract", {
                 method: "POST",
                 body: JSON.stringify({
-                  chain: networkData?.chain?.id,
+                  chain: chain,
                   contractAddress: contract,
                   contractType: "merkledistributor",
                   constructorArguments:
@@ -704,7 +704,7 @@ const useDeploy = () => {
             fetch("/api/verify-contract", {
               method: "POST",
               body: JSON.stringify({
-                chain: networkData?.chain?.id,
+                chain: chain,
                 contractAddress: _context.merkleVestingContractAddress,
                 contractType: "merklevesting",
                 constructorArguments: _context.abiEncodedMerkleVestingArgs,
@@ -731,7 +731,7 @@ const useDeploy = () => {
         if (!icon && !distributionData?.length) return send("SKIP")
 
         const ipfsData = new FormData()
-        ipfsData.append("dirName", _context.tokenAddress)
+        ipfsData.append("dirName", `${chainSlugs[chain]}/${_context.tokenAddress}`)
 
         const info: TokenInfoJSON = {
           icon: null,

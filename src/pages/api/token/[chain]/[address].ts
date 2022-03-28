@@ -8,7 +8,9 @@ const handler = nextConnect({
 })
 
 handler.get((req: NextApiRequest, res: NextApiResponse) =>
-  fetch(`${process.env.NEXT_PUBLIC_FLEEK_BUCKET}/${req.query.address}/info.json`)
+  fetch(
+    `${process.env.NEXT_PUBLIC_FLEEK_BUCKET}/${req.query.chain}/${req.query.address}/info.json`
+  )
     .then((response) =>
       response.ok
         ? response.json().then((tokenInfo) => res.json(tokenInfo))

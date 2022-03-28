@@ -9,6 +9,11 @@ const provider = ({ chainId }) =>
   new providers.InfuraProvider(chainId ?? 3, process.env.NEXT_PUBLIC_INFURA_ID)
 
 const supportedChainIds = [/* 1,*/ 3, 5]
+const chainSlugs = {
+  1: "ethereum",
+  3: "ropsten",
+  5: "goerli",
+}
 const chains = defaultChains.filter((c) => supportedChainIds.includes(c.id))
 
 const TOKEN_XYZ_CONTRACT = {
@@ -49,4 +54,12 @@ const iconUrls = {
   5: "/networkLogos/ethereum.svg",
 }
 
-export { TOKEN_XYZ_CONTRACT, provider, chains, connectors, injected, iconUrls }
+export {
+  TOKEN_XYZ_CONTRACT,
+  provider,
+  chains,
+  chainSlugs,
+  connectors,
+  injected,
+  iconUrls,
+}
