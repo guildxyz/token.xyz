@@ -51,7 +51,7 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                 left={-2}
                 top={-1}
                 as={Question}
-                color="gray"
+                color="tokenxyz.rosybrown.500"
                 boxSize={5}
               />
             </Tooltip>
@@ -122,7 +122,7 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                 left={-2}
                 top={-1}
                 as={Question}
-                color="gray"
+                color="tokenxyz.rosybrown.500"
                 boxSize={5}
               />
             </Tooltip>
