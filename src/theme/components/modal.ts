@@ -2,12 +2,12 @@ const styles = {
   parts: ["dialog", "closeButton", "header", "footer", "body"],
   baseStyle: {
     dialog: {
-      borderRadius: "none",
       overflow: "hidden",
       marginTop: "auto",
       marginBottom: { base: 0, sm: "auto" },
       bgColor: "tokenxyz.white",
       color: "tokenxyz.rosybrown.500",
+      borderRadius: "xl",
       boxShadow: "none",
       // we can't add data attributes to the Modal component so we have
       // to prevent the focus-visible polyfill from removing shadow on
