@@ -127,11 +127,7 @@ const FixedSupplyForm = (): JSX.Element => {
       </GridItem>
 
       <GridItem minW={0} colSpan={2}>
-        <Alert
-          status="info"
-          bgColor="tokenxyz.rosybrown.200"
-          color="tokenxyz.rosybrown.500"
-        >
+        <Alert status="info" bgColor="tokenxyz.white" color="tokenxyz.rosybrown.500">
           <Stack>
             <HStack spacing={0.5}>
               <AlertIcon mt={0} mr={2} color="tokenxyz.rosybrown.500" />

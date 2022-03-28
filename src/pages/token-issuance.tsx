@@ -73,7 +73,7 @@ const Page = (): JSX.Element => {
                   pr={{ base: 0, md: 8 }}
                   pt={20} // TODO: find a better solution...
                   pb={8}
-                  bgColor="tokenxyz.rosybrown.300"
+                  bgColor="tokenxyz.rosybrown.200"
                 >
                   <DynamicPageTitle />
                   <CurrentForm />

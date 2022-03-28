@@ -27,20 +27,20 @@ const Layout = ({
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const dynamicBgColor = useBreakpointValue({
-    base: "var(--chakra-colors-tokenxyz-rosybrown-300)",
-    md: "var(--chakra-colors-tokenxyz-rosybrown-200)",
+    base: "var(--chakra-colors-tokenxyz-rosybrown-200)",
+    md: "var(--chakra-colors-tokenxyz-rosybrown-100)",
   })
 
   return (
     <>
       {title && <Meta title={title} description={description} />}
       <Box
-        bgColor={splitBg ? dynamicBgColor : "tokenxyz.rosybrown.200"}
+        bgColor={splitBg ? dynamicBgColor : "tokenxyz.rosybrown.100"}
         minHeight="100vh"
         color="tokenxyz.black"
         bgGradient={
           splitBg
-            ? `linear(to right, var(--chakra-colors-tokenxyz-rosybrown-300) 0%, var(--chakra-colors-tokenxyz-rosybrown-300) 50%, ${dynamicBgColor} 50%, ${dynamicBgColor} 100%)`
+            ? `linear(to right, var(--chakra-colors-tokenxyz-rosybrown-200) 0%, var(--chakra-colors-tokenxyz-rosybrown-200) 50%, ${dynamicBgColor} 50%, ${dynamicBgColor} 100%)`
             : undefined
         }
       >

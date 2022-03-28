@@ -92,7 +92,7 @@ const DeployButtons = (): JSX.Element => {
             <Button
               w="full"
               size="lg"
-              colorScheme="tokenxyz.green"
+              colorScheme="tokenxyz.red"
               disabled={!correct || isLoading}
               isLoading={isLoading}
               loadingText={loadingText}
