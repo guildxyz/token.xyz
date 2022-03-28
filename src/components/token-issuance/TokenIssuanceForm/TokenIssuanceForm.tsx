@@ -80,6 +80,9 @@ const TokenIssuanceForm = (): JSX.Element => {
 
   const urlName = useWatch({ control, name: "urlName" })
 
+  const initialSupply = useWatch({ control, name: "initialSupply" })
+  const maxSupply = useWatch({ control, name: "maxSupply" })
+
   const isNextButtonDisabled = () =>
     !getValues("tokenName") ||
     !getValues("tokenTicker") ||
@@ -331,38 +334,40 @@ const TokenIssuanceForm = (): JSX.Element => {
                 </FormErrorMessage>
               </FormControl>
 
-              <FormControl>
-                <FormLabel
-                  color="tokenxyz.blue.500"
-                  fontWeight="extrabold"
-                  fontSize="lg"
-                >
-                  Ownable / access control
-                </FormLabel>
-                <Controller
-                  control={control}
-                  name="tokenType"
-                  defaultValue="OWNABLE"
-                  render={({ field: { ref, value, onChange, onBlur } }) => (
-                    <RadioGroup
-                      ref={ref}
-                      value={value.toString()}
-                      onChange={onChange}
-                      onBlur={onBlur}
-                      colorScheme="primary"
-                    >
-                      <Stack spacing={2}>
-                        <Radio value="OWNABLE" maxW="max-content">
-                          Ownable
-                        </Radio>
-                        <Radio value="ACCESS_CONTROL" maxW="max-content">
-                          Access control
-                        </Radio>
-                      </Stack>
-                    </RadioGroup>
-                  )}
-                />
-              </FormControl>
+              {initialSupply !== maxSupply && (
+                <FormControl>
+                  <FormLabel
+                    color="tokenxyz.blue.500"
+                    fontWeight="extrabold"
+                    fontSize="lg"
+                  >
+                    Ownable / access control
+                  </FormLabel>
+                  <Controller
+                    control={control}
+                    name="tokenType"
+                    defaultValue="OWNABLE"
+                    render={({ field: { ref, value, onChange, onBlur } }) => (
+                      <RadioGroup
+                        ref={ref}
+                        value={value.toString()}
+                        onChange={onChange}
+                        onBlur={onBlur}
+                        colorScheme="primary"
+                      >
+                        <Stack spacing={2}>
+                          <Radio value="OWNABLE" maxW="max-content">
+                            Ownable
+                          </Radio>
+                          <Radio value="ACCESS_CONTROL" maxW="max-content">
+                            Access control
+                          </Radio>
+                        </Stack>
+                      </RadioGroup>
+                    )}
+                  />
+                </FormControl>
+              )}
             </Stack>
           </AccordionPanel>
         </AccordionItem>
