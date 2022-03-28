@@ -12,6 +12,7 @@ import { House } from "phosphor-react"
 import { PropsWithChildren } from "react"
 import Link from "../Link"
 import Account from "./components/Account"
+import CreateTokenButton from "./components/CreateTokenButton"
 import InfoMenu from "./components/InfoMenu"
 
 type Props = {
@@ -75,6 +76,7 @@ const Layout = ({
           </Link>
 
           <HStack spacing="2">
+            <CreateTokenButton />
             <Account />
             <InfoMenu />
           </HStack>
