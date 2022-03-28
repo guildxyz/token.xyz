@@ -59,7 +59,7 @@ const DisplayCard = ({
           <Text
             as="span"
             fontFamily="display"
-            fontSize="xl"
+            fontSize="2xl"
             fontWeight="bold"
             color="tokenxyz.blue.500"
             textShadow="0 1px 0 var(--chakra-colors-tokenxyz-black)"

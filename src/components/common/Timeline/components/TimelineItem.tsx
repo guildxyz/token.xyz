@@ -65,8 +65,6 @@ const TimelineItem = ({
         <MotionCircle
           position="relative"
           size={12}
-          // borderWidth={4}
-          // borderColor={active ? "primary.500" : borderColor}
           bgColor={icon ? borderColor : "transparent"}
           animate={{
             background: active
@@ -92,7 +90,7 @@ const TimelineItem = ({
         <Text
           as="span"
           fontWeight="bold"
-          fontSize="lg"
+          fontSize="2xl"
           fontFamily="display"
           color="tokenxyz.blue.500"
           textShadow="0 1px 0 var(--chakra-colors-tokenxyz-black)"

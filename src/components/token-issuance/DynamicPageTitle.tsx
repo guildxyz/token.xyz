@@ -38,10 +38,10 @@ const DynamicPageTitle = (): JSX.Element => {
         <Heading
           as="h2"
           fontFamily="display"
-          fontSize={{ base: "2xl", md: "3xl", lg: "5xl" }}
           color="tokenxyz.red.500"
           textShadow="0 2px 0 var(--chakra-colors-tokenxyz-black)"
           letterSpacing="wider"
+          fontSize={{ base: "3xl", sm: "5xl", md: "6xl" }}
         >
           {steps[activeItem].title}
         </Heading>

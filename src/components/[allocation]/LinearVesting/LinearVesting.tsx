@@ -59,6 +59,7 @@ const LinearVesting = (): JSX.Element => {
             color="tokenxyz.red.500"
             textShadow="0 2px 0 var(--chakra-colors-tokenxyz-black)"
             letterSpacing="wider"
+            fontSize={{ base: "3xl", sm: "5xl", md: "6xl" }}
           >
             {name}
           </Heading>
