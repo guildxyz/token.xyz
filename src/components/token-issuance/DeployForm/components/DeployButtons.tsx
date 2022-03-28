@@ -132,7 +132,7 @@ const DeployButtons = (): JSX.Element => {
             </Stack>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="primary">Go to my dashboard</Button>
+            <Button colorScheme="tokenxyz.rosybrown">Go to my dashboard</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
