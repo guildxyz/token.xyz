@@ -78,8 +78,8 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                   ref={ref}
                   value={value}
                   onChange={(newValue) => {
-                    onChange(newValue)
                     const parsedValue = parseInt(newValue)
+                    onChange(parsedValue)
                     if (
                       parsedValue >=
                       getValues(`distributionData.${index}.vestingPeriod`)
@@ -149,8 +149,8 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                   ref={ref}
                   value={value}
                   onChange={(newValue) => {
-                    onChange(newValue)
                     const parsedValue = parseInt(newValue)
+                    onChange(parsedValue)
                     if (
                       parsedValue >=
                       getValues(`distributionData.${index}.distributionDuration`)
@@ -208,7 +208,7 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                 <NumberInput
                   ref={ref}
                   value={value}
-                  onChange={onChange}
+                  onChange={(newValue) => onChange(parseInt(newValue))}
                   onBlur={onBlur}
                   min={0}
                   max={120}

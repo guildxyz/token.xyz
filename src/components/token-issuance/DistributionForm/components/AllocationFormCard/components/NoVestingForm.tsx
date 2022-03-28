@@ -53,7 +53,7 @@ const NoVestingForm = ({ index }: Props): JSX.Element => {
                 <NumberInput
                   ref={ref}
                   value={value}
-                  onChange={onChange}
+                  onChange={(newValue) => onChange(parseInt(newValue))}
                   onBlur={onBlur}
                   min={0}
                   max={120}

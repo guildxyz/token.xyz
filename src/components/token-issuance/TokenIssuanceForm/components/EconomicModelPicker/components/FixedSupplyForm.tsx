@@ -64,8 +64,8 @@ const FixedSupplyForm = (): JSX.Element => {
                 ref={ref}
                 value={value}
                 onChange={(newValue) => {
-                  onChange(newValue)
                   const parsedValue = parseInt(newValue)
+                  onChange(parsedValue)
                   if (parsedValue >= getValues("maxSupply"))
                     setValue("maxSupply", parsedValue)
                 }}
@@ -106,7 +106,7 @@ const FixedSupplyForm = (): JSX.Element => {
               <NumberInput
                 ref={ref}
                 value={value}
-                onChange={onChange}
+                onChange={(newValue) => onChange(parseInt(newValue))}
                 onBlur={onBlur}
                 min={0}
               >
