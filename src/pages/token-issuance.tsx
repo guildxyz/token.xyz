@@ -70,7 +70,7 @@ const Page = (): JSX.Element => {
                 <GridItem
                   colSpan={{ base: 1, md: 5 }}
                   minW={0}
-                  pr={8}
+                  pr={{ base: 0, md: 8 }}
                   pt={20} // TODO: find a better solution...
                   pb={8}
                   bgColor="tokenxyz.rosybrown.300"
