@@ -8,7 +8,12 @@ const Page = (): JSX.Element => {
 
   return (
     <Layout title="Home">
-      <SimpleGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={{ base: 4, md: 6 }}>
+      <SimpleGrid
+        columns={{ base: 1, sm: 2, lg: 3 }}
+        gap={{ base: 4, md: 6 }}
+        pt={{ base: 4, md: 9 }}
+        pb={{ base: 20, md: 14 }}
+      >
         {isValidating ? (
           <Spinner />
         ) : !data?.length ? (

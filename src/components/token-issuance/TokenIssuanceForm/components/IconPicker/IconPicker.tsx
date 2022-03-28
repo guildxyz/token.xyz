@@ -1,11 +1,4 @@
-import {
-  Button,
-  FormControl,
-  FormErrorMessage,
-  Icon,
-  Img,
-  useColorModeValue,
-} from "@chakra-ui/react"
+import { Button, FormControl, FormErrorMessage, Icon, Img } from "@chakra-ui/react"
 import { ImageSquare } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -17,8 +10,6 @@ const errorMessages = {
 }
 
 const IconPicker = (): JSX.Element => {
-  const buttonColor = useColorModeValue("white", "blackAlpha.300")
-
   const { control, register, setValue } = useFormContext<TokenIssuanceFormType>()
 
   useEffect(() => {
@@ -55,16 +46,16 @@ const IconPicker = (): JSX.Element => {
     <FormControl isInvalid={!!fileRejections?.[0]}>
       <Button
         {...getRootProps()}
+        variant="outline"
+        colorScheme="tokenxyz.rosybrown"
         as="label"
         autoFocus
         aria-label="Upload token icon"
         rounded="full"
+        display="flex"
         boxSize={12}
         flexShrink={0}
-        colorScheme="gray"
-        variant="outline"
-        borderWidth={1}
-        bg={buttonColor}
+        color="tokenxyz.black"
         overflow="hidden"
         p={0}
       >
@@ -76,7 +67,7 @@ const IconPicker = (): JSX.Element => {
         )}
       </Button>
 
-      <FormErrorMessage>
+      <FormErrorMessage color="tokenxyz.red.500">
         {errorMessages[fileRejections?.[0]?.errors?.[0]?.code] ??
           fileRejections?.[0]?.errors?.[0]?.message}
       </FormErrorMessage>

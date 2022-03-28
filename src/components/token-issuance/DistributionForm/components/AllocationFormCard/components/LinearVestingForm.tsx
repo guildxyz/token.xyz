@@ -93,7 +93,7 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                   onBlur={onBlur}
                   min={0}
                 >
-                  <NumberInputField borderRightRadius={0} />
+                  <NumberInputField />
                   <NumberInputStepper>
                     <NumberIncrementStepper />
                     <NumberDecrementStepper />
@@ -101,9 +101,9 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                 </NumberInput>
               )}
             />
-            <InputRightAddon bgColor="whiteAlpha.50">months</InputRightAddon>
+            <InputRightAddon>months</InputRightAddon>
           </InputGroup>
-          <FormErrorMessage>
+          <FormErrorMessage color="tokenxyz.red.500">
             {errors?.distributionData?.[index]?.cliff?.message}
           </FormErrorMessage>
         </FormControl>
@@ -166,7 +166,7 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                   min={1}
                   max={120}
                 >
-                  <NumberInputField borderRightRadius={0} />
+                  <NumberInputField />
                   <NumberInputStepper>
                     <NumberIncrementStepper />
                     <NumberDecrementStepper />
@@ -174,9 +174,9 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                 </NumberInput>
               )}
             />
-            <InputRightAddon bgColor="whiteAlpha.50">months</InputRightAddon>
+            <InputRightAddon>months</InputRightAddon>
           </InputGroup>
-          <FormErrorMessage>
+          <FormErrorMessage color="tokenxyz.red.500">
             {errors?.distributionData?.[index]?.vestingPeriod?.message}
           </FormErrorMessage>
         </FormControl>
@@ -213,7 +213,7 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                   min={0}
                   max={120}
                 >
-                  <NumberInputField borderRightRadius={0} />
+                  <NumberInputField />
                   <NumberInputStepper>
                     <NumberIncrementStepper />
                     <NumberDecrementStepper />
@@ -221,9 +221,9 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                 </NumberInput>
               )}
             />
-            <InputRightAddon bgColor="whiteAlpha.50">months</InputRightAddon>
+            <InputRightAddon>months</InputRightAddon>
           </InputGroup>
-          <FormErrorMessage>
+          <FormErrorMessage color="tokenxyz.red.500">
             {errors?.distributionData?.[index]?.distributionDuration?.message}
           </FormErrorMessage>
         </FormControl>

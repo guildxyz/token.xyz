@@ -213,12 +213,15 @@ const useDeploy = () => {
           clearError: assign({
             error: undefined,
           }),
-          assignErrorToContext: assign((_context, event) => ({
-            error:
-              event.data?.reason ||
-              event.data?.message ||
-              "An unknown error occurred",
-          })),
+          assignErrorToContext: assign((_context, event) => {
+            console.log("ERR", _context, event)
+            return {
+              error:
+                event.data?.reason ||
+                event.data?.message ||
+                "An unknown error occurred",
+            }
+          }),
           assignDataToContext: assign((_context, event) => ({
             ...event.data,
           })),
@@ -552,10 +555,10 @@ const useDeploy = () => {
           const createType: "createToken" | "createTokenWithRoles" =
             tokenType === "OWNABLE" ? "createToken" : "createTokenWithRoles"
 
-          let contractType: ContractType = "erc20initialsupply"
+          let contractType: ContractType
 
-          // Using `==` here, because react-hook-form stores these values as strings!
-          if (initialSupply == 0 || maxSupply == 0 || initialSupply < maxSupply) {
+          console.log("initialSupply: ", initialSupply, ", maxSupply: ", maxSupply)
+          if (initialSupply === 0 || maxSupply === 0 || initialSupply < maxSupply) {
             if (maxSupply > 0)
               contractType =
                 createType === "createToken"
@@ -569,6 +572,8 @@ const useDeploy = () => {
           } else if (initialSupply === maxSupply) {
             contractType = "erc20initialsupply"
           }
+
+          console.log("contract type should be", contractType)
 
           let argTypes = []
           let args = []
@@ -638,11 +643,6 @@ const useDeploy = () => {
               // string name, string symbol
               argTypes = ["string", "string"]
               args = [tokenName, tokenTicker]
-          }
-
-          if (maxSupply) {
-            argTypes.push("uint256")
-            args.push(utils.parseUnits(maxSupply.toString(), decimals))
           }
 
           const abiEncodedConstructorArguments = utils.defaultAbiCoder

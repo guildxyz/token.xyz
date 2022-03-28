@@ -180,7 +180,7 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
 
   return (
     <FormCard onRemove={onRemove}>
-      <Stack spacing={4}>
+      <Stack spacing={4} color="tokenxyz.rosybrown.500">
         <FormControl
           isRequired
           isInvalid={!!errors?.distributionData?.[index]?.allocationName}
@@ -199,7 +199,7 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
             })}
             placeholder="Choose a name for your group"
           />
-          <FormErrorMessage>
+          <FormErrorMessage color="tokenxyz.red.500">
             {errors?.distributionData?.[index]?.allocationName?.message}
           </FormErrorMessage>
         </FormControl>
@@ -210,13 +210,13 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
           isInvalid={!!errors?.distributionData?.[index]?.allocationCsv}
         >
           <FormLabel mb={1}>Allocation list</FormLabel>
-          <Text mb={2} colorScheme="gray" fontSize="sm">
+          <Text mb={2} color="tokenxyz.black" fontSize="sm">
             Upload the participant's addresses with their corresponding allocation
             sizes in a CSV file.
           </Text>
           <HStack>
             <Button
-              colorScheme="primary"
+              colorScheme="tokenxyz.rosybrown"
               w="full"
               h={10}
               onClick={onUploadClick}
@@ -231,8 +231,9 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
             {allocationAddressesAmounts?.length && (
               <IconButton
                 aria-label="Remove .csv"
+                isRound
                 icon={<Icon as={TrashSimple} />}
-                colorScheme="red"
+                colorScheme="tokenxyz.red"
                 onClick={onRemoveCsv}
                 w={10}
                 h={10}
@@ -250,7 +251,7 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
             accept=".csv"
             onChange={onFileInputChange}
           />
-          <FormErrorMessage>
+          <FormErrorMessage color="tokenxyz.red.500">
             {errors?.distributionData?.[index]?.allocationCsv?.message}
           </FormErrorMessage>
         </FormControl>
@@ -258,12 +259,12 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
         <FormControl isRequired>
           <FormLabel>Vesting</FormLabel>
           <VestingTypePicker index={index} />
-          <FormErrorMessage>
+          <FormErrorMessage color="tokenxyz.red.500">
             {errors?.distributionData?.[index]?.vestingType?.message}
           </FormErrorMessage>
         </FormControl>
 
-        <Tag w="max-content">
+        <Tag w="max-content" bgColor="tokenxyz.rosybrown.500" color="tokenxyz.white">
           <HStack spacing={1}>
             {loading && <Spinner size="xs" />}
             <Text as="span">

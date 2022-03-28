@@ -18,6 +18,18 @@ const ConnectorButton = ({
   isLoading,
 }: Props): JSX.Element => (
   <Button
+    variant="unstyled"
+    display="flex"
+    justifyContent="space-between"
+    px="1rem!important"
+    bgColor="tokenxyz.rosybrown.200"
+    border={isActive && "2px"}
+    _hover={{ bg: "tokenxyz.rosybrown.100" }}
+    _active={{ bg: null }}
+    _focus={{ bg: "tokenxyz.rosybrown.100" }}
+    borderColor="tokenxyz.rosybrown.500"
+    isFullWidth
+    size="xl"
     onClick={onClick}
     rightIcon={
       <Box boxSize={6}>
@@ -34,11 +46,6 @@ const ConnectorButton = ({
     isLoading={isLoading}
     spinnerPlacement="end"
     loadingText={`${name} - connecting...`}
-    isFullWidth
-    size="xl"
-    justifyContent="space-between"
-    border={isActive && "2px"}
-    borderColor="primary.500"
   >
     {`${name} ${isActive ? " - connected" : ""}`}
   </Button>

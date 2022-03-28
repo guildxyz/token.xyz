@@ -9,26 +9,29 @@ const Timeline = (): JSX.Element => {
     md: {
       sx: {
         position: "sticky",
-        top: "1rem",
+        top: 8,
       },
     },
   })
 
   return (
-    <Box {...timelineProps}>
-      {steps?.map((step, index) => (
-        <TimelineItem
-          key={step.title}
-          title={step.title}
-          icon={step.icon}
-          onClick={() => setActive(index)}
-          active={index <= activeItem}
-          completed={index < activeItem}
-        >
-          {step.preview}
-        </TimelineItem>
-      ))}
-    </Box>
+    <>
+      <Box mb={6} h={20} /> {/* TODO: Find a better solution... */}
+      <Box {...timelineProps}>
+        {steps?.map((step, index) => (
+          <TimelineItem
+            key={step.title}
+            title={step.title}
+            icon={step.icon}
+            onClick={() => setActive(index)}
+            active={index <= activeItem}
+            completed={index < activeItem}
+          >
+            {step.preview}
+          </TimelineItem>
+        ))}
+      </Box>
+    </>
   )
 }
 

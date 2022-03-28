@@ -19,16 +19,23 @@ const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
     >
       <Box>
         <Button
+          variant="unstyled"
+          display="flex"
+          alignContent="space-between"
+          px="1rem!important"
+          bgColor="tokenxyz.rosybrown.200"
+          _hover={{ bg: "tokenxyz.rosybrown.100" }}
+          _active={{ bg: null }}
+          _focus={{ bg: "tokenxyz.rosybrown.100" }}
+          border={isCurrentChain && "2px"}
+          borderColor="tokenxyz.rosybrown.500"
+          isFullWidth
+          size="xl"
           rightIcon={
             <Img src={iconUrls[chain.id]} boxSize="6" alt={`${chain.name} logo`} />
           }
-          border={isCurrentChain && "2px"}
-          borderColor="primary.500"
           disabled={isCurrentChain}
           onClick={requestNetworkChange}
-          isFullWidth
-          size="xl"
-          justifyContent="space-between"
         >
           {chain.name}
         </Button>

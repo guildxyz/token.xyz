@@ -91,7 +91,7 @@ const TokenIssuanceForm = (): JSX.Element => {
 
   return (
     <Stack spacing={8}>
-      <FormSection title="General data">
+      <FormSection title="General data" color="tokenxyz.blue.500">
         <SimpleGrid
           w="full"
           gridTemplateColumns={{ base: "3rem auto", sm: "3rem 2fr 1fr" }}
@@ -108,7 +108,9 @@ const TokenIssuanceForm = (): JSX.Element => {
                 {...register("tokenName", { required: "This field is required!" })}
                 placeholder="Token name"
               />
-              <FormErrorMessage>{errors?.tokenName?.message}</FormErrorMessage>
+              <FormErrorMessage color="tokenxyz.red.500">
+                {errors?.tokenName?.message}
+              </FormErrorMessage>
             </FormControl>
           </GridItem>
 
@@ -124,11 +126,13 @@ const TokenIssuanceForm = (): JSX.Element => {
                 />
                 <InputRightElement h="full" alignItems="center">
                   <Tooltip label="A ticker means a short symbol for your token, used by exchanges.">
-                    <Icon as={Question} color="gray" boxSize={5} />
+                    <Icon as={Question} color="tokenxyz.rosybrown.500" boxSize={5} />
                   </Tooltip>
                 </InputRightElement>
               </InputGroup>
-              <FormErrorMessage>{errors?.tokenTicker?.message}</FormErrorMessage>
+              <FormErrorMessage color="tokenxyz.red.500">
+                {errors?.tokenTicker?.message}
+              </FormErrorMessage>
             </FormControl>
           </GridItem>
         </SimpleGrid>
@@ -137,6 +141,7 @@ const TokenIssuanceForm = (): JSX.Element => {
       <FormSection
         title="URL name"
         description="Choose a unique identifier for your token or generate a new one. If this is your first token, we'll generate a new URL name automatically"
+        color="tokenxyz.blue.500"
       >
         <SimpleGrid columns={3} gap={4}>
           <GridItem colSpan={{ base: 3, md: 1 }}>
@@ -180,11 +185,11 @@ const TokenIssuanceForm = (): JSX.Element => {
         </SimpleGrid>
       </FormSection>
 
-      <FormSection title="Choose a token economy model:">
+      <FormSection title="Choose a token economy model" color="tokenxyz.blue.500">
         <EconomyModelPicker />
       </FormSection>
 
-      <FormSection title="Chain">
+      <FormSection title="Chain" color="tokenxyz.blue.500">
         <Controller
           control={control}
           name="chain"
@@ -232,15 +237,27 @@ const TokenIssuanceForm = (): JSX.Element => {
             maxW="max-content"
             _hover={{ bgColor: null }}
           >
-            <Box pr={2} textAlign="left" fontWeight="bold">
+            <Box
+              pr={2}
+              textAlign="left"
+              color="tokenxyz.blue.500"
+              fontWeight="extrabold"
+              fontSize="xl"
+            >
               Advanced settings
             </Box>
             <AccordionIcon />
           </AccordionButton>
-          <AccordionPanel px={0} pt={4} borderTopWidth={1}>
+          <AccordionPanel px={0} pt={4}>
             <Stack spacing={8}>
               <FormControl isInvalid={!!errors?.transferOwnershipTo}>
-                <FormLabel>Transfer ownership</FormLabel>
+                <FormLabel
+                  color="tokenxyz.blue.500"
+                  fontWeight="extrabold"
+                  fontSize="lg"
+                >
+                  Transfer ownership
+                </FormLabel>
                 <InputGroup>
                   <Input
                     size="lg"
@@ -249,23 +266,29 @@ const TokenIssuanceForm = (): JSX.Element => {
                   />
                   <InputRightElement h="full" alignItems="center">
                     <Tooltip label="TODO">
-                      <Icon as={Question} color="gray" boxSize={5} />
+                      <Icon
+                        as={Question}
+                        color="tokenxyz.rosybrown.500"
+                        boxSize={5}
+                      />
                     </Tooltip>
                   </InputRightElement>
                 </InputGroup>
-                <FormErrorMessage>
+                <FormErrorMessage color="tokenxyz.red.500">
                   {errors?.transferOwnershipTo?.message}
                 </FormErrorMessage>
               </FormControl>
 
               <FormControl
                 pr={{ base: 2, md: 8 }}
-                pb={4}
                 isRequired
                 isInvalid={!!errors?.decimals}
+                fontSize="lg"
               >
-                <FormLabel>Decimals</FormLabel>
-                <FormHelperText mb={4}>
+                <FormLabel color="tokenxyz.blue.500" fontWeight="extrabold">
+                  Decimals
+                </FormLabel>
+                <FormHelperText mb={4} color="tokenxyz.black">
                   Most widely supported is 18, but you can set another value here if
                   you wish.
                 </FormHelperText>
@@ -303,11 +326,19 @@ const TokenIssuanceForm = (): JSX.Element => {
                     </NumberInput>
                   )}
                 />
-                <FormErrorMessage>{errors?.decimals?.message}</FormErrorMessage>
+                <FormErrorMessage color="tokenxyz.red.500">
+                  {errors?.decimals?.message}
+                </FormErrorMessage>
               </FormControl>
 
               <FormControl>
-                <FormLabel>Ownable / access control</FormLabel>
+                <FormLabel
+                  color="tokenxyz.blue.500"
+                  fontWeight="extrabold"
+                  fontSize="lg"
+                >
+                  Ownable / access control
+                </FormLabel>
                 <Controller
                   control={control}
                   name="tokenType"
@@ -339,8 +370,8 @@ const TokenIssuanceForm = (): JSX.Element => {
 
       <Flex mt="auto" width="100%" justifyContent="end">
         <Button
+          colorScheme="tokenxyz.rosybrown"
           onClick={next}
-          colorScheme="primary"
           isDisabled={isNextButtonDisabled()}
         >
           Continue to Distribution

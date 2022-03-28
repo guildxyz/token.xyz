@@ -1,4 +1,4 @@
-import { Tag, Text, VStack } from "@chakra-ui/react"
+import { Tag, VStack } from "@chakra-ui/react"
 import { chains } from "connectors"
 import { useMemo } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -26,10 +26,10 @@ const TokenIssuancePreview = (): JSX.Element => {
 
   return (
     <VStack alignItems="start" spacing={1} fontSize="sm">
-      <Text as="span" fontWeight="bold">
-        {tokenTicker ? `$${tokenTicker} token` : "No ticker"}
-      </Text>
-      <Tag size="sm">
+      <Tag size="sm" bgColor="tokenxyz.rosybrown.500" color="tokenxyz.white">
+        Symbol: {tokenTicker ? `$${tokenTicker}` : "No symbol"}
+      </Tag>
+      <Tag size="sm" bgColor="tokenxyz.rosybrown.500" color="tokenxyz.white">
         Supply:{" "}
         {economyModel === "UNLIMITED"
           ? !isNaN(initialSupply) && Number(initialSupply).toLocaleString("en")
@@ -39,10 +39,12 @@ const TokenIssuancePreview = (): JSX.Element => {
               maxSupply
             ).toLocaleString("en")}`}
       </Tag>
-      <Tag size="sm">
+      <Tag size="sm" bgColor="tokenxyz.rosybrown.500" color="tokenxyz.white">
         Owner: {shortenHex(transferOwnershipTo || accountData?.address, 3)}
       </Tag>
-      <Tag size="sm">Chain: {chainName}</Tag>
+      <Tag size="sm" bgColor="tokenxyz.rosybrown.500" color="tokenxyz.white">
+        Chain: {chainName}
+      </Tag>
     </VStack>
   )
 }

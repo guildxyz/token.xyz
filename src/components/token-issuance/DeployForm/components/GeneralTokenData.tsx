@@ -7,7 +7,6 @@ import {
   Td,
   Tr,
   useBreakpointValue,
-  useColorModeValue,
 } from "@chakra-ui/react"
 import { chains } from "connectors"
 import { useMemo } from "react"
@@ -17,8 +16,6 @@ import shortenHex from "utils/shortenHex"
 import { useAccount } from "wagmi"
 
 const GeneralTokenData = (): JSX.Element => {
-  const borderColor = useColorModeValue("gray.200", undefined)
-
   const [{ data: accountData }] = useAccount()
   const { control } = useFormContext<TokenIssuanceFormType>()
 
@@ -40,37 +37,42 @@ const GeneralTokenData = (): JSX.Element => {
 
   return (
     <Stack>
-      <Heading as="h3" mb={2} fontFamily="display" fontSize="lg">
+      <Heading as="h3" mb={2} color="tokenxyz.blue.500" fontSize="xl">
         General token data
       </Heading>
-      <Box borderWidth={1} borderRadius="xl" overflow="hidden">
-        <Table variant="simple" size="sm">
+      <Box
+        borderWidth={2}
+        borderColor="tokenxyz.rosybrown.500"
+        overflow="hidden"
+        borderRadius="xl"
+      >
+        <Table variant="simple" size="sm" bgColor="tokenxyz.white">
           <Tbody>
             <Tr>
-              <Td borderColor={borderColor} fontWeight="bold">
+              <Td borderColor="tokenxyz.rosybrown.500" fontWeight="bold">
                 Name
               </Td>
-              <Td borderColor={borderColor}>{tokenName}</Td>
+              <Td borderColor="tokenxyz.rosybrown.500">{tokenName}</Td>
             </Tr>
             <Tr>
-              <Td borderColor={borderColor} fontWeight="bold">
+              <Td borderColor="tokenxyz.rosybrown.500" fontWeight="bold">
                 Symbol
               </Td>
-              <Td borderColor={borderColor}>${tokenTicker}</Td>
+              <Td borderColor="tokenxyz.rosybrown.500">${tokenTicker}</Td>
             </Tr>
             <Tr>
-              <Td borderColor={borderColor} fontWeight="bold">
+              <Td borderColor="tokenxyz.rosybrown.500" fontWeight="bold">
                 Supply
               </Td>
-              <Td borderColor={borderColor}>
+              <Td borderColor="tokenxyz.rosybrown.500">
                 {!isNaN(initialSupply) && Number(initialSupply).toLocaleString("en")}
               </Td>
             </Tr>
             <Tr>
-              <Td borderColor={borderColor} fontWeight="bold">
+              <Td borderColor="tokenxyz.rosybrown.500" fontWeight="bold">
                 Owner address
               </Td>
-              <Td borderColor={borderColor}>{displayedAddress}</Td>
+              <Td borderColor="tokenxyz.rosybrown.500">{displayedAddress}</Td>
             </Tr>
             <Tr>
               <Td fontWeight="bold" borderBottom="none">

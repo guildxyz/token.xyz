@@ -51,7 +51,9 @@ const UnlimitedSupplyForm = (): JSX.Element => {
               </NumberInput>
             )}
           />
-          <FormErrorMessage>{errors?.initialSupply?.message}</FormErrorMessage>
+          <FormErrorMessage color="tokenxyz.red.500">
+            {errors?.initialSupply?.message}
+          </FormErrorMessage>
         </FormControl>
       </GridItem>
     </SimpleGrid>

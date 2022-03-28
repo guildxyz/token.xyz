@@ -11,7 +11,7 @@ function getSize(size: Size): PartsStyleObject<typeof parts> {
 
   const radius: Record<Size, string> = {
     lg: "xl",
-    md: "lg",
+    md: "xl",
     sm: "lg",
     xs: "md",
   }
@@ -21,11 +21,19 @@ function getSize(size: Size): PartsStyleObject<typeof parts> {
       ...sizeStyle.field,
     },
     stepper: {
+      borderRightWidth: 1,
+      color: "tokenxyz.rosybrown.500",
+      borderColor: "tokenxyz.rosybrown.500",
       _first: {
+        bgColor: "tokenxyz.rosybrown.300",
+        borderTopWidth: 1,
         borderTopEndRadius: radius[size],
       },
       _last: {
+        bgColor: "tokenxyz.rosybrown.300",
+        borderTopWidth: 1,
         borderBottomEndRadius: radius[size],
+        borderBottomWidth: 1,
       },
     },
   }

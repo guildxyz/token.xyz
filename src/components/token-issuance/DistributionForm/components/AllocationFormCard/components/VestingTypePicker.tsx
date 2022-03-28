@@ -1,4 +1,4 @@
-import { StackDivider, useColorMode, useRadioGroup, VStack } from "@chakra-ui/react"
+import { useColorMode, useRadioGroup, VStack } from "@chakra-ui/react"
 import { useEffect } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
@@ -88,12 +88,12 @@ const VestingTypePicker = ({ index }: Props): JSX.Element => {
   return (
     <VStack
       {...group}
-      borderRadius="xl"
-      bg={colorMode === "light" ? "white" : "blackAlpha.300"}
+      w="full"
+      bg="tokenxyz.white"
       spacing="0"
-      border="1px"
-      borderColor={colorMode === "light" ? "blackAlpha.300" : "whiteAlpha.300"}
-      divider={<StackDivider />}
+      borderRadius="xl"
+      borderWidth={2}
+      borderColor="tokenxyz.rosybrown.500"
     >
       {OPTIONS.map((option) => {
         const radio = getRadioProps({ value: option.value })

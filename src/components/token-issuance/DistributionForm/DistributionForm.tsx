@@ -31,44 +31,47 @@ const DistributionForm = (): JSX.Element => {
   }, [distributionData])
 
   return (
-    <Stack spacing={8} w="full">
+    <>
       <Chart />
 
-      <FormSection
-        title="How do you want to airdrop the tokens?"
-        description="Set up distribution groups with a custom list of participants, allocation sizes and vesting periods."
-      >
-        <Stack spacing={8} w="full">
-          {fields.map((field, index) => (
-            <AllocationFormCard
-              key={field.id}
-              index={index}
-              onRemove={() => remove(index)}
-            />
-          ))}
-
-          {fields?.length < 3 ? (
-            <AddCard text="New group" onClick={() => append({})} />
-          ) : (
-            <Tooltip label="You can add up to 3 distribution groups">
-              <Box>
-                <AddCard text="New group" disabled />
-              </Box>
-            </Tooltip>
-          )}
-        </Stack>
-      </FormSection>
-
-      <Flex mt="auto" width="100%" justifyContent="end">
-        <Button
-          onClick={next}
-          colorScheme="primary"
-          isDisabled={isNextButtonDisabled}
+      <Stack mt={8} spacing={8}>
+        <FormSection
+          title="How do you want to airdrop the tokens?"
+          description="Set up distribution groups with a custom list of participants, allocation sizes and vesting periods."
+          color="tokenxyz.blue.500"
         >
-          Continue to Deploy
-        </Button>
-      </Flex>
-    </Stack>
+          <Stack spacing={8} w="full">
+            {fields.map((field, index) => (
+              <AllocationFormCard
+                key={field.id}
+                index={index}
+                onRemove={() => remove(index)}
+              />
+            ))}
+
+            {fields?.length < 3 ? (
+              <AddCard text="New group" onClick={() => append({})} />
+            ) : (
+              <Tooltip label="You can add up to 3 distribution groups">
+                <Box>
+                  <AddCard text="New group" disabled />
+                </Box>
+              </Tooltip>
+            )}
+          </Stack>
+        </FormSection>
+
+        <Flex mt="auto" width="100%" justifyContent="end">
+          <Button
+            colorScheme="tokenxyz.rosybrown"
+            onClick={next}
+            isDisabled={isNextButtonDisabled}
+          >
+            Continue to Deploy
+          </Button>
+        </Flex>
+      </Stack>
+    </>
   )
 }
 

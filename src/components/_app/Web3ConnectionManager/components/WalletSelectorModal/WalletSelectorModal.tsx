@@ -73,7 +73,7 @@ const WalletSelectorModal = ({
             <Text textAlign="center">
               New to Ethereum wallets?{" "}
               <Link
-                colorScheme="blue"
+                colorScheme="tokenxyz.blue"
                 href="https://ethereum.org/en/wallets/"
                 isExternal
               >

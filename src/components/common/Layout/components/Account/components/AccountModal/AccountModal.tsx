@@ -43,10 +43,14 @@ const AccountModal = ({ isOpen, onClose }) => {
         </ModalBody>
         <ModalFooter>
           <Stack direction="row" alignItems="center" justifyContent="space-between">
-            <Text colorScheme="gray" fontSize="sm" fontWeight="medium">
+            <Text fontSize="sm" fontWeight="medium">
               Connected with {accountData?.connector?.name}
             </Text>
-            <Button size="sm" variant="outline" onClick={handleWalletProviderSwitch}>
+            <Button
+              size="sm"
+              colorScheme="tokenxyz.rosybrown"
+              onClick={handleWalletProviderSwitch}
+            >
               Switch
             </Button>
           </Stack>

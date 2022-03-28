@@ -1,4 +1,4 @@
-import { Center } from "@chakra-ui/react"
+import { Center, Circle } from "@chakra-ui/react"
 import Jazzicon from "@metamask/jazzicon"
 import { useEffect, useRef } from "react"
 
@@ -17,7 +17,15 @@ const Identicon = ({ address, size = 40 }: Props): JSX.Element => {
     }
   }, [address, size])
 
-  return <Center ref={ref} />
+  return (
+    <Center>
+      <Circle
+        mt={-1}
+        boxShadow="0 4px 0 var(--chakra-colors-tokenxyz-black)"
+        ref={ref}
+      />
+    </Center>
+  )
 }
 
 export default Identicon

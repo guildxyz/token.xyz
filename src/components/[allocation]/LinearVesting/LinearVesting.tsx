@@ -52,11 +52,23 @@ const LinearVesting = (): JSX.Element => {
     >
       <Flex alignItems="center" direction="column" minH="60vh">
         <Stack mb={8} alignItems="center">
-          <Heading as="h2" mb={2} fontFamily="display">
+          <Heading
+            as="h2"
+            mb={2}
+            fontFamily="display"
+            color="tokenxyz.red.500"
+            textShadow="0 2px 0 var(--chakra-colors-tokenxyz-black)"
+            letterSpacing="wider"
+          >
             {name}
           </Heading>
           <Skeleton width="max-content" isLoaded={!tokenLoading}>
-            <Text as="span" fontSize="lg" fontWeight="medium" colorScheme="gray">
+            <Text
+              as="span"
+              fontSize="md"
+              fontWeight="medium"
+              color="tokenxyz.rosybrown.500"
+            >
               Claim your ${tokenData?.symbol || "TOKENSYMBOL"}
             </Text>
           </Skeleton>
@@ -96,7 +108,7 @@ const LinearVesting = (): JSX.Element => {
         )}
 
         <Button
-          colorScheme="primary"
+          colorScheme="tokenxyz.rosybrown"
           isDisabled={
             vestingEnded ||
             !isEligible ||

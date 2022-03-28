@@ -17,7 +17,15 @@ const CopyableAddress = ({ address, decimals = 3, ...rest }: Props): JSX.Element
       closeOnClick={false}
       hasArrow
     >
-      <Button onClick={onCopy} variant="unstyled" height="auto" {...rest}>
+      <Button
+        onClick={onCopy}
+        variant="unstyled"
+        height="auto"
+        bgColor="transparent"
+        _active={{ bg: null }}
+        _focus={{ bg: null }}
+        {...rest}
+      >
         <Text>{shortenHex(address, decimals)}</Text>
       </Button>
     </Tooltip>

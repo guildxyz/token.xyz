@@ -82,13 +82,13 @@ type ContractType =
   | "merklevesting"
 
 enum ContractTypeNamePairs {
-  erc20initialsupply = "ERC20InitialSupply.sol:ERC20InitialSupply",
-  erc20mintableaccesscontrolled = "ERC20MintableAccessControlled.sol:ERC20MintableAccessControlled",
-  erc20mintableaccesscontrolledmaxsupply = "ERC20MintableAccessControlledMaxSupply.sol:ERC20MintableAccessControlledMaxSupply",
-  erc20mintableowned = "ERC20MintableOwned.sol:ERC20MintableOwned",
-  erc20mintableownedmaxsupply = "ERC20MintableOwnedMaxSupply.sol:ERC20MintableOwnedMaxSupply",
-  merkledistributor = "MerkleDistributor.sol:MerkleDistributor",
-  merklevesting = "MerkleVesting.sol:MerkleVesting",
+  erc20initialsupply = "./contracts/features/deployables/token/ERC20InitialSupply.sol:ERC20InitialSupply",
+  erc20mintableaccesscontrolled = "./contracts/features/deployables/token/ERC20MintableAccessControlled.sol:ERC20MintableAccessControlled",
+  erc20mintableaccesscontrolledmaxsupply = "./contracts/features/deployables/token/ERC20MintableAccessControlledMaxSupply.sol:ERC20MintableAccessControlledMaxSupply",
+  erc20mintableowned = "./contracts/features/deployables/token/ERC20MintableOwned.sol:ERC20MintableOwned",
+  erc20mintableownedmaxsupply = "./contracts/features/deployables/token/ERC20MintableOwnedMaxSupply.sol:ERC20MintableOwnedMaxSupply",
+  merkledistributor = "./contracts/features/deployables/MerkleDistributor.sol:MerkleDistributor",
+  merklevesting = "./contracts/features/deployables/MerkleVesting.sol:MerkleVesting",
 }
 
 export type {

@@ -57,21 +57,33 @@ const Page = (): JSX.Element => {
 
   return (
     <ConfettiProvider>
-      <Layout>
+      <Layout splitBg={!!accountData?.address}>
         {accountData?.address ? (
           <FormProvider {...methods}>
             <TimelineProvider steps={STEPS}>
-              <DynamicPageTitle />
-
               <SimpleGrid
-                gridTemplateColumns={{ base: "1fr", md: "2fr 1fr" }}
-                gap={8}
+                mt={-20}
+                columns={{ base: 1, md: 7 }}
+                columnGap={8}
+                minH="100vh"
               >
-                <GridItem minW={0}>
+                <GridItem
+                  colSpan={{ base: 1, md: 5 }}
+                  minW={0}
+                  pr={8}
+                  pt={20} // TODO: find a better solution...
+                  pb={8}
+                  bgColor="tokenxyz.rosybrown.300"
+                >
+                  <DynamicPageTitle />
                   <CurrentForm />
                 </GridItem>
 
-                <GridItem minW={0} display={{ base: "none", md: "block" }}>
+                <GridItem
+                  colSpan={{ base: 1, md: 2 }}
+                  minW={0}
+                  display={{ base: "none", md: "block" }}
+                >
                   <Timeline />
                 </GridItem>
               </SimpleGrid>
@@ -80,8 +92,15 @@ const Page = (): JSX.Element => {
             <DynamicDevTool control={methods.control} />
           </FormProvider>
         ) : (
-          <Alert status="error">
-            <AlertIcon />
+          <Alert
+            status="error"
+            bgColor="tokenxyz.red.100"
+            color="tokenxyz.red.500"
+            borderWidth={2}
+            borderColor="tokenxyz.red.500"
+            borderRadius={0}
+          >
+            <AlertIcon color="tokenxyz.red.500" />
             <AlertDescription>
               Please connect your wallet in order to continue!
             </AlertDescription>

@@ -1,4 +1,3 @@
-import { useColorModeValue } from "@chakra-ui/react"
 import {
   CategoryScale,
   Chart as ChartJS,
@@ -40,20 +39,20 @@ const getCurrentMonth = (index: number) => {
 
 // TODO: generate colors dynamicall?
 const CHART_COLORS: Array<{ bg: string; border: string }> = [
-  // Cyan
+  // TokenXZY Red
   {
-    bg: "#76E4F7",
-    border: "#00B5D8",
+    bg: "#C65D7B",
+    border: "#C65D7B",
   },
-  // Pink
+  // TokenXZY Blue
   {
-    bg: "#F687B3",
-    border: "#D53F8C",
+    bg: "#1C658C",
+    border: "#1C658C",
   },
-  // Teal
+  // TokenXYZ Dark Tan
   {
-    bg: "#4FD1C5",
-    border: "#319795",
+    bg: "#D4ACA0",
+    border: "#D4ACA0",
   },
 ]
 
@@ -62,8 +61,6 @@ type Props = {
 }
 
 const Chart = ({ isSimple }: Props): JSX.Element => {
-  const chartTextColor = useColorModeValue("#000000", "#ffffff")
-
   const { control, getValues } = useFormContext<TokenIssuanceFormType>()
 
   const initialSupply = useWatch({ control, name: "initialSupply" })
@@ -106,8 +103,9 @@ const Chart = ({ isSimple }: Props): JSX.Element => {
               x: getCurrentMonth(i),
               y: initialSupply - (distributedSupply || 0),
             })),
-          borderColor: "#718096",
-          backgroundColor: "#CBD5E0",
+          // TokenXYZ Green
+          borderColor: "#B4C6A6",
+          backgroundColor: "#B4C6A6",
           fill: "origin",
         },
       ].concat(
@@ -183,6 +181,7 @@ const Chart = ({ isSimple }: Props): JSX.Element => {
             },
             ticks: {
               display: !isSimple,
+              color: "#AF644F", // Rosybrown 600
             },
           },
           y: {
@@ -190,10 +189,11 @@ const Chart = ({ isSimple }: Props): JSX.Element => {
             stacked: true,
             ticks: {
               display: !isSimple,
+              color: "#AF644F", // Rosybrown 600,
             },
           },
         },
-        color: chartTextColor,
+        color: "#AF644F", // Rosybrown 600
       }}
       data={dynamicChartData}
     />

@@ -80,7 +80,9 @@ const FixedSupplyForm = (): JSX.Element => {
               </NumberInput>
             )}
           />
-          <FormErrorMessage>{errors?.initialSupply?.message}</FormErrorMessage>
+          <FormErrorMessage color="tokenxyz.red.500">
+            {errors?.initialSupply?.message}
+          </FormErrorMessage>
         </FormControl>
       </GridItem>
 
@@ -118,15 +120,21 @@ const FixedSupplyForm = (): JSX.Element => {
               </NumberInput>
             )}
           />
-          <FormErrorMessage>{errors?.maxSupply?.message}</FormErrorMessage>
+          <FormErrorMessage color="tokenxyz.red.500">
+            {errors?.maxSupply?.message}
+          </FormErrorMessage>
         </FormControl>
       </GridItem>
 
       <GridItem minW={0} colSpan={2}>
-        <Alert status="info">
+        <Alert
+          status="info"
+          bgColor="tokenxyz.rosybrown.200"
+          color="tokenxyz.rosybrown.500"
+        >
           <Stack>
             <HStack spacing={0.5}>
-              <AlertIcon mt={0} mr={2} />
+              <AlertIcon mt={0} mr={2} color="tokenxyz.rosybrown.500" />
 
               <AlertTitle>Tip</AlertTitle>
             </HStack>

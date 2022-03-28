@@ -17,6 +17,7 @@ const FormCard = ({ onRemove, children }: PropsWithChildren<Props>): JSX.Element
         width={8}
         height={8}
         rounded="full"
+        color="tokenxyz.red.500"
         onClick={onRemove}
       />
     )}

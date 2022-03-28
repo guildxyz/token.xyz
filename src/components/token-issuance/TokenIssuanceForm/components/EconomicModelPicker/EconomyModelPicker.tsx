@@ -1,4 +1,4 @@
-import { StackDivider, useColorMode, useRadioGroup, VStack } from "@chakra-ui/react"
+import { useRadioGroup, VStack } from "@chakra-ui/react"
 import { useEffect } from "react"
 import { useController, useFormContext, useWatch } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
@@ -54,7 +54,6 @@ const EconomyModelPicker = (): JSX.Element => {
   })
 
   const group = getRootProps()
-  const { colorMode } = useColorMode()
 
   const economyModel = useWatch({ control, name: "economyModel" })
   const initialSupply = useWatch({ control, name: "initialSupply" })
@@ -74,12 +73,11 @@ const EconomyModelPicker = (): JSX.Element => {
     <VStack
       {...group}
       w="full"
-      borderRadius="xl"
-      bg={colorMode === "light" ? "white" : "blackAlpha.300"}
+      bg="tokenxyz.white"
       spacing="0"
-      border="1px"
-      borderColor={colorMode === "light" ? "blackAlpha.300" : "whiteAlpha.300"}
-      divider={<StackDivider />}
+      borderRadius="xl"
+      borderWidth={2}
+      borderColor="tokenxyz.rosybrown.500"
     >
       {OPTIONS.map((option) => {
         const radio = getRadioProps({ value: option.value })

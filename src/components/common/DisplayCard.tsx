@@ -61,7 +61,9 @@ const DisplayCard = ({
             fontFamily="display"
             fontSize="xl"
             fontWeight="bold"
-            letterSpacing="wide"
+            color="tokenxyz.blue.500"
+            textShadow="0 1px 0 var(--chakra-colors-tokenxyz-black)"
+            letterSpacing="wider"
             maxW="full"
             isTruncated
           >

@@ -1,5 +1,6 @@
 import {
   Button,
+  Circle,
   GridItem,
   Heading,
   Img,
@@ -66,18 +67,18 @@ const DeployButtons = (): JSX.Element => {
   return (
     <>
       <Stack>
-        <Heading as="h3" mb={2} fontFamily="display" fontSize="lg">
-          Deploy
-        </Heading>
         <SimpleGrid columns={3} gap={4}>
           <GridItem colSpan={{ base: 3, sm: 1 }}>
             <Button
+              colorScheme="tokenxyz.blue"
               leftIcon={
-                <Img
-                  src={iconUrls[networkData?.chain?.id]}
-                  boxSize={4}
-                  alt={`${networkData?.chain?.name} logo`}
-                />
+                <Circle bgColor="tokenxyz.white" size={6}>
+                  <Img
+                    src={iconUrls[networkData?.chain?.id]}
+                    boxSize={4}
+                    alt={`${networkData?.chain?.name} logo`}
+                  />
+                </Circle>
               }
               w="full"
               size="lg"
@@ -91,7 +92,7 @@ const DeployButtons = (): JSX.Element => {
             <Button
               w="full"
               size="lg"
-              colorScheme="primary"
+              colorScheme="tokenxyz.green"
               disabled={!correct || isLoading}
               isLoading={isLoading}
               loadingText={loadingText}

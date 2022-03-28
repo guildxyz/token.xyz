@@ -1,11 +1,4 @@
-import {
-  Box,
-  Circle,
-  HStack,
-  Stack,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react"
+import { Box, Circle, HStack, Stack, Text } from "@chakra-ui/react"
 import { motion } from "framer-motion"
 import { KeyboardEventHandler, PropsWithChildren } from "react"
 
@@ -28,10 +21,7 @@ const TimelineItem = ({
   onClick,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
-  const borderColor = useColorModeValue(
-    "var(--chakra-colors-gray-200)",
-    "var(--chakra-colors-gray-700)"
-  )
+  const borderColor = "var(--chakra-colors-tokenxyz-rosybrown-500)"
 
   const handleTitleKeyDown: KeyboardEventHandler = (event) => {
     if (event.code === "Enter") onClick()
@@ -46,8 +36,8 @@ const TimelineItem = ({
       _before={{
         content: "''",
         position: "absolute",
-        top: 10,
-        left: "1.125rem",
+        top: 12,
+        left: "1.375rem",
         width: 1,
         height: "full",
         bgColor: borderColor,
@@ -58,10 +48,10 @@ const TimelineItem = ({
     >
       <MotionBox
         position="absolute"
-        top={10}
-        left="1.125rem"
+        top={12}
+        left="1.375rem"
         width={1}
-        bgColor="primary.500"
+        bgColor="tokenxyz.blue.500"
         animate={{
           height: completed ? "100%" : "0%",
         }}
@@ -73,19 +63,30 @@ const TimelineItem = ({
       />
       <HStack>
         <MotionCircle
-          size={10}
+          position="relative"
+          size={12}
           // borderWidth={4}
           // borderColor={active ? "primary.500" : borderColor}
           bgColor={icon ? borderColor : "transparent"}
           animate={{
-            background: active ? "var(--chakra-colors-primary-500)" : borderColor,
+            background: active
+              ? "var(--chakra-colors-tokenxyz-blue-500)"
+              : borderColor,
           }}
           transition={{
             type: "just",
             delay: active ? 0.3 : 0,
           }}
-          color={active ? "white" : undefined}
+          color="tokenxyz.white"
+          borderBottomWidth={4}
+          borderBottomColor="tokenxyz.black"
         >
+          <Circle
+            position="absolute"
+            inset={1}
+            borderWidth={3}
+            borderColor="tokenxyz.rosybrown.200"
+          />
           {icon}
         </MotionCircle>
         <Text
@@ -93,6 +94,9 @@ const TimelineItem = ({
           fontWeight="bold"
           fontSize="lg"
           fontFamily="display"
+          color="tokenxyz.blue.500"
+          textShadow="0 1px 0 var(--chakra-colors-tokenxyz-black)"
+          letterSpacing="wider"
           // cursor={completed ? "pointer" : undefined}
           // onClick={completed ? onClick : undefined}
           // tabIndex={completed ? 0 : -1}

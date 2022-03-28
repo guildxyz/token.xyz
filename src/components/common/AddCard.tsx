@@ -22,32 +22,30 @@ const AddCard = ({ text, link, onClick, disabled }: Props): JSX.Element => {
           ? undefined
           : {
               textDecor: "none",
-              bg: colorMode === "light" ? "gray.100" : "whiteAlpha.50",
+              bgColor: "tokenxyz.rosybrown.100",
             }
       }
-      borderRadius="2xl"
+      _active={{
+        bgColor: "tokenxyz.rosybrown.200",
+      }}
       display="flex"
       w="full"
       px={{ base: 5, sm: 7 }}
       py={link ? 9 : 7}
+      bgColor="tokenxyz.white"
       borderWidth={2}
-      borderColor={colorMode === "light" ? "gray.200" : "gray.600"}
+      borderColor="tokenxyz.rosybrown.500"
+      borderRadius="xl"
       href={link}
       cursor="pointer"
       onClick={onClick}
       disabled={disabled}
       opacity={disabled ? 0.5 : 1}
+      transition="background 0.2s ease"
     >
       <Stack direction="row" spacing={5} alignItems="center">
-        <Icon
-          as={Plus}
-          boxSize={8}
-          color={colorMode === "light" ? "gray.300" : "gray.500"}
-        />
-        <Text
-          fontWeight="bold"
-          color={colorMode === "light" ? "gray.400" : "gray.500"}
-        >
+        <Icon as={Plus} boxSize={8} color="tokenxyz.rosybrown.600" />
+        <Text fontWeight="bold" color="tokenxyz.rosybrown.600">
           {text}
         </Text>
       </Stack>

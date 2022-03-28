@@ -19,7 +19,6 @@ import {
   Thead,
   Tr,
   useBreakpointValue,
-  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
 import Modal from "components/common/Modal"
@@ -31,8 +30,6 @@ import { TokenIssuanceFormType } from "types"
 import shortenHex from "utils/shortenHex"
 
 const DistributionData = (): JSX.Element => {
-  const borderColor = useColorModeValue("gray.200", undefined)
-
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { control } = useFormContext<TokenIssuanceFormType>()
@@ -54,22 +51,33 @@ const DistributionData = (): JSX.Element => {
       <SimpleGrid columns={2} gap={4}>
         <GridItem colSpan={{ base: 2, sm: 1 }}>
           <Stack>
-            <Heading as="h3" mb={2} fontFamily="display" fontSize="lg">
+            <Heading as="h3" mb={2} color="tokenxyz.blue.500" fontSize="xl">
               Distribution data
             </Heading>
             {addressList?.length ? (
               <>
                 <Box
-                  borderColor={borderColor}
-                  borderWidth={1}
+                  borderColor="tokenxyz.rosybrown.500"
+                  borderWidth={2}
                   borderRadius="xl"
                   overflow="hidden"
                 >
-                  <Table variant="simple" size="sm">
+                  <Table variant="simple" size="sm" bgColor="tokenxyz.white">
                     <Thead>
                       <Tr>
-                        <Th>Address</Th>
-                        <Th isNumeric>Amount</Th>
+                        <Th
+                          borderColor="tokenxyz.rosybrown.500"
+                          color="tokenxyz.rosybrown.500"
+                        >
+                          Address
+                        </Th>
+                        <Th
+                          borderColor="tokenxyz.rosybrown.500"
+                          color="tokenxyz.rosybrown.500"
+                          isNumeric
+                        >
+                          Amount
+                        </Th>
                       </Tr>
                     </Thead>
                     <Tbody>
@@ -77,14 +85,14 @@ const DistributionData = (): JSX.Element => {
                         <Tr key={`${row.address}-${row.amount}`}>
                           <Td
                             borderBottom={i === 2 ? "none" : undefined}
-                            borderColor={borderColor}
+                            borderColor="tokenxyz.rosybrown.500"
                           >
                             {shortenHex(row.address, 3)}
                           </Td>
                           <Td
                             borderBottom={i === 2 ? "none" : undefined}
                             isNumeric
-                            borderColor={borderColor}
+                            borderColor="tokenxyz.rosybrown.500"
                           >
                             {row.amount}
                           </Td>
@@ -94,7 +102,12 @@ const DistributionData = (): JSX.Element => {
                   </Table>
                 </Box>
 
-                <Button size="sm" w="full" onClick={onOpen}>
+                <Button
+                  colorScheme="tokenxyz.rosybrown"
+                  size="sm"
+                  w="full"
+                  onClick={onOpen}
+                >
                   View all addresses
                 </Button>
               </>
@@ -106,10 +119,22 @@ const DistributionData = (): JSX.Element => {
 
         <GridItem colSpan={{ base: 2, sm: 1 }}>
           <Stack minW={0} maxW="full">
-            <Heading as="h3" mb={2} fontFamily="display" fontSize="lg">
+            <Heading as="h3" mb={2} color="tokenxyz.blue.500" fontSize="xl">
               Distribution chart
             </Heading>
-            <Chart isSimple />
+            <Box
+              pt={2.5}
+              pb={0.5}
+              pr={2.5}
+              pl={0.5}
+              maxW="full"
+              bgColor="tokenxyz.white"
+              borderColor="tokenxyz.rosybrown.500"
+              borderWidth={2}
+              borderRadius="xl"
+            >
+              <Chart isSimple />
+            </Box>
           </Stack>
         </GridItem>
       </SimpleGrid>
