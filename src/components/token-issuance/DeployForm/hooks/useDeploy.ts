@@ -728,8 +728,6 @@ const useDeploy = () => {
           `DEPLOYED CONTRACTS:\n--------------------\nToken: ${_context.tokenAddress}\nMerkleDistributor: ${_context.merkleDistributorContractAddresses}\nMerkleVesting:${_context.merkleVestingContractAddress}\n----------`
         )
 
-        if (!icon && !distributionData?.length) return send("SKIP")
-
         const ipfsData = new FormData()
         ipfsData.append("dirName", `${ChainSlugs[chain]}/${_context.tokenAddress}`)
 
