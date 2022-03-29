@@ -10,7 +10,7 @@ type Props = {
 const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
   const [{ data }] = useNetwork()
 
-  const isCurrentChain = chain.id === data.chain.id
+  const isCurrentChain = chain.id === data?.chain?.id
 
   return (
     <Tooltip
@@ -22,7 +22,7 @@ const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
           variant="outline"
           colorScheme="tokenxyz.rosybrown"
           display="flex"
-          alignContent="space-between"
+          justifyContent="space-between"
           px="1rem!important"
           isFullWidth
           size="xl"
