@@ -6,7 +6,7 @@ const Card = ({ children, ...rest }: PropsWithChildren<Rest>): JSX.Element => (
   <Box
     bg="tokenxyz.white"
     borderRadius="xl"
-    borderWidth={2}
+    borderWidth={1}
     borderColor="tokenxyz.rosybrown.500"
     display="flex"
     flexDirection="column"

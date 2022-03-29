@@ -47,6 +47,7 @@ const IconPicker = (): JSX.Element => {
       <Button
         {...getRootProps()}
         variant="outline"
+        bgColor="tokenxyz.white"
         colorScheme="tokenxyz.rosybrown"
         as="label"
         autoFocus

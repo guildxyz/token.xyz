@@ -73,7 +73,7 @@ const Page = (): JSX.Element => {
                   pr={{ base: 0, md: 8 }}
                   pt={20} // TODO: find a better solution...
                   pb={8}
-                  bgColor="tokenxyz.rosybrown.200"
+                  bgColor="tokenxyz.rosybrown.100"
                 >
                   <DynamicPageTitle />
                   <CurrentForm />
@@ -96,9 +96,7 @@ const Page = (): JSX.Element => {
             status="error"
             bgColor="tokenxyz.red.100"
             color="tokenxyz.red.500"
-            borderWidth={2}
             borderColor="tokenxyz.red.500"
-            borderRadius={0}
           >
             <AlertIcon color="tokenxyz.red.500" />
             <AlertDescription>

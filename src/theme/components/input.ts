@@ -46,7 +46,7 @@ const variantOutline: PartsStyleFunction<typeof parts> = () => ({
   field: {
     overflow: "hidden",
     bg: "tokenxyz.white",
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: "tokenxyz.rosybrown.500",
     color: "tokenxyz.black",
     _placeholder: {
@@ -54,19 +54,16 @@ const variantOutline: PartsStyleFunction<typeof parts> = () => ({
     },
     _hover: {
       borderColor: "tokenxyz.rosybrown.500",
+      bg: "tokenxyz.rosybrown.50",
     },
-    _focus: {
-      borderWidth: 2,
-    },
+    _focus: {},
     _invalid: {
-      borderWidth: 2,
       borderColor: "tokenxyz.red.500",
     },
   },
   addon: {
     bg: "tokenxyz.rosybrown.200",
     borderColor: "tokenxyz.rosybrown.500",
-    borderWidth: 2,
   },
 })
 

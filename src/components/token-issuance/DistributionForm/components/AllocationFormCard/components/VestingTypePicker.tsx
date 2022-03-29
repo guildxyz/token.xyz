@@ -1,4 +1,4 @@
-import { useColorMode, useRadioGroup, VStack } from "@chakra-ui/react"
+import { useRadioGroup, VStack } from "@chakra-ui/react"
 import { useEffect } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
@@ -33,11 +33,11 @@ const OPTIONS: Array<{
     disabled: false,
     children: LinearVestingForm,
   },
-  {
-    value: "BOND_VESTING",
-    title: "Bond vesting",
-    disabled: "Coming soon",
-  },
+  // {
+  //   value: "BOND_VESTING",
+  //   title: "Bond vesting",
+  //   disabled: "Coming soon",
+  // },
 ]
 
 const VestingTypePicker = ({ index }: Props): JSX.Element => {
@@ -65,7 +65,6 @@ const VestingTypePicker = ({ index }: Props): JSX.Element => {
   })
 
   const group = getRootProps()
-  const { colorMode } = useColorMode()
 
   const vestingType = getValues(`distributionData.${index}.vestingType`)
   useEffect(() => {
@@ -89,11 +88,9 @@ const VestingTypePicker = ({ index }: Props): JSX.Element => {
     <VStack
       {...group}
       w="full"
-      bg="tokenxyz.white"
+      bg="tokenxyz.rosybrown.50"
       spacing="0"
       borderRadius="xl"
-      borderWidth={2}
-      borderColor="tokenxyz.rosybrown.500"
     >
       {OPTIONS.map((option) => {
         const radio = getRadioProps({ value: option.value })

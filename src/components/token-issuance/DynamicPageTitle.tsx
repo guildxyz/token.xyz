@@ -19,9 +19,9 @@ const DynamicPageTitle = (): JSX.Element => {
             colorScheme="tokenxyz.blue"
             position="relative"
             mt={-1}
-            boxSize={9}
-            minWidth={9}
-            minHeight={9}
+            boxSize={10}
+            minWidth={10}
+            minHeight={10}
             icon={<Icon as={ArrowLeft} />}
             fontSize="sm"
             onClick={prev}

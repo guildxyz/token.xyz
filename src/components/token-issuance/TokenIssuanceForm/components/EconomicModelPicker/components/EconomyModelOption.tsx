@@ -71,14 +71,17 @@ const EconomyModelOption = ({
       borderRadius="none"
       _first={{ borderTopRadius: "xl" }}
       _last={{ borderBottomRadius: "xl" }}
-      bg={isChecked ? "tokenxyz.rosybrown.100" : null}
+      bg={isChecked ? "tokenxyz.white" : null}
+      borderWidth={isChecked ? 1 : 0}
+      borderColor="tokenxyz.rosybrown.400"
       _hover={{
-        bg: isChecked ? null : "tokenxyz.rosybrown.100",
+        opacity: 1,
       }}
       _active={{ bg: null }}
       _focus={{ bg: null, boxShadow: "none" }}
       boxShadow="none !important"
       color="tokenxyz.rosybrown.500"
+      opacity={isChecked ? 1 : 0.5}
     >
       <Flex
         as="label"
@@ -98,29 +101,6 @@ const EconomyModelOption = ({
               </Text>
             )}
           </Stack>
-
-          {isChecked && (
-            <Flex
-              alignItems="center"
-              justifyContent="center"
-              position="relative"
-              px={4}
-              h={8}
-              bgColor="tokenxyz.red.500"
-              color="tokenxyz.white"
-              fontSize="xs"
-              textTransform="uppercase"
-              _after={{
-                content: "''",
-                position: "absolute",
-                inset: 1,
-                borderWidth: 2,
-                borderColor: "tokenxyz.rosybrown.200",
-              }}
-            >
-              Active
-            </Flex>
-          )}
         </HStack>
       </Flex>
       {children && <Collapse in={isChecked}>{children}</Collapse>}

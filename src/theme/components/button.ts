@@ -56,7 +56,7 @@ const variantOutline = (props: Dict) => {
   const { theme, colorScheme: c } = props
 
   const style: Record<string, any> = {
-    border: "2px solid",
+    border: "1px solid",
     borderColor:
       c !== "gray"
         ? mode(`${c}.500`, transparentize(`${c}.300`, 0.8)(theme))(props)
@@ -77,37 +77,8 @@ const variantOutline = (props: Dict) => {
 }
 
 const styles = {
-  baseStyle: (props: Dict) => {
-    const { colorScheme: c, borderRadius, variant } = props
-    const baseBoxShadow =
-      variant !== "unstyled" && variant !== "outline"
-        ? `${
-            borderRadius === "full" ? "0" : "0"
-          } 4px 0 var(--chakra-colors-tokenxyz-black)`
-        : undefined
-    const translate =
-      variant !== "unstyled" && variant !== "outline"
-        ? `translate(0, 4px)`
-        : undefined
-
-    return {
-      position: "relative",
-      boxShadow: baseBoxShadow,
-      borderRadius: "xl",
-      _focusVisible: {
-        boxShadow: baseBoxShadow,
-        transform: "none",
-      },
-      _focus: {
-        boxShadow: baseBoxShadow,
-        bgColor: `${c}.400`,
-        transform: translate,
-      },
-      _active: {
-        boxShadow: "0 0 0 var(--chakra-colors-tokenxyz-black)",
-        transform: translate,
-      },
-    }
+  baseStyle: {
+    borderRadius: "xl",
   },
   sizes: {
     md: {

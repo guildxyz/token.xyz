@@ -17,12 +17,12 @@ const styles = {
       borderRightWidth: 0,
     },
     ".chakra-input__group .chakra-numberinput div div:first-of-type": {
-      marginRight: "1px",
+      marginRight: "0.5px",
       borderTopRightRadius: 0,
       borderRightWidth: 0,
     },
     ".chakra-input__group .chakra-numberinput div div:last-of-type": {
-      marginRight: "1px",
+      marginRight: "0.5px",
       borderBottomRightRadius: 0,
       borderRightWidth: 0,
     },

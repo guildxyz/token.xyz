@@ -38,8 +38,6 @@ const styles = {
         container: {
           bg: `tokenxyz.${c}.200`,
           py: 4,
-          borderWidth: 2,
-          borderColor: `tokenxyz.${c}.500`,
           color: `tokenxyz.${c}.500`,
         },
         icon: {
@@ -50,14 +48,12 @@ const styles = {
       // Edge cases, maybe we'll need to completely replace the green and blue color pallettes
       if (c === "blue") {
         style.container.bg = "tokenxyz.blue.100"
-        style.container.borderColor = "tokenxyz.blue.400"
         style.container.color = "tokenxyz.blue.400"
         style.icon.color = "tokenxyz.blue.400"
       }
 
       if (c === "green") {
         style.container.bg = "tokenxyz.green.500"
-        style.container.borderColor = "tokenxyz.green.700"
         style.container.color = "tokenxyz.green.700"
         style.icon.color = "tokenxyz.green.700"
       }

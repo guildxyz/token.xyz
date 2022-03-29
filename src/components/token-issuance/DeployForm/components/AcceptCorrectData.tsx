@@ -16,7 +16,7 @@ const AcceptCorrectData = () => {
         px={4}
         py={2}
         bgColor="tokenxyz.white"
-        borderWidth={2}
+        borderWidth={1}
         borderColor="tokenxyz.rosybrown.500"
         borderRadius="xl"
         colorScheme="tokenxyz.rosybrown"

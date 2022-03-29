@@ -20,18 +20,26 @@ function getSize(size: Size): PartsStyleObject<typeof parts> {
     field: {
       ...sizeStyle.field,
     },
+    stepperGroup: {
+      margin: 0,
+      height: "full",
+    },
     stepper: {
       borderRightWidth: 1,
       color: "tokenxyz.rosybrown.500",
       borderColor: "tokenxyz.rosybrown.500",
+      bgColor: "tokenxyz.rosybrown.200",
+      _hover: {
+        bgColor: "tokenxyz.rosybrown.100",
+      },
+      _active: {
+        bgColor: "tokenxyz.rosybrown.50",
+      },
+      borderTopWidth: 1,
       _first: {
-        bgColor: "tokenxyz.rosybrown.300",
-        borderTopWidth: 1,
         borderTopEndRadius: radius[size],
       },
       _last: {
-        bgColor: "tokenxyz.rosybrown.300",
-        borderTopWidth: 1,
         borderBottomEndRadius: radius[size],
         borderBottomWidth: 1,
       },

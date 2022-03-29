@@ -76,14 +76,13 @@ const TimelineItem = ({
             delay: active ? 0.3 : 0,
           }}
           color="tokenxyz.white"
-          borderBottomWidth={4}
-          borderBottomColor="tokenxyz.black"
+          boxShadow="0 4px 0 var(--chakra-colors-tokenxyz-black)"
         >
           <Circle
             position="absolute"
             inset={1}
             borderWidth={3}
-            borderColor="tokenxyz.rosybrown.200"
+            borderColor="tokenxyz.rosybrown.100"
           />
           {icon}
         </MotionCircle>

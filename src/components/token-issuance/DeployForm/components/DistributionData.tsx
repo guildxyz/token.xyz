@@ -58,7 +58,7 @@ const DistributionData = (): JSX.Element => {
               <>
                 <Box
                   borderColor="tokenxyz.rosybrown.500"
-                  borderWidth={2}
+                  borderWidth={1}
                   borderRadius="xl"
                   overflow="hidden"
                 >
@@ -130,7 +130,7 @@ const DistributionData = (): JSX.Element => {
               maxW="full"
               bgColor="tokenxyz.white"
               borderColor="tokenxyz.rosybrown.500"
-              borderWidth={2}
+              borderWidth={1}
               borderRadius="xl"
             >
               <Chart isSimple />

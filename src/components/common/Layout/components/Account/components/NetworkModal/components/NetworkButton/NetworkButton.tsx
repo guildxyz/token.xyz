@@ -19,16 +19,11 @@ const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
     >
       <Box>
         <Button
-          variant="unstyled"
+          variant="outline"
+          colorScheme="tokenxyz.rosybrown"
           display="flex"
           alignContent="space-between"
           px="1rem!important"
-          bgColor="tokenxyz.rosybrown.200"
-          _hover={{ bg: "tokenxyz.rosybrown.100" }}
-          _active={{ bg: null }}
-          _focus={{ bg: "tokenxyz.rosybrown.100" }}
-          border={isCurrentChain && "2px"}
-          borderColor="tokenxyz.rosybrown.500"
           isFullWidth
           size="xl"
           rightIcon={

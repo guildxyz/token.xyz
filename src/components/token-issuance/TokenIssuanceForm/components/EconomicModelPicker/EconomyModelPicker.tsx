@@ -73,11 +73,9 @@ const EconomyModelPicker = (): JSX.Element => {
     <VStack
       {...group}
       w="full"
-      bg="tokenxyz.white"
+      bg="tokenxyz.rosybrown.50"
       spacing="0"
       borderRadius="xl"
-      borderWidth={2}
-      borderColor="tokenxyz.rosybrown.500"
     >
       {OPTIONS.map((option) => {
         const radio = getRadioProps({ value: option.value })

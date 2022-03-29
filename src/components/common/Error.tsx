@@ -48,9 +48,7 @@ const Error = <ErrorType,>({
         mb="6"
         bgColor="tokenxyz.red.100"
         color="tokenxyz.red.500"
-        borderWidth={2}
         borderColor="tokenxyz.red.500"
-        borderRadius={0}
       >
         <AlertIcon color="tokenxyz.red.500" />
         <Stack>

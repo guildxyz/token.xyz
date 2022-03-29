@@ -41,7 +41,7 @@ const GeneralTokenData = (): JSX.Element => {
         General token data
       </Heading>
       <Box
-        borderWidth={2}
+        borderWidth={1}
         borderColor="tokenxyz.rosybrown.500"
         overflow="hidden"
         borderRadius="xl"
