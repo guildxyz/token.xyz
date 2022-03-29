@@ -1,5 +1,5 @@
 import { useMachine } from "@xstate/react"
-import { chainSlugs } from "connectors"
+import { ChainSlugs } from "connectors"
 import { Contract, Event, utils } from "ethers"
 import useToast from "hooks/useToast"
 import useTokenXyzContract from "hooks/useTokenXyzContract"
@@ -731,7 +731,7 @@ const useDeploy = () => {
         if (!icon && !distributionData?.length) return send("SKIP")
 
         const ipfsData = new FormData()
-        ipfsData.append("dirName", `${chainSlugs[chain]}/${_context.tokenAddress}`)
+        ipfsData.append("dirName", `${ChainSlugs[chain]}/${_context.tokenAddress}`)
 
         const info: TokenInfoJSON = {
           icon: null,

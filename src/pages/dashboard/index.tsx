@@ -2,7 +2,7 @@ import { SimpleGrid, Spinner, Text } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import TokenCard from "components/dashboard/TokenCard"
-import { chainSlugs } from "connectors"
+import { ChainSlugs } from "connectors"
 import useMyTokens from "hooks/useMyTokens"
 import { useNetwork } from "wagmi"
 
@@ -23,7 +23,7 @@ const Page = (): JSX.Element => {
               <TokenCard
                 key={token}
                 // TODO: maybe we shouldn't fallback to 3 here, but we should have a URL query param for the chain?
-                chain={chainSlugs[networkData?.chain?.id || 3]}
+                chain={ChainSlugs[networkData?.chain?.id || 3]}
                 address={token}
               />
             ))

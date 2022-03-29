@@ -52,7 +52,7 @@ const DisplayCard = ({
       alignItems="center"
     >
       {image && <Img src={image} boxSize={12} rounded="full" />}
-      <VStack spacing={2} alignItems="start" w="full" maxW="full" mb="1" mt="-1">
+      <VStack spacing={2} alignItems="start" w="full" maxW="full" mt={-1}>
         <Text
           as="span"
           fontFamily="display"

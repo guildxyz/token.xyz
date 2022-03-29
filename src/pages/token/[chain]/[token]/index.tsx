@@ -1,6 +1,17 @@
-import { Heading, HStack, Img, SimpleGrid, Spinner, Stack } from "@chakra-ui/react"
+import {
+  Heading,
+  HStack,
+  Img,
+  SimpleGrid,
+  Spinner,
+  Stack,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+} from "@chakra-ui/react"
 import Layout from "components/common/Layout"
-import Section from "components/common/Section"
 import AllocationCard from "components/dashboard/AllocationCard"
 import useTokenDataFromIpfs from "hooks/useTokenDataFromIPFS"
 import { useRouter } from "next/router"
@@ -15,7 +26,11 @@ const Page = (): JSX.Element => {
   const { data, isValidating } = useTokenDataFromIpfs(chain, tokenAddress)
 
   return (
-    <Layout title="Token page">
+    <Layout
+      title={
+        loading || !tokenContractData ? "Token page" : tokenContractData?.symbol
+      }
+    >
       {isValidating || loading ? (
         <Spinner />
       ) : (
@@ -26,46 +41,65 @@ const Page = (): JSX.Element => {
                 src={`${process.env.NEXT_PUBLIC_FLEEK_BUCKET}/${chain}/${tokenAddress}/${data?.icon}`}
                 alt={`${tokenContractData?.symbol} icon`}
                 boxSize={12}
+                rounded="full"
               />
             )}
-            <Heading as="h2" fontFamily="display">
+            <Heading
+              as="h2"
+              fontFamily="display"
+              color="tokenxyz.red.500"
+              textShadow="0 2px 0 var(--chakra-colors-tokenxyz-black)"
+              letterSpacing="wider"
+              fontSize={{ base: "2xl", sm: "4xl", md: "5xl" }}
+            >
               {tokenContractData?.symbol}
             </Heading>
           </HStack>
 
-          {data?.airdrops?.length && (
-            <Section title="Airdrops">
-              <SimpleGrid
-                columns={{ base: 1, sm: 2, lg: 3 }}
-                gap={{ base: 4, md: 6 }}
-              >
-                {data.airdrops.map((airdrop) => (
-                  <AllocationCard
-                    key={airdrop.prettyUrl}
-                    prettyUrl={airdrop.prettyUrl}
-                    fileName={`${chain}/${tokenAddress}/${airdrop.fileName}`}
-                  />
-                ))}
-              </SimpleGrid>
-            </Section>
-          )}
+          <Tabs colorScheme="tokenxyz.rosybrown">
+            <TabList>
+              <Tab>Claim</Tab>
+              <Tab>Tokenomics</Tab>
+              <Tab>Liquidity</Tab>
+            </TabList>
 
-          {data?.vestings?.length && (
-            <Section title="Vestings">
-              <SimpleGrid
-                columns={{ base: 1, sm: 2, lg: 3 }}
-                gap={{ base: 4, md: 6 }}
-              >
-                {data.vestings.map((vesting) => (
-                  <AllocationCard
-                    key={vesting.prettyUrl}
-                    prettyUrl={vesting.prettyUrl}
-                    fileName={`${chain}/${tokenAddress}/${vesting.fileName}`}
-                  />
-                ))}
-              </SimpleGrid>
-            </Section>
-          )}
+            <TabPanels>
+              <TabPanel px={0} pt={8}>
+                <Stack spacing={8}>
+                  <SimpleGrid
+                    columns={{ base: 1, sm: 2, lg: 3 }}
+                    gap={{ base: 4, md: 6 }}
+                  >
+                    {data?.airdrops?.length &&
+                      data.airdrops.map((airdrop) => (
+                        <AllocationCard
+                          key={airdrop.prettyUrl}
+                          prettyUrl={airdrop.prettyUrl}
+                          fileName={`${chain}/${tokenAddress}/${airdrop.fileName}`}
+                        />
+                      ))}
+
+                    {data?.vestings?.length &&
+                      data.vestings.map((vesting) => (
+                        <AllocationCard
+                          key={vesting.prettyUrl}
+                          prettyUrl={vesting.prettyUrl}
+                          fileName={`${chain}/${tokenAddress}/${vesting.fileName}`}
+                        />
+                      ))}
+                  </SimpleGrid>
+                </Stack>
+              </TabPanel>
+
+              <TabPanel px={0}>
+                <p>Tokenomics (TODO)</p>
+              </TabPanel>
+
+              <TabPanel px={0}>
+                <p>Liquidity (TODO)</p>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
         </Stack>
       )}
     </Layout>

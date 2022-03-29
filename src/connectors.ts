@@ -5,10 +5,10 @@ import { WalletConnectConnector } from "wagmi/connectors/walletConnect"
 import { WalletLinkConnector } from "wagmi/connectors/walletLink"
 
 const supportedChainIds = [/* 1,*/ 3, 5]
-const chainSlugs = {
-  1: "ethereum",
-  3: "ropsten",
-  5: "goerli",
+enum ChainSlugs {
+  "ethereum" = 1,
+  "ropsten" = 3,
+  "goerli" = 5,
 }
 
 // Default chain is Ropsten for now
@@ -62,7 +62,7 @@ export {
   TOKEN_XYZ_CONTRACT,
   provider,
   chains,
-  chainSlugs,
+  ChainSlugs,
   connectors,
   injected,
   iconUrls,
