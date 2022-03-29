@@ -1,4 +1,4 @@
-import { Img, SimpleGrid, Text, VStack } from "@chakra-ui/react"
+import { HStack, Img, Text, VStack } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { PropsWithChildren } from "react"
 import { Rest } from "types"
@@ -46,13 +46,17 @@ const DisplayCard = ({
     }}
     {...rest}
   >
-    <SimpleGrid
-      templateColumns={image ? "3rem calc(100% - 4.25rem)" : "1fr"}
-      gap={4}
-      alignItems="center"
-    >
-      {image && <Img src={image} boxSize={12} rounded="full" />}
-      <VStack spacing={2} alignItems="start" w="full" maxW="full" mt={-1}>
+    <VStack spacing={1} alignItems="start" w="full" maxW="full" mt={-1}>
+      <HStack spacing={2}>
+        {image && (
+          <Img
+            src={image}
+            position="relative"
+            top={-0.5}
+            boxSize={6}
+            rounded="full"
+          />
+        )}
         <Text
           as="span"
           fontFamily="display"
@@ -66,9 +70,9 @@ const DisplayCard = ({
         >
           {title}
         </Text>
-        {children}
-      </VStack>
-    </SimpleGrid>
+      </HStack>
+      {children}
+    </VStack>
   </Card>
 )
 

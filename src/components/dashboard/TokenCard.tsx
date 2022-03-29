@@ -1,3 +1,4 @@
+import { Spinner, Tag, Wrap } from "@chakra-ui/react"
 import DisplayCard from "components/common/DisplayCard"
 import Link from "components/common/Link"
 import useTokenDataFromIpfs from "hooks/useTokenDataFromIPFS"
@@ -10,30 +11,42 @@ type Props = {
 }
 
 const TokenCard = ({ chain, address }: Props): JSX.Element => {
-  const [{ data, error, loading }] = useToken({ address })
-  const { data: tokenDataFromIpfs, isValidating } = useTokenDataFromIpfs(
-    chain,
-    address
-  )
-
+  const [{ data, error }] = useToken({ address })
+  const { data: tokenDataFromIpfs } = useTokenDataFromIpfs(chain, address)
   // if (tokenDataFromIpfs && !tokenDataFromIpfs?.displayInExplorer) return null
 
   return (
     <Link href={`/token/${chain}/${address}`} _hover={{ textDecoration: "none" }}>
       <DisplayCard
-        title={
-          loading || isValidating
-            ? shortenHex(address, 4)
-            : error
-            ? "ERROR"
-            : data?.symbol
-        }
+        title={!data ? shortenHex(address, 4) : error ? "ERROR" : data?.symbol}
         image={
           tokenDataFromIpfs?.icon
             ? `${process.env.NEXT_PUBLIC_FLEEK_BUCKET}/${chain}/${address}/${tokenDataFromIpfs.icon}`
             : undefined
         }
-      />
+      >
+        <Wrap spacing={1.5}>
+          <Tag bgColor="tokenxyz.rosybrown.100" color="tokenxyz.rosybrown.500">
+            {tokenDataFromIpfs ? (
+              `${tokenDataFromIpfs.airdrops?.length || 0} airdrop${
+                tokenDataFromIpfs.airdrops?.length > 1 ? "s" : ""
+              }`
+            ) : (
+              <Spinner size="xs" />
+            )}
+          </Tag>
+
+          <Tag bgColor="tokenxyz.rosybrown.100" color="tokenxyz.rosybrown.500">
+            {tokenDataFromIpfs ? (
+              `${tokenDataFromIpfs.vestings?.length || 0} vesting${
+                tokenDataFromIpfs.vestings?.length > 1 ? "s" : ""
+              }`
+            ) : (
+              <Spinner size="xs" />
+            )}
+          </Tag>
+        </Wrap>
+      </DisplayCard>
     </Link>
   )
 }
