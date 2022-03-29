@@ -8,10 +8,14 @@ const useTokenDataFromIpfs = (
   chain: string,
   tokenAddress: string
 ): SWRResponse<TokenInfoJSON> =>
-  useSWR<TokenInfoJSON>(["tokenDataFromIpfs", chain, tokenAddress], fetchTokenData, {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    shouldRetryOnError: false,
-  })
+  useSWR<TokenInfoJSON>(
+    chain && tokenAddress ? ["tokenDataFromIpfs", chain, tokenAddress] : null,
+    fetchTokenData,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      shouldRetryOnError: false,
+    }
+  )
 
 export default useTokenDataFromIpfs

@@ -2,7 +2,6 @@ import {
   Heading,
   HStack,
   Img,
-  SimpleGrid,
   Spinner,
   Stack,
   Tab,
@@ -10,21 +9,38 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-  Text,
 } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
-import AllocationCard from "components/dashboard/AllocationCard"
+import Allocation from "components/[token]/Allocation"
+import useHash from "hooks/useHash"
 import useTokenDataFromIpfs from "hooks/useTokenDataFromIPFS"
 import { useRouter } from "next/router"
+import { useMemo } from "react"
 import { useToken } from "wagmi"
 
 const Page = (): JSX.Element => {
   const router = useRouter()
+
   const chain = router.query.chain?.toString()
   const tokenAddress = router.query.token?.toString()?.toLowerCase()
 
+  const [hash, setHash] = useHash()
+
   const [{ data: tokenContractData, loading }] = useToken({ address: tokenAddress })
   const { data, isValidating } = useTokenDataFromIpfs(chain, tokenAddress)
+
+  const allocations = useMemo(
+    () => (data ? []?.concat(data.airdrops).concat(data.vestings) : []),
+    [data]
+  )
+
+  const currentIndex = useMemo(() => {
+    const indexByHash = allocations?.findIndex(
+      (allocation) => allocation.prettyUrl === hash?.replace("#", "")
+    )
+
+    return indexByHash > -1 ? indexByHash : 0
+  }, [allocations, hash])
 
   return (
     <Layout
@@ -57,50 +73,37 @@ const Page = (): JSX.Element => {
             </Heading>
           </HStack>
 
-          <Tabs colorScheme="tokenxyz.rosybrown">
-            <TabList>
-              <Tab>Airdrops</Tab>
-              <Tab>Vestings</Tab>
+          <Tabs
+            colorScheme="tokenxyz.rosybrown"
+            index={currentIndex}
+            onChange={(index) => setHash(`#${allocations?.[index]?.prettyUrl}`)}
+          >
+            <TabList borderBottomWidth={0}>
+              {allocations?.map((allocation) => (
+                <Tab
+                  key={allocation.prettyUrl}
+                  fontWeight="bold"
+                  fontSize="xl"
+                  fontFamily="display"
+                  color="tokenxyz.blue.500"
+                  textShadow="0 1px 0 var(--chakra-colors-tokenxyz-black)"
+                  letterSpacing="wider"
+                  _selected={{
+                    color: "tokenxyz.blue.500",
+                    borderBottomColor: "tokenxyz.blue.500",
+                  }}
+                >
+                  {allocation.prettyUrl}
+                </Tab>
+              ))}
             </TabList>
 
             <TabPanels>
-              <TabPanel px={0} pt={8}>
-                {data?.airdrops?.length ? (
-                  <SimpleGrid
-                    columns={{ base: 1, sm: 2, lg: 3 }}
-                    gap={{ base: 4, md: 6 }}
-                  >
-                    {data.airdrops.map((airdrop) => (
-                      <AllocationCard
-                        key={airdrop.prettyUrl}
-                        prettyUrl={airdrop.prettyUrl}
-                        fileName={`${chain}/${tokenAddress}/${airdrop.fileName}`}
-                      />
-                    ))}
-                  </SimpleGrid>
-                ) : (
-                  <Text>There are no airdrops for this token.</Text>
-                )}
-              </TabPanel>
-
-              <TabPanel px={0} pt={8}>
-                {data?.vestings?.length ? (
-                  <SimpleGrid
-                    columns={{ base: 1, sm: 2, lg: 3 }}
-                    gap={{ base: 4, md: 6 }}
-                  >
-                    {data.vestings.map((vesting) => (
-                      <AllocationCard
-                        key={vesting.prettyUrl}
-                        prettyUrl={vesting.prettyUrl}
-                        fileName={`${chain}/${tokenAddress}/${vesting.fileName}`}
-                      />
-                    ))}
-                  </SimpleGrid>
-                ) : (
-                  <Text>There are no vestings for this token.</Text>
-                )}
-              </TabPanel>
+              {allocations?.map((allocation) => (
+                <TabPanel key={allocation.prettyUrl} px={0} pt={8}>
+                  <Allocation allocationPrettyUrl={allocation.prettyUrl} />
+                </TabPanel>
+              ))}
             </TabPanels>
           </Tabs>
         </Stack>

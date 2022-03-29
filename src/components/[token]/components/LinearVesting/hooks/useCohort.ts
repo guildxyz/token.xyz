@@ -1,4 +1,4 @@
-import { useAllocation } from "components/[allocation]/common/AllocationContext"
+import { useAllocation } from "components/[token]/components/common/AllocationContext"
 import { BigNumber, Contract } from "ethers"
 import { useMemo } from "react"
 import MerkleVestingABI from "static/abis/MerkleVestingABI.json"

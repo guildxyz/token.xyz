@@ -51,7 +51,7 @@ const Airdrop = (): JSX.Element => {
       py={{ base: 6, sm: 12 }}
       maxW="container.sm"
     >
-      <Flex alignItems="center" direction="column" minH="60vh">
+      <Flex alignItems="center" direction="column">
         <Stack mb={8} alignItems="center">
           <Heading
             as="h2"

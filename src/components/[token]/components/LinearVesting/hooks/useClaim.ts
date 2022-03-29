@@ -1,35 +1,36 @@
-import { useAllocation } from "components/[allocation]/common/AllocationContext"
+import { useAllocation } from "components/[token]/components/common/AllocationContext"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useMemo } from "react"
-import MerkleDistributorABI from "static/abis/MerkleDistributorABI.json"
+import MerkleVestingABI from "static/abis/MerkleVestingABI.json"
 import processContractInteractionError from "utils/processContractInteractionError"
 import { useAccount, useContract, useSigner } from "wagmi"
 
 const useClaim = () => {
   const [{ data: accountData }] = useAccount()
   const [{ data: signerData }] = useSigner()
-  const { claims, merkleDistributorContract: contractAddress } = useAllocation()
+  const { merkleRoot, claims, vestingContract } = useAllocation()
   const toast = useToast()
 
-  const merkleDistributorContract = useContract({
-    addressOrName: contractAddress,
-    contractInterface: MerkleDistributorABI,
+  const merkleVestingContract = useContract({
+    addressOrName: vestingContract,
+    contractInterface: MerkleVestingABI,
     signerOrProvider: signerData,
   })
 
-  const userMerkleDistributorData = useMemo(
+  const userVestingData = useMemo(
     () => (accountData && claims ? claims[accountData.address] : null),
     [accountData, claims]
   )
 
   const claim = async () =>
-    merkleDistributorContract
+    merkleVestingContract
       .claim(
-        userMerkleDistributorData?.index,
+        merkleRoot,
+        userVestingData?.index,
         accountData?.address,
-        userMerkleDistributorData?.amount,
-        userMerkleDistributorData?.proof
+        userVestingData?.amount,
+        userVestingData?.proof
       )
       .then((res) => res.wait())
 

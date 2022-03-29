@@ -1,20 +1,22 @@
 import { Spinner, Text } from "@chakra-ui/react"
 import { ConfettiProvider } from "components/common/ConfettiContext"
-import Layout from "components/common/Layout"
-import Airdrop from "components/[allocation]/Airdrop"
-import BondVesting from "components/[allocation]/BondVesting"
-import { AllocationProvider } from "components/[allocation]/common/AllocationContext"
-import LinearVesting from "components/[allocation]/LinearVesting"
+import Airdrop from "components/[token]/components/Airdrop"
+import BondVesting from "components/[token]/components/BondVesting"
+import { AllocationProvider } from "components/[token]/components/common/AllocationContext"
+import LinearVesting from "components/[token]/components/LinearVesting"
 import useAllocationData from "hooks/useAllocationData"
 import useTokenDataFromIpfs from "hooks/useTokenDataFromIPFS"
 import { useRouter } from "next/router"
 import { VestingTypes } from "types"
 
-const Page = (): JSX.Element => {
+type Props = {
+  allocationPrettyUrl: string
+}
+
+const Allocation = ({ allocationPrettyUrl }: Props): JSX.Element => {
   const router = useRouter()
   const chain = router.query?.chain?.toString()
   const tokenAddress = router.query?.token?.toString()
-  const allocationPrettyUrl = router.query?.allocation?.toString()
 
   const { data: tokenInfo } = useTokenDataFromIpfs(chain, tokenAddress)
 
@@ -39,7 +41,7 @@ const Page = (): JSX.Element => {
   )
 
   return (
-    <Layout title={error ? "Error" : data ? data.name : "Loading... "}>
+    <>
       {data?.vestingType ? (
         <ConfettiProvider>
           <AllocationProvider initialData={data}>
@@ -51,8 +53,8 @@ const Page = (): JSX.Element => {
       ) : (
         <Spinner />
       )}
-    </Layout>
+    </>
   )
 }
 
-export default Page
+export default Allocation
