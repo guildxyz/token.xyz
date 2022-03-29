@@ -10,6 +10,7 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  Text,
 } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
 import AllocationCard from "components/dashboard/AllocationCard"
@@ -58,45 +59,47 @@ const Page = (): JSX.Element => {
 
           <Tabs colorScheme="tokenxyz.rosybrown">
             <TabList>
-              <Tab>Claim</Tab>
-              <Tab>Tokenomics</Tab>
-              <Tab>Liquidity</Tab>
+              <Tab>Airdrops</Tab>
+              <Tab>Vestings</Tab>
             </TabList>
 
             <TabPanels>
               <TabPanel px={0} pt={8}>
-                <Stack spacing={8}>
+                {data?.airdrops?.length ? (
                   <SimpleGrid
                     columns={{ base: 1, sm: 2, lg: 3 }}
                     gap={{ base: 4, md: 6 }}
                   >
-                    {data?.airdrops?.length &&
-                      data.airdrops.map((airdrop) => (
-                        <AllocationCard
-                          key={airdrop.prettyUrl}
-                          prettyUrl={airdrop.prettyUrl}
-                          fileName={`${chain}/${tokenAddress}/${airdrop.fileName}`}
-                        />
-                      ))}
-
-                    {data?.vestings?.length &&
-                      data.vestings.map((vesting) => (
-                        <AllocationCard
-                          key={vesting.prettyUrl}
-                          prettyUrl={vesting.prettyUrl}
-                          fileName={`${chain}/${tokenAddress}/${vesting.fileName}`}
-                        />
-                      ))}
+                    {data.airdrops.map((airdrop) => (
+                      <AllocationCard
+                        key={airdrop.prettyUrl}
+                        prettyUrl={airdrop.prettyUrl}
+                        fileName={`${chain}/${tokenAddress}/${airdrop.fileName}`}
+                      />
+                    ))}
                   </SimpleGrid>
-                </Stack>
+                ) : (
+                  <Text>There are no airdrops for this token.</Text>
+                )}
               </TabPanel>
 
-              <TabPanel px={0}>
-                <p>Tokenomics (TODO)</p>
-              </TabPanel>
-
-              <TabPanel px={0}>
-                <p>Liquidity (TODO)</p>
+              <TabPanel px={0} pt={8}>
+                {data?.vestings?.length ? (
+                  <SimpleGrid
+                    columns={{ base: 1, sm: 2, lg: 3 }}
+                    gap={{ base: 4, md: 6 }}
+                  >
+                    {data.vestings.map((vesting) => (
+                      <AllocationCard
+                        key={vesting.prettyUrl}
+                        prettyUrl={vesting.prettyUrl}
+                        fileName={`${chain}/${tokenAddress}/${vesting.fileName}`}
+                      />
+                    ))}
+                  </SimpleGrid>
+                ) : (
+                  <Text>There are no vestings for this token.</Text>
+                )}
               </TabPanel>
             </TabPanels>
           </Tabs>
