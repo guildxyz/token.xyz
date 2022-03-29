@@ -30,7 +30,13 @@ const Page = (): JSX.Element => {
   const { data, isValidating } = useTokenDataFromIpfs(chain, tokenAddress)
 
   const allocations = useMemo(
-    () => (data ? []?.concat(data.airdrops).concat(data.vestings) : []),
+    () =>
+      data
+        ? []
+            ?.concat(data.airdrops)
+            .concat(data.vestings)
+            ?.filter((allocation) => !!allocation)
+        : [],
     [data]
   )
 
