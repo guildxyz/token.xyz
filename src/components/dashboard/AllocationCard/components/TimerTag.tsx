@@ -1,4 +1,4 @@
-import { Tag } from "@chakra-ui/react"
+import { Spinner, Tag } from "@chakra-ui/react"
 import { useMemo } from "react"
 import { useTimer } from "react-timer-hook"
 
@@ -6,7 +6,17 @@ type Props = {
   expirityTime: number
 }
 
-const TimerTag = ({ expirityTime }: Props): JSX.Element => {
+const TimerTag = ({ expirityTime }: Props): JSX.Element => (
+  <Tag bgColor="tokenxyz.rosybrown.100" color="tokenxyz.rosybrown.500">
+    {expirityTime ? (
+      <TimerWithData expirityTime={expirityTime} />
+    ) : (
+      <Spinner size="xs" />
+    )}
+  </Tag>
+)
+
+const TimerWithData = ({ expirityTime }: Props): JSX.Element => {
   const { seconds, minutes, hours, days } = useTimer({
     expiryTimestamp: new Date(expirityTime),
     autoStart: false,
@@ -18,7 +28,7 @@ const TimerTag = ({ expirityTime }: Props): JSX.Element => {
   )
 
   return (
-    <Tag bgColor="tokenxyz.rosybrown.100" color="tokenxyz.rosybrown.500">
+    <>
       {ended
         ? "Ended"
         : `Ends in ${
@@ -30,7 +40,7 @@ const TimerTag = ({ expirityTime }: Props): JSX.Element => {
               ? `${minutes} minutes`
               : `${seconds} seconds`
           }`}
-    </Tag>
+    </>
   )
 }
 
