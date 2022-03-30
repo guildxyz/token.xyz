@@ -2,6 +2,7 @@ import { useRadioGroup, VStack } from "@chakra-ui/react"
 import { useEffect } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
+import Disperse from "./Disperse"
 import LinearVestingForm from "./LinearVestingForm"
 import NoVestingForm from "./NoVestingForm"
 import VestingTypeOption from "./VestingTypeOption"
@@ -18,8 +19,15 @@ const OPTIONS: Array<{
   children?: (props: any) => JSX.Element
 }> = [
   {
+    value: "DISTRIBUTE",
+    title: "Distribute tokens to addresses",
+    description: "Tokens will be available in the recipients addresses immediately.",
+    disabled: false,
+    children: Disperse,
+  },
+  {
     value: "NO_VESTING",
-    title: "No vesting",
+    title: "No vesting (airdrop)",
     description:
       "Tokens will be available to your recipients for claiming right after the minting event.",
     disabled: false,
@@ -54,21 +62,21 @@ const VestingTypePicker = ({ index }: Props): JSX.Element => {
     control,
     name: `distributionData.${index}.vestingType`,
     rules: { required: "You must pick a realm for your guild" },
-    defaultValue: "NO_VESTING",
+    defaultValue: "DISTRIBUTE",
   })
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: `distributionData.${index}.vestingType`,
     onChange: field.onChange,
     value: field.value,
-    defaultValue: "NO_VESTING",
+    defaultValue: "DISTRIBUTE",
   })
 
   const group = getRootProps()
 
   const vestingType = getValues(`distributionData.${index}.vestingType`)
   useEffect(() => {
-    if (vestingType !== "NO_VESTING") {
+    if (vestingType === "LINEAR_VESTING") {
       if (touchedFields.distributionData?.[index]?.vestingPeriod)
         trigger(`distributionData.${index}.vestingPeriod`)
       if (touchedFields.distributionData?.[index]?.cliff)

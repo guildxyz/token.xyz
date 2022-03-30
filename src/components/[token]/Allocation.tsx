@@ -34,7 +34,10 @@ const Allocation = ({ allocationPrettyUrl }: Props): JSX.Element => {
 
   const { data: tokenInfo } = useTokenDataFromIpfs(chain, tokenAddress)
 
-  const vestingTypesComponents: Record<VestingTypes, JSX.Element> = {
+  const vestingTypesComponents: Record<
+    Exclude<VestingTypes, "DISTRIBUTE">,
+    JSX.Element
+  > = {
     NO_VESTING: <Airdrop />,
     LINEAR_VESTING: <LinearVesting />,
     BOND_VESTING: <BondVesting />,
