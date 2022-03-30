@@ -1,5 +1,7 @@
-import { NULL_ADDRESS } from "connectors"
-import { Contract } from "ethers"
+import { ChainSlugs, NULL_ADDRESS } from "connectors"
+import { Contract, providers } from "ethers"
+import { useRouter } from "next/router"
+import { useMemo } from "react"
 import useSWR, { SWRResponse } from "swr"
 import { erc20ABI, useContract, useProvider } from "wagmi"
 
@@ -29,14 +31,23 @@ const useTokenDataFromContract = (
   name: string
   decimals: number
 }> => {
+  const router = useRouter()
+  const chain = router?.query?.chain?.toString()
+
   const shouldFetch = ADDRESS_REGEX.test(tokenAddress)
 
   const provider = useProvider()
 
+  const localProvider = useMemo(() => {
+    const parsedChain = ChainSlugs[chain] ? parseInt(ChainSlugs[chain]) : undefined
+    if (!parsedChain) return undefined
+    return new providers.InfuraProvider(parsedChain)
+  }, [chain])
+
   const tokenContract = useContract({
     addressOrName: tokenAddress || NULL_ADDRESS,
     contractInterface: erc20ABI,
-    signerOrProvider: provider,
+    signerOrProvider: localProvider ?? provider,
   })
 
   const swrResponse = useSWR<{

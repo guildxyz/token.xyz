@@ -22,8 +22,6 @@ const Airdrop = (): JSX.Element => {
     isValidating: tokenLoading,
   } = useTokenDataFromContract(tokenAddress)
 
-  console.log("tokenData", tokenData)
-
   const [{ data: accountData, error: accountError, loading: accountLoading }] =
     useAccount()
 

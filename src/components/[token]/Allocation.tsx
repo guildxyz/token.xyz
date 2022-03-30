@@ -65,7 +65,7 @@ const Allocation = ({ allocationPrettyUrl }: Props): JSX.Element => {
         <ConfettiProvider>
           <AllocationProvider initialData={data}>
             <Stack spacing={8} alignItems="center">
-              {shouldSwitchChain && (
+              {shouldSwitchChain && accountData && (
                 <Alert
                   status="error"
                   bgColor="tokenxyz.red.100"
@@ -77,18 +77,13 @@ const Allocation = ({ allocationPrettyUrl }: Props): JSX.Element => {
                   <Stack w="full">
                     <AlertTitle>Uh-oh!</AlertTitle>
                     <AlertDescription>
-                      {accountData
-                        ? `Please switch to ${
-                            chains?.find(
-                              (c) =>
-                                c.id === ChainSlugs[router.query.chain?.toString()]
-                            )?.name
-                          } in order to see the details of this ${
-                            data?.vestingType === "NO_VESTING"
-                              ? "airdrop"
-                              : "vesting"
-                          }!`
-                        : "Please connect your wallet in order to interact with this airdrop!"}
+                      {`Please switch to ${
+                        chains?.find(
+                          (c) => c.id === ChainSlugs[router.query.chain?.toString()]
+                        )?.name
+                      } in order to see the details of this ${
+                        data?.vestingType === "NO_VESTING" ? "airdrop" : "vesting"
+                      }!`}
                     </AlertDescription>
                   </Stack>
                 </Alert>
