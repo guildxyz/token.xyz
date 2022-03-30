@@ -81,7 +81,7 @@ const Allocation = ({ allocationPrettyUrl }: Props): JSX.Element => {
                         chains?.find(
                           (c) => c.id === ChainSlugs[router.query.chain?.toString()]
                         )?.name
-                      } in order to see the details of this ${
+                      } in order to interact with this ${
                         data?.vestingType === "NO_VESTING" ? "airdrop" : "vesting"
                       }!`}
                     </AlertDescription>
