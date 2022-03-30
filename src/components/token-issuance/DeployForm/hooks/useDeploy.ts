@@ -451,6 +451,13 @@ const useDeploy = () => {
           const cliff = monthsToSecond(allocation.cliff)
           const vestingPeriod = monthsToSecond(allocation.vestingPeriod)
 
+          console.log(
+            "ADDCOHORT",
+            _context.merkleTrees?.[index]?.merkleRoot,
+            distributionDuration,
+            vestingPeriod,
+            cliff
+          )
           addCohortCalls.push(
             merkleVestingContract.interface.encodeFunctionData(
               "addCohort(bytes32,uint256,uint64,uint64)",
