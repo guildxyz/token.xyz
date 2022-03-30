@@ -11,12 +11,11 @@ import Modal from "components/common/Modal"
 import processConnectionError from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/utils/processConnectionError"
 import { chains } from "connectors"
 import useToast from "hooks/useToast"
-import { useEffect } from "react"
 import { useNetwork } from "wagmi"
 import NetworkButton from "./components/NetworkButton"
 
 const NetworkModal = ({ isOpen, onClose }) => {
-  const [{ data, error }, switchNetwork] = useNetwork()
+  const [{ error }, switchNetwork] = useNetwork()
   const toast = useToast()
 
   const requestManualNetworkChange = (chainName: string) => () =>
@@ -26,11 +25,6 @@ const NetworkModal = ({ isOpen, onClose }) => {
       status: "error",
       duration: 4000,
     })
-
-  useEffect(() => {
-    if (data?.chain?.unsupported) return
-    onClose()
-  }, [data])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -49,7 +43,7 @@ const NetworkModal = ({ isOpen, onClose }) => {
                 chain={chain}
                 requestNetworkChange={
                   switchNetwork
-                    ? () => switchNetwork(chain.id)
+                    ? () => switchNetwork(chain.id).then(() => onClose())
                     : requestManualNetworkChange(chain.name)
                 }
               />

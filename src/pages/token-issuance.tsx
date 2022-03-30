@@ -19,6 +19,7 @@ import DynamicPageTitle from "components/token-issuance/DynamicPageTitle"
 import TokenIssuanceForm from "components/token-issuance/TokenIssuanceForm"
 import TokenIssuancePreview from "components/token-issuance/TokenIssuancePreview"
 import { Web3Connection } from "components/_app/Web3ConnectionManager"
+import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { ChartLine, Coin, CurrencyEth } from "phosphor-react"
 import { useContext, useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -54,6 +55,8 @@ const Page = (): JSX.Element => {
     if (loading || accountData || !triedEager) return
     openWalletSelectorModal()
   }, [loading, accountData, openWalletSelectorModal, triedEager])
+
+  useWarnIfUnsavedChanges(methods?.formState?.isDirty)
 
   return (
     <ConfettiProvider>

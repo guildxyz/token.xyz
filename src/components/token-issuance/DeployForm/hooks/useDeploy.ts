@@ -3,6 +3,7 @@ import { ChainSlugs } from "connectors"
 import { Contract, ContractInterface, Event, utils } from "ethers"
 import useToast from "hooks/useToast"
 import useTokenXyzContract from "hooks/useTokenXyzContract"
+import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useEffect, useMemo, useRef } from "react"
 import { useFormContext } from "react-hook-form"
 import DisperseABI from "static/abis/DisperseABI.json"
@@ -890,6 +891,8 @@ const useDeploy = () => {
       },
     },
   })
+
+  useWarnIfUnsavedChanges(!state?.matches("idle"))
 
   // DEBUG
   useEffect(() => {
