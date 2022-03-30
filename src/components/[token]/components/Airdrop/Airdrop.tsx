@@ -1,17 +1,28 @@
 import { Button, Flex, Heading, Skeleton, Stack, Text } from "@chakra-ui/react"
 import Card from "components/common/Card"
+import { ChainSlugs } from "connectors"
+import useTokenDataFromContract from "hooks/useTokenDataFromContract"
+import { useRouter } from "next/router"
 import { useEffect, useMemo } from "react"
-import { useAccount, useToken } from "wagmi"
+import { useAccount, useNetwork } from "wagmi"
 import { useAllocation } from "../common/AllocationContext"
 import Countdown from "../common/Countdown"
 import useAirdropDataWithIndex from "./hooks/useAirdropDataWithIndex"
 import useClaim from "./hooks/useClaim"
 
 const Airdrop = (): JSX.Element => {
-  const { name, tokenAddress, claims, distributionEnd } = useAllocation()
-  const [{ data: tokenData, error: tokenError, loading: tokenLoading }] = useToken({
-    address: tokenAddress,
-  })
+  const router = useRouter()
+  const [{ data: networkData }] = useNetwork()
+
+  const { vestingType, name, tokenAddress, claims, distributionEnd } =
+    useAllocation()
+  const {
+    data: tokenData,
+    error: tokenError,
+    isValidating: tokenLoading,
+  } = useTokenDataFromContract(tokenAddress)
+
+  console.log("tokenData", tokenData)
 
   const [{ data: accountData, error: accountError, loading: accountLoading }] =
     useAccount()
@@ -44,11 +55,17 @@ const Airdrop = (): JSX.Element => {
     mutateAirdropData()
   }, [claimResponse])
 
+  const shouldSwitchChain = useMemo(
+    () => ChainSlugs[router.query.chain?.toString()] !== networkData?.chain?.id,
+    [router.query, networkData]
+  )
+
   return (
     <Card
       mx="auto"
       px={{ base: 8, sm: 16 }}
       py={{ base: 6, sm: 12 }}
+      w="full"
       maxW="container.sm"
     >
       <Flex alignItems="center" direction="column">
@@ -64,7 +81,10 @@ const Airdrop = (): JSX.Element => {
           >
             {name}
           </Heading>
-          <Skeleton width="max-content" isLoaded={!tokenLoading}>
+          <Skeleton
+            width="max-content"
+            isLoaded={!tokenLoading && !!tokenData.symbol}
+          >
             <Text
               as="span"
               fontSize="md"
@@ -99,7 +119,7 @@ const Airdrop = (): JSX.Element => {
 
         <Button
           colorScheme="tokenxyz.rosybrown"
-          isDisabled={airdropEnded || isClaimed || !isEligible}
+          isDisabled={airdropEnded || isClaimed || !isEligible || shouldSwitchChain}
           isLoading={isClaimLoading}
           loadingText="Claiming tokens"
           mt="auto"

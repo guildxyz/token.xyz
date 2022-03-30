@@ -1,13 +1,24 @@
-import { Spinner, Text } from "@chakra-ui/react"
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Spinner,
+  Stack,
+  Text,
+} from "@chakra-ui/react"
 import { ConfettiProvider } from "components/common/ConfettiContext"
 import Airdrop from "components/[token]/components/Airdrop"
 import BondVesting from "components/[token]/components/BondVesting"
 import { AllocationProvider } from "components/[token]/components/common/AllocationContext"
 import LinearVesting from "components/[token]/components/LinearVesting"
+import { chains, ChainSlugs } from "connectors"
 import useAllocationData from "hooks/useAllocationData"
 import useTokenDataFromIpfs from "hooks/useTokenDataFromIPFS"
 import { useRouter } from "next/router"
+import { useMemo } from "react"
 import { VestingTypes } from "types"
+import { useAccount, useNetwork } from "wagmi"
 
 type Props = {
   allocationPrettyUrl: string
@@ -17,6 +28,9 @@ const Allocation = ({ allocationPrettyUrl }: Props): JSX.Element => {
   const router = useRouter()
   const chain = router.query?.chain?.toString()
   const tokenAddress = router.query?.token?.toString()
+
+  const [{ data: networkData }] = useNetwork()
+  const [{ data: accountData }] = useAccount()
 
   const { data: tokenInfo } = useTokenDataFromIpfs(chain, tokenAddress)
 
@@ -40,12 +54,47 @@ const Allocation = ({ allocationPrettyUrl }: Props): JSX.Element => {
       : null
   )
 
+  const shouldSwitchChain = useMemo(
+    () => ChainSlugs[router.query.chain?.toString()] !== networkData?.chain?.id,
+    [router.query, networkData]
+  )
+
   return (
     <>
       {data?.vestingType ? (
         <ConfettiProvider>
           <AllocationProvider initialData={data}>
-            {vestingTypesComponents[data.vestingType]}
+            <Stack spacing={8} alignItems="center">
+              {shouldSwitchChain && (
+                <Alert
+                  status="error"
+                  bgColor="tokenxyz.red.100"
+                  color="tokenxyz.red.500"
+                  borderColor="tokenxyz.red.500"
+                  maxW="container.sm"
+                >
+                  <AlertIcon color="tokenxyz.red.500" />
+                  <Stack w="full">
+                    <AlertTitle>Uh-oh!</AlertTitle>
+                    <AlertDescription>
+                      {accountData
+                        ? `Please switch to ${
+                            chains?.find(
+                              (c) =>
+                                c.id === ChainSlugs[router.query.chain?.toString()]
+                            )?.name
+                          } in order to see the details of this ${
+                            data?.vestingType === "NO_VESTING"
+                              ? "airdrop"
+                              : "vesting"
+                          }!`
+                        : "Please connect your wallet in order to interact with this airdrop!"}
+                    </AlertDescription>
+                  </Stack>
+                </Alert>
+              )}
+              {vestingTypesComponents[data.vestingType]}
+            </Stack>
           </AllocationProvider>
         </ConfettiProvider>
       ) : error ? (

@@ -13,10 +13,10 @@ import {
 import Layout from "components/common/Layout"
 import Allocation from "components/[token]/Allocation"
 import useHash from "hooks/useHash"
+import useTokenDataFromContract from "hooks/useTokenDataFromContract"
 import useTokenDataFromIpfs from "hooks/useTokenDataFromIPFS"
 import { useRouter } from "next/router"
 import { useMemo } from "react"
-import { useToken } from "wagmi"
 
 const Page = (): JSX.Element => {
   const router = useRouter()
@@ -26,7 +26,8 @@ const Page = (): JSX.Element => {
 
   const [hash, setHash] = useHash()
 
-  const [{ data: tokenContractData, loading }] = useToken({ address: tokenAddress })
+  const { data: tokenContractData, isValidating: tokenDataLoading } =
+    useTokenDataFromContract(tokenAddress)
   const { data, isValidating } = useTokenDataFromIpfs(chain, tokenAddress)
 
   const allocations = useMemo(
@@ -51,10 +52,12 @@ const Page = (): JSX.Element => {
   return (
     <Layout
       title={
-        loading || !tokenContractData ? "Token page" : tokenContractData?.symbol
+        tokenDataLoading || !tokenContractData?.name || !tokenContractData?.symbol
+          ? "Token page"
+          : `${tokenContractData.name} ($${tokenContractData.symbol})`
       }
     >
-      {isValidating || loading ? (
+      {isValidating || tokenDataLoading ? (
         <Spinner />
       ) : (
         <Stack spacing={8}>
@@ -75,7 +78,7 @@ const Page = (): JSX.Element => {
               letterSpacing="wider"
               fontSize={{ base: "2xl", sm: "4xl", md: "5xl" }}
             >
-              {tokenContractData?.symbol}
+              {tokenContractData?.name || "Token page"}
             </Heading>
           </HStack>
 

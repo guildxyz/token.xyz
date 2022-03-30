@@ -1,8 +1,9 @@
 import { Button, Flex, Heading, Skeleton, Stack, Text } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { BigNumber, utils } from "ethers"
+import useTokenDataFromContract from "hooks/useTokenDataFromContract"
 import { useEffect, useMemo } from "react"
-import { useAccount, useToken } from "wagmi"
+import { useAccount } from "wagmi"
 import { useAllocation } from "../common/AllocationContext"
 import Countdown from "../common/Countdown"
 import useClaim from "./hooks/useClaim"
@@ -13,9 +14,11 @@ const formatAmount = (amount: BigNumber, decimals: number): string =>
 
 const LinearVesting = (): JSX.Element => {
   const { name, tokenAddress, claims, distributionEnd } = useAllocation()
-  const [{ data: tokenData, error: tokenError, loading: tokenLoading }] = useToken({
-    address: tokenAddress,
-  })
+  const {
+    data: tokenData,
+    error: tokenError,
+    isValidating: tokenLoading,
+  } = useTokenDataFromContract(tokenAddress)
 
   const { data: cohortData, mutate: mutateCohortData } = useCohort()
 
@@ -48,6 +51,7 @@ const LinearVesting = (): JSX.Element => {
       mx="auto"
       px={{ base: 8, sm: 16 }}
       py={{ base: 6, sm: 12 }}
+      w="full"
       maxW="container.sm"
     >
       <Flex alignItems="center" direction="column">
@@ -63,7 +67,10 @@ const LinearVesting = (): JSX.Element => {
           >
             {name}
           </Heading>
-          <Skeleton width="max-content" isLoaded={!tokenLoading}>
+          <Skeleton
+            width="max-content"
+            isLoaded={!tokenLoading && !!tokenData?.symbol}
+          >
             <Text
               as="span"
               fontSize="md"
