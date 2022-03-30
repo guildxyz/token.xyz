@@ -32,8 +32,9 @@ import { useTimeline } from "components/common/Timeline/components/TimelineConte
 import FormSection from "components/forms/FormSection"
 import { chains } from "connectors"
 import useMyUrlNames from "hooks/useMyUrlNames"
+import useTokenDeployedEvents from "hooks/useTokenDeployedEvents"
 import { Question } from "phosphor-react"
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
 import shortenHex from "utils/shortenHex"
@@ -64,6 +65,26 @@ const TokenIssuanceForm = (): JSX.Element => {
     register("decimals")
   }, [register])
 
+  const { data: tokenDeployedEvents, isValidating } = useTokenDeployedEvents("ALL")
+
+  const inputRef = useRef<HTMLInputElement | null>()
+  const validate = async () => {
+    /**
+     * Form mode is set to "all", so validation runs on both change and blur events.
+     * In this case we only want it to run on blur tho, so we cancel when the input is focused
+     */
+    if (document.activeElement === inputRef.current) return null
+    if (!urlName?.length || !tokenDeployedEvents?.length || isValidating) return null
+    if (!tokenDeployedEvents.find((event) => event.args?.[1] === urlName))
+      return null
+    return "This name is already taken!"
+  }
+
+  const { ref: nameInputRef, ...rest } = register("tokenName", {
+    required: "This field is required.",
+    validate,
+  })
+
   const tokenName = useWatch({ control, name: "tokenName" })
 
   const urlNameSelect = useWatch({ control, name: "urlNameSelect" })
@@ -75,7 +96,7 @@ const TokenIssuanceForm = (): JSX.Element => {
   // TODO: check if the urlName already exists, and ask for another token name if needed!
   useEffect(() => {
     if (touchedFields.urlName || urlNameSelect !== "GENERATE") return
-    setValue("urlName", slugify(tokenName || ""))
+    setValue("urlName", slugify(tokenName?.trim() || ""))
   }, [tokenName, urlNameSelect])
 
   const urlName = useWatch({ control, name: "urlName" })
@@ -108,8 +129,15 @@ const TokenIssuanceForm = (): JSX.Element => {
             <FormControl isInvalid={!!errors?.tokenName}>
               <Input
                 size="lg"
-                {...register("tokenName", { required: "This field is required!" })}
+                {...register("tokenName", {
+                  required: "This field is required!",
+                })}
                 placeholder="Token name"
+                {...rest}
+                ref={(e) => {
+                  inputRef.current = e
+                  nameInputRef(e)
+                }}
               />
               <FormErrorMessage color="tokenxyz.red.500">
                 {errors?.tokenName?.message}
