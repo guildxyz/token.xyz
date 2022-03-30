@@ -7,11 +7,19 @@ import { erc20ABI, useContract, useProvider } from "wagmi"
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
+type ResponseType = {
+  owner: string
+  symbol: string
+  name: string
+  decimals: number
+  totalSupply: number
+}
+
 const getTokenData = (
   _: string,
   __: string,
   contract: Contract
-): Promise<{ owner: string; symbol: string; name: string; decimals: number }> =>
+): Promise<ResponseType> =>
   Promise.all([
     contract
       .queryFilter(contract.filters.Transfer(NULL_ADDRESS))
@@ -19,18 +27,26 @@ const getTokenData = (
     contract.symbol(),
     contract.name(),
     contract.decimals(),
+    contract.totalSupply(),
   ])
-    .then(([owner, symbol, name, decimals]) => ({ owner, symbol, name, decimals }))
-    .catch((_) => ({ owner: null, symbol: null, name: null, decimals: null }))
+    .then(([owner, symbol, name, decimals, totalSupply]) => ({
+      owner,
+      symbol,
+      name,
+      decimals,
+      totalSupply,
+    }))
+    .catch((_) => ({
+      owner: null,
+      symbol: null,
+      name: null,
+      decimals: null,
+      totalSupply: null,
+    }))
 
 const useTokenDataFromContract = (
   tokenAddress: string
-): SWRResponse<{
-  owner: string
-  symbol: string
-  name: string
-  decimals: number
-}> => {
+): SWRResponse<ResponseType> => {
   const router = useRouter()
   const chain = router?.query?.chain?.toString()
 
@@ -50,16 +66,15 @@ const useTokenDataFromContract = (
     signerOrProvider: localProvider ?? provider,
   })
 
-  const swrResponse = useSWR<{
-    owner: string
-    symbol: string
-    name: string
-    decimals: number
-  }>(shouldFetch ? ["tokenData", tokenAddress, tokenContract] : null, getTokenData, {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    errorRetryInterval: 100,
-  })
+  const swrResponse = useSWR<ResponseType>(
+    shouldFetch ? ["tokenData", tokenAddress, tokenContract] : null,
+    getTokenData,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      errorRetryInterval: 100,
+    }
+  )
 
   return {
     ...swrResponse,
@@ -72,6 +87,7 @@ const useTokenDataFromContract = (
       symbol: undefined,
       name: undefined,
       decimals: undefined,
+      totalSupply: undefined,
     },
   }
 }
