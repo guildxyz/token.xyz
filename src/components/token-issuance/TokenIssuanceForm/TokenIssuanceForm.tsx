@@ -77,6 +77,7 @@ const TokenIssuanceForm = (): JSX.Element => {
     if (!urlName?.length || !tokenDeployedEvents?.length || isValidating) return null
     if (!tokenDeployedEvents.find((event) => event.args?.[1] === urlName))
       return null
+    if (reusableUrlNames?.includes(urlName)) return null
     return "This name is already taken!"
   }
 

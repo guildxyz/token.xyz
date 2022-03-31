@@ -17,12 +17,12 @@ import { TrashSimple } from "phosphor-react"
 import { useRef, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
+import unique from "utils/unique"
 import FormCard from "../FormCard"
 import VestingTypePicker from "./components/VestingTypePicker"
 import useEstimateGas from "./hooks/useEstimateGas"
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
-const unique = (value, index, self): boolean => self.indexOf(value) === index
 
 type Props = {
   index: number
