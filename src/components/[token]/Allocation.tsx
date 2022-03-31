@@ -3,6 +3,7 @@ import {
   AlertDescription,
   AlertIcon,
   AlertTitle,
+  Button,
   Spinner,
   Stack,
   Text,
@@ -14,6 +15,7 @@ import { AllocationProvider } from "components/[token]/components/common/Allocat
 import LinearVesting from "components/[token]/components/LinearVesting"
 import { chains, ChainSlugs } from "connectors"
 import useAllocationData from "hooks/useAllocationData"
+import useToast from "hooks/useToast"
 import useTokenDataFromIpfs from "hooks/useTokenDataFromIPFS"
 import { useRouter } from "next/router"
 import { useMemo } from "react"
@@ -29,7 +31,7 @@ const Allocation = ({ allocationPrettyUrl }: Props): JSX.Element => {
   const chain = router.query?.chain?.toString()
   const tokenAddress = router.query?.token?.toString()
 
-  const [{ data: networkData }] = useNetwork()
+  const [{ data: networkData }, switchNetwork] = useNetwork()
   const [{ data: accountData }] = useAccount()
 
   const { data: tokenInfo } = useTokenDataFromIpfs(chain, tokenAddress)
@@ -57,10 +59,25 @@ const Allocation = ({ allocationPrettyUrl }: Props): JSX.Element => {
       : null
   )
 
+  const allocationsChain = useMemo(
+    () =>
+      chains?.find((c) => c.id === ChainSlugs[router.query.chain?.toString()])?.name,
+    [chains, router.query]
+  )
+
   const shouldSwitchChain = useMemo(
     () => ChainSlugs[router.query.chain?.toString()] !== networkData?.chain?.id,
     [router.query, networkData]
   )
+
+  const toast = useToast()
+  const requestManualNetworkChange = (chainName: string) => () =>
+    toast({
+      title: "Your wallet doesn't support switching chains automatically",
+      description: `Please switch to ${chainName} from your wallet manually!`,
+      status: "error",
+      duration: 4000,
+    })
 
   return (
     <>
@@ -77,17 +94,30 @@ const Allocation = ({ allocationPrettyUrl }: Props): JSX.Element => {
                   maxW="container.sm"
                 >
                   <AlertIcon color="tokenxyz.red.500" />
-                  <Stack w="full">
-                    <AlertTitle>Uh-oh!</AlertTitle>
-                    <AlertDescription>
-                      {`Please switch to ${
-                        chains?.find(
-                          (c) => c.id === ChainSlugs[router.query.chain?.toString()]
-                        )?.name
-                      } in order to interact with this ${
-                        data?.vestingType === "NO_VESTING" ? "airdrop" : "vesting"
-                      }!`}
-                    </AlertDescription>
+                  <Stack
+                    w="full"
+                    direction={{ base: "column", md: "row" }}
+                    spacing={4}
+                    alignItems="end"
+                  >
+                    <Stack w="full">
+                      <AlertTitle>Uh-oh!</AlertTitle>
+                      <AlertDescription>
+                        {`Please switch to ${allocationsChain} in order to interact with this ${
+                          data?.vestingType === "NO_VESTING" ? "airdrop" : "vesting"
+                        }!`}
+                      </AlertDescription>
+                    </Stack>
+
+                    <Button
+                      minW={44}
+                      colorScheme="tokenxyz.red"
+                      onClick={() =>
+                        switchNetwork
+                          ? switchNetwork(ChainSlugs[router.query.chain?.toString()])
+                          : requestManualNetworkChange(allocationsChain)
+                      }
+                    >{`Switch to ${allocationsChain}`}</Button>
                   </Stack>
                 </Alert>
               )}

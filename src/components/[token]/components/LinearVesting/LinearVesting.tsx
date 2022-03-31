@@ -1,9 +1,11 @@
 import { Button, Flex, Heading, Skeleton, Stack, Text } from "@chakra-ui/react"
 import Card from "components/common/Card"
+import { ChainSlugs } from "connectors"
 import { BigNumber, utils } from "ethers"
 import useTokenDataFromContract from "hooks/useTokenDataFromContract"
+import { useRouter } from "next/router"
 import { useEffect, useMemo } from "react"
-import { useAccount } from "wagmi"
+import { useAccount, useNetwork } from "wagmi"
 import { useAllocation } from "../common/AllocationContext"
 import Countdown from "../common/Countdown"
 import useClaim from "./hooks/useClaim"
@@ -13,6 +15,9 @@ const formatAmount = (amount: BigNumber, decimals: number): string =>
   parseFloat(utils.formatUnits(amount ?? 0, decimals ?? 18)).toFixed(2)
 
 const LinearVesting = (): JSX.Element => {
+  const router = useRouter()
+  const [{ data: networkData }] = useNetwork()
+
   const { name, tokenAddress, claims, distributionEnd } = useAllocation()
   const {
     data: tokenData,
@@ -20,7 +25,11 @@ const LinearVesting = (): JSX.Element => {
     isValidating: tokenLoading,
   } = useTokenDataFromContract(tokenAddress)
 
-  const { data: cohortData, mutate: mutateCohortData } = useCohort()
+  const {
+    data: cohortData,
+    isValidating: cohortDataLoading,
+    mutate: mutateCohortData,
+  } = useCohort()
 
   const [{ data: accountData, error: accountError, loading: accountLoading }] =
     useAccount()
@@ -45,6 +54,11 @@ const LinearVesting = (): JSX.Element => {
     if (!claimResponse) return
     mutateCohortData()
   }, [claimResponse])
+
+  const shouldSwitchChain = useMemo(
+    () => ChainSlugs[router.query.chain?.toString()] !== networkData?.chain?.id,
+    [router.query, networkData]
+  )
 
   return (
     <Card
@@ -124,13 +138,21 @@ const LinearVesting = (): JSX.Element => {
               formatAmount(cohortData?.claimableAmount, tokenData?.decimals)
             ) < 0.01
           }
-          isLoading={isClaimLoading}
-          loadingText="Claiming tokens"
+          isLoading={cohortDataLoading || accountLoading || isClaimLoading}
+          loadingText={isClaimLoading ? "Claiming tokens" : "Loading"}
           mt="auto"
           maxW="max-content"
           onClick={onSubmit}
         >
-          Claim my tokens
+          {vestingEnded
+            ? "Ended"
+            : !accountData?.address
+            ? "Connect your wallet"
+            : shouldSwitchChain
+            ? "Wrong chain"
+            : !isEligible
+            ? "You aren't eligible"
+            : "Claim my tokens"}
         </Button>
       </Flex>
     </Card>

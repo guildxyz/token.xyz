@@ -116,15 +116,27 @@ const Airdrop = (): JSX.Element => {
         )}
 
         <Button
-          colorScheme="tokenxyz.rosybrown"
+          colorScheme={shouldSwitchChain ? "tokenxyz.red" : "tokenxyz.rosybrown"}
           isDisabled={airdropEnded || isClaimed || !isEligible || shouldSwitchChain}
-          isLoading={isClaimLoading}
-          loadingText="Claiming tokens"
+          isLoading={
+            isAirdropDataWithIndexLoading || accountLoading || isClaimLoading
+          }
+          loadingText={isClaimLoading ? "Claiming tokens" : "Loading"}
           mt="auto"
           maxW="max-content"
           onClick={onSubmit}
         >
-          Claim my tokens
+          {isClaimed
+            ? "Already claimed"
+            : airdropEnded
+            ? "Ended"
+            : !accountData?.address
+            ? "Connect your wallet"
+            : shouldSwitchChain
+            ? "Wrong chain"
+            : !isEligible
+            ? "You aren't eligible"
+            : "Claim my tokens"}
         </Button>
       </Flex>
     </Card>
