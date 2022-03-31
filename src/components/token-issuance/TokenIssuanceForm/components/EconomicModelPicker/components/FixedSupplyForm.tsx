@@ -104,7 +104,7 @@ const FixedSupplyForm = (): JSX.Element => {
                   onChange(isNaN(parsedValue) ? "" : parsedValue)
                 }}
                 onBlur={onBlur}
-                min={0}
+                min={getValues("initialSupply")}
               >
                 <NumberInputField />
                 <NumberInputStepper>
