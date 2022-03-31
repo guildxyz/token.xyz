@@ -1,7 +1,7 @@
 import { Button, Flex, Heading, Skeleton, Stack, Text } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { ChainSlugs } from "connectors"
-import useTokenDataFromContract from "hooks/useTokenDataFromContract"
+import useTokenData from "hooks/useTokenData"
 import { useRouter } from "next/router"
 import { useEffect, useMemo } from "react"
 import { useAccount, useNetwork } from "wagmi"
@@ -20,7 +20,7 @@ const Airdrop = (): JSX.Element => {
     data: tokenData,
     error: tokenError,
     isValidating: tokenLoading,
-  } = useTokenDataFromContract(tokenAddress)
+  } = useTokenData(router?.query?.chain?.toString(), tokenAddress)
 
   const [{ data: accountData, error: accountError, loading: accountLoading }] =
     useAccount()
@@ -81,7 +81,7 @@ const Airdrop = (): JSX.Element => {
           </Heading>
           <Skeleton
             width="max-content"
-            isLoaded={!tokenLoading && !!tokenData.symbol}
+            isLoaded={!tokenLoading && !!tokenData?.symbol}
           >
             <Text
               as="span"
@@ -89,7 +89,7 @@ const Airdrop = (): JSX.Element => {
               fontWeight="medium"
               color="tokenxyz.rosybrown.500"
             >
-              Claim your ${tokenData?.symbol || "TOKENSYMBOL"}
+              Claim your ${tokenData?.symbol}
             </Text>
           </Skeleton>
         </Stack>

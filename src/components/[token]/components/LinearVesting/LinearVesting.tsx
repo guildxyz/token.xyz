@@ -2,7 +2,7 @@ import { Button, Flex, Heading, Skeleton, Stack, Text } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { ChainSlugs } from "connectors"
 import { BigNumber, utils } from "ethers"
-import useTokenDataFromContract from "hooks/useTokenDataFromContract"
+import useTokenData from "hooks/useTokenData"
 import { useRouter } from "next/router"
 import { useEffect, useMemo } from "react"
 import { useAccount, useNetwork } from "wagmi"
@@ -23,7 +23,7 @@ const LinearVesting = (): JSX.Element => {
     data: tokenData,
     error: tokenError,
     isValidating: tokenLoading,
-  } = useTokenDataFromContract(tokenAddress)
+  } = useTokenData(router?.query?.chain?.toString(), tokenAddress)
 
   const {
     data: cohortData,
@@ -91,7 +91,7 @@ const LinearVesting = (): JSX.Element => {
               fontWeight="medium"
               color="tokenxyz.rosybrown.500"
             >
-              Claim your ${tokenData?.symbol || "TOKENSYMBOL"}
+              Claim your ${tokenData?.symbol}
             </Text>
           </Skeleton>
         </Stack>
