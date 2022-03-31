@@ -45,9 +45,9 @@ const TokenCard = ({ chain, address }: Props): JSX.Element => {
             )}
           </Tag>
           <Tag bgColor="tokenxyz.rosybrown.100" color="tokenxyz.rosybrown.500">
-            {tokenData?.infoJSON ? (
-              `${tokenData.infoJSON.airdrops?.length || 0} airdrop${
-                tokenData.infoJSON.airdrops?.length > 1 ? "s" : ""
+            {tokenData && !tokenDataLoading ? (
+              `${tokenData.infoJSON?.airdrops?.length || 0} airdrop${
+                tokenData.infoJSON?.airdrops?.length > 1 ? "s" : ""
               }`
             ) : (
               <Spinner size="xs" />
@@ -55,9 +55,9 @@ const TokenCard = ({ chain, address }: Props): JSX.Element => {
           </Tag>
 
           <Tag bgColor="tokenxyz.rosybrown.100" color="tokenxyz.rosybrown.500">
-            {tokenData?.infoJSON ? (
-              `${tokenData.infoJSON.vestings?.length || 0} vesting${
-                tokenData.infoJSON.vestings?.length > 1 ? "s" : ""
+            {tokenData && !tokenDataLoading ? (
+              `${tokenData.infoJSON?.vestings?.length || 0} vesting${
+                tokenData.infoJSON?.vestings?.length > 1 ? "s" : ""
               }`
             ) : (
               <Spinner size="xs" />
