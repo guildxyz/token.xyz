@@ -52,13 +52,7 @@ const TokenPage = (): JSX.Element => {
   }, [allocations, hash])
 
   return (
-    <Layout
-      title={
-        !data?.name || !data?.symbol
-          ? "Token page"
-          : `${data.name} ($${data.symbol})`
-      }
-    >
+    <Layout title={`${data?.name} ($${data?.symbol})`}>
       <Stack spacing={8}>
         <HStack spacing={4}>
           {data?.infoJSON?.icon && (
@@ -142,21 +136,42 @@ const getStaticProps: GetStaticProps = async ({ params }) => {
       ? "http://localhost:3000/api"
       : process.env.NEXT_PUBLIC_API_URL
 
-  const data: TokenData = await fetch(`${baseUrl}${endpoint}`)
+  const tokenData: TokenData = await fetch(`${baseUrl}${endpoint}`)
     .then((res) => res.json())
     .catch((_) => ({}))
 
-  if (!data?.symbol)
+  if (!tokenData?.symbol)
     return {
       notFound: true,
       revalidate: 10,
     }
 
+  const fallback = {
+    [endpoint]: tokenData,
+  }
+
+  if (
+    tokenData?.infoJSON?.airdrops?.length ||
+    tokenData?.infoJSON?.vestings?.length
+  ) {
+    const allocations: Array<{ fileName: string; prettyUrl: string }> = []
+      ?.concat(tokenData?.infoJSON?.airdrops || [])
+      ?.concat(tokenData?.infoJSON?.vestings || [])
+
+    for (const allocation of allocations) {
+      const url = `${process.env.NEXT_PUBLIC_FLEEK_BUCKET}/${chainSlug}/${address}/${allocation.fileName}`
+
+      const allocationData = await fetch(url)
+        .then((allocationJSON) => allocationJSON.json())
+        .catch((_) => null)
+
+      if (allocationData) fallback[url] = allocationData
+    }
+  }
+
   return {
     props: {
-      fallback: {
-        [endpoint]: data,
-      },
+      fallback,
     },
     revalidate: 60,
   }
