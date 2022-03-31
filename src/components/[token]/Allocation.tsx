@@ -16,7 +16,7 @@ import LinearVesting from "components/[token]/components/LinearVesting"
 import { chains, ChainSlugs } from "connectors"
 import useAllocationData from "hooks/useAllocationData"
 import useToast from "hooks/useToast"
-import useTokenDataFromIpfs from "hooks/useTokenDataFromIPFS"
+import useTokenData from "hooks/useTokenData"
 import { useRouter } from "next/router"
 import { useMemo } from "react"
 import { VestingTypes } from "types"
@@ -34,7 +34,7 @@ const Allocation = ({ allocationPrettyUrl }: Props): JSX.Element => {
   const [{ data: networkData }, switchNetwork] = useNetwork()
   const [{ data: accountData }] = useAccount()
 
-  const { data: tokenInfo } = useTokenDataFromIpfs(chain, tokenAddress)
+  const { data: tokenData } = useTokenData(chain, tokenAddress)
 
   const vestingTypesComponents: Record<
     Exclude<VestingTypes, "DISTRIBUTE">,
@@ -49,10 +49,10 @@ const Allocation = ({ allocationPrettyUrl }: Props): JSX.Element => {
     fileName ? `${chain}/${tokenAddress}/${fileName}` : null
 
   const { data, error } = useAllocationData(
-    tokenInfo
+    tokenData?.infoJSON
       ? generateFilePath(
-          tokenInfo.airdrops
-            .concat(tokenInfo.vestings)
+          (tokenData.infoJSON.airdrops || [])
+            .concat(tokenData.infoJSON.vestings || [])
             ?.find((allocation) => allocation.prettyUrl === allocationPrettyUrl)
             ?.fileName
         )

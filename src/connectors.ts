@@ -62,6 +62,7 @@ const iconUrls = {
 
 export {
   TOKEN_XYZ_CONTRACT,
+  supportedChainIds,
   provider,
   chains,
   ChainSlugs,

@@ -1,3 +1,5 @@
+import { BigNumber } from "ethers"
+
 type WalletError = { code: number; message: string }
 
 type Rest = {
@@ -91,6 +93,15 @@ enum ContractTypeNamePairs {
   merklevesting = "/contracts/features/deployables/MerkleVesting.sol:MerkleVesting",
 }
 
+type TokenData = {
+  owner: string
+  symbol: string
+  name: string
+  decimals: number
+  totalSupply: BigNumber | string // Already formatted nicely
+  infoJSON?: TokenInfoJSON
+}
+
 export type {
   WalletError,
   Rest,
@@ -102,5 +113,6 @@ export type {
   AllocationFormType,
   AllocationJSON,
   ContractType,
+  TokenData,
 }
 export { ContractTypeNamePairs }
