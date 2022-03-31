@@ -166,7 +166,10 @@ const getStaticPaths: GetStaticPaths = async () => {
   let paths = []
 
   for (const chainId of supportedChainIds) {
-    const provider = new providers.InfuraProvider(chainId)
+    const provider = new providers.InfuraProvider(
+      chainId,
+      process.env.NEXT_PUBLIC_INFURA_ID
+    )
     const tokenXyzContract = new Contract(
       TOKEN_XYZ_CONTRACT[chainId],
       TokenXyzABI,

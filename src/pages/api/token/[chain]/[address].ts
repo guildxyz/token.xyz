@@ -22,7 +22,10 @@ handler.get(async (req: NextApiRequest, res: NextApiResponse) => {
   if (!chainSlug || !ADDRESS_REGEX.test(address))
     return res.status(400).json({ error: "Bad request. Invalid chain or address" })
 
-  const provider = new providers.InfuraProvider(chainSlug)
+  const provider = new providers.InfuraProvider(
+    chainSlug,
+    process.env.NEXT_PUBLIC_INFURA_ID
+  )
   const tokenContract = new Contract(address, erc20ABI, provider)
 
   const data: TokenData = await Promise.all([
