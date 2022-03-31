@@ -62,9 +62,6 @@ const EconomyModelPicker = (): JSX.Element => {
   useEffect(() => clearErrors(["initialSupply", "maxSupply"]), [economyModel])
 
   useEffect(() => {
-    if (economyModel === "UNLIMITED" && !dirtyFields.maxSupply)
-      setValue("maxSupply", 0)
-
     if (dirtyFields.initialSupply) trigger("initialSupply")
     if (dirtyFields.maxSupply && economyModel !== "UNLIMITED") trigger("maxSupply")
   }, [economyModel, initialSupply, maxSupply])

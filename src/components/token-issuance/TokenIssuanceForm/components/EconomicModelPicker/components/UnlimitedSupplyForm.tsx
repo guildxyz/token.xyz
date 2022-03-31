@@ -39,7 +39,10 @@ const UnlimitedSupplyForm = (): JSX.Element => {
               <NumberInput
                 ref={ref}
                 value={value}
-                onChange={(newValue) => onChange(parseInt(newValue))}
+                onChange={(newValue) => {
+                  const parsedValue = parseInt(newValue)
+                  onChange(isNaN(parsedValue) ? "" : parsedValue)
+                }}
                 onBlur={onBlur}
                 min={0}
               >

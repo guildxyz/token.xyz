@@ -25,12 +25,10 @@ const FixedSupplyForm = (): JSX.Element => {
     control,
     getValues,
     setValue,
-    formState: { errors, dirtyFields },
+    formState: { errors },
   } = useFormContext<TokenIssuanceFormType>()
 
   const economyModel = useWatch({ control, name: "economyModel" })
-  const initialSupply = useWatch({ control, name: "initialSupply" })
-  const maxSupply = useWatch({ control, name: "maxSupply" })
 
   return (
     <SimpleGrid columns={2} gap={4} px={5} pb={4}>
@@ -50,13 +48,6 @@ const FixedSupplyForm = (): JSX.Element => {
                 value: 0,
                 message: "Must be positive",
               },
-              max:
-                economyModel !== "UNLIMITED" && dirtyFields.maxSupply
-                  ? {
-                      value: maxSupply,
-                      message: "Must be less or equal than max supply",
-                    }
-                  : undefined,
             }}
             defaultValue={0}
             render={({ field: { ref, value, onChange, onBlur } }) => (
@@ -65,7 +56,7 @@ const FixedSupplyForm = (): JSX.Element => {
                 value={value}
                 onChange={(newValue) => {
                   const parsedValue = parseInt(newValue)
-                  onChange(parsedValue)
+                  onChange(isNaN(parsedValue) ? "" : parsedValue)
                   if (parsedValue >= getValues("maxSupply"))
                     setValue("maxSupply", parsedValue)
                 }}
@@ -99,7 +90,7 @@ const FixedSupplyForm = (): JSX.Element => {
             rules={{
               required: economyModel !== "UNLIMITED" && "This field is required!",
               min: {
-                value: initialSupply,
+                value: getValues("initialSupply"),
                 message: "Must be greater or equal than initial supply",
               },
             }}
@@ -108,7 +99,10 @@ const FixedSupplyForm = (): JSX.Element => {
               <NumberInput
                 ref={ref}
                 value={value}
-                onChange={(newValue) => onChange(parseInt(newValue))}
+                onChange={(newValue) => {
+                  const parsedValue = parseInt(newValue)
+                  onChange(isNaN(parsedValue) ? "" : parsedValue)
+                }}
                 onBlur={onBlur}
                 min={0}
               >

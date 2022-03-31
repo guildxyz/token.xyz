@@ -27,7 +27,6 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
   const {
     control,
     getValues,
-    setValue,
     formState: { errors },
   } = useFormContext<TokenIssuanceFormType>()
 
@@ -79,16 +78,7 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                   value={value}
                   onChange={(newValue) => {
                     const parsedValue = parseInt(newValue)
-                    onChange(parsedValue)
-                    if (
-                      parsedValue >=
-                      getValues(`distributionData.${index}.vestingPeriod`)
-                    )
-                      setValue(
-                        `distributionData.${index}.vestingPeriod`,
-                        parsedValue + 1,
-                        { shouldValidate: true }
-                      )
+                    onChange(isNaN(parsedValue) ? "" : parsedValue)
                   }}
                   onBlur={onBlur}
                   min={0}
@@ -138,10 +128,10 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                   value: +getValues(`distributionData.${index}.cliff`) + 1,
                   message: "Vesting must be greater than cliff",
                 },
-
                 max: {
-                  value: 120,
-                  message: "Maximum vesting time is 120 months",
+                  value:
+                    getValues(`distributionData.${index}.distributionDuration`) - 1,
+                  message: "Cliff must be less than distribution",
                 },
               }}
               render={({ field: { ref, value, onChange, onBlur } }) => (
@@ -150,20 +140,10 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                   value={value}
                   onChange={(newValue) => {
                     const parsedValue = parseInt(newValue)
-                    onChange(parsedValue)
-                    if (
-                      parsedValue >=
-                      getValues(`distributionData.${index}.distributionDuration`)
-                    ) {
-                      setValue(
-                        `distributionData.${index}.distributionDuration`,
-                        parsedValue + 1,
-                        { shouldValidate: true }
-                      )
-                    }
+                    onChange(isNaN(parsedValue) ? "" : parsedValue)
                   }}
                   onBlur={onBlur}
-                  min={1}
+                  min={+getValues(`distributionData.${index}.cliff`) + 1}
                   max={120}
                 >
                   <NumberInputField />
@@ -196,7 +176,10 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                 required: "This field is required!",
                 min: {
                   value: +getValues(`distributionData.${index}.vestingPeriod`) + 1,
-                  message: "Must be greater than vesting period",
+                  message:
+                    +getValues(`distributionData.${index}.vestingPeriod`) === 0
+                      ? "Must be a positive number"
+                      : "Must be greater than vesting period",
                 },
                 max: {
                   value: 120,
@@ -208,9 +191,12 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                 <NumberInput
                   ref={ref}
                   value={value}
-                  onChange={(newValue) => onChange(parseInt(newValue))}
+                  onChange={(newValue) => {
+                    const parsedValue = parseInt(newValue)
+                    onChange(isNaN(parsedValue) ? "" : parsedValue)
+                  }}
                   onBlur={onBlur}
-                  min={0}
+                  min={+getValues(`distributionData.${index}.vestingPeriod`) + 1}
                   max={120}
                 >
                   <NumberInputField />
