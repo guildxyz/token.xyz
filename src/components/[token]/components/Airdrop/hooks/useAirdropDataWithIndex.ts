@@ -40,7 +40,11 @@ const useAirdropDataWithIndex = (): SWRResponse<{
   })
 
   const shouldFetch =
-    contractAddress && index && accountData && merkleDistributorContract && !error
+    contractAddress &&
+    typeof index === "number" &&
+    accountData &&
+    merkleDistributorContract &&
+    !error
 
   const swrResponse = useSWR(
     shouldFetch ? [merkleDistributorContract, index] : null,
