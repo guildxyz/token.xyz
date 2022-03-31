@@ -17,17 +17,17 @@ import {
 } from "@chakra-ui/react"
 import { useConfetti } from "components/common/ConfettiContext"
 import Modal from "components/common/Modal"
-import { Web3Connection } from "components/_app/Web3ConnectionManager"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { iconUrls } from "connectors"
 import useToast from "hooks/useToast"
-import { useContext, useEffect } from "react"
+import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
 import { useNetwork } from "wagmi"
 import useDeploy from "../hooks/useDeploy"
 
 const DeployButtons = (): JSX.Element => {
-  const { openNetworkModal, closeNetworkModal } = useContext(Web3Connection)
+  const { openNetworkModal, closeNetworkModal } = useWeb3ConnectionManager()
   const [{ data: networkData }] = useNetwork()
 
   const { control, setValue, handleSubmit } = useFormContext<TokenIssuanceFormType>()

@@ -1,6 +1,6 @@
 import { useDisclosure } from "@chakra-ui/react"
 import NetworkModal from "components/common/Layout/components/Account/components/NetworkModal/NetworkModal"
-import { createContext, PropsWithChildren } from "react"
+import { createContext, PropsWithChildren, useContext } from "react"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useEagerConnect from "./hooks/useEagerConnect"
 
@@ -58,4 +58,7 @@ const Web3ConnectionManager = ({
     </Web3Connection.Provider>
   )
 }
-export { Web3Connection, Web3ConnectionManager }
+
+const useWeb3ConnectionManager = () => useContext(Web3Connection)
+
+export { useWeb3ConnectionManager, Web3ConnectionManager }

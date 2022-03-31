@@ -11,14 +11,13 @@ import {
 } from "@chakra-ui/react"
 import CopyableAddress from "components/common/CopyableAddress"
 import Modal from "components/common/Modal"
-import { useContext } from "react"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { useAccount } from "wagmi"
-import { Web3Connection } from "../../../../../../_app/Web3ConnectionManager"
 import Identicon from "../Identicon"
 
 const AccountModal = ({ isOpen, onClose }) => {
   const [{ data: accountData }] = useAccount()
-  const { openWalletSelectorModal } = useContext(Web3Connection)
+  const { openWalletSelectorModal } = useWeb3ConnectionManager()
 
   const handleWalletProviderSwitch = () => {
     openWalletSelectorModal()

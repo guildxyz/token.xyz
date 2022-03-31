@@ -5,9 +5,8 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Web3Connection } from "components/_app/Web3ConnectionManager"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { LinkBreak, SignIn } from "phosphor-react"
-import { useContext } from "react"
 import shortenHex from "utils/shortenHex"
 import { useAccount, useConnect, useNetwork } from "wagmi"
 import AccountButton from "./components/AccountButton"
@@ -21,7 +20,7 @@ const Account = (): JSX.Element => {
     fetchEns: true,
   })
   const { openWalletSelectorModal, triedEager, openNetworkModal } =
-    useContext(Web3Connection)
+    useWeb3ConnectionManager()
   const {
     isOpen: isAccountModalOpen,
     onOpen: onAccountModalOpen,
