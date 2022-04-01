@@ -2,12 +2,34 @@ import { SimpleGrid, Spinner, Text } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
 import TokenCard from "components/dashboard/TokenCard"
 import { ChainSlugs } from "connectors"
-import useAllTokens from "hooks/useAllTokens"
-import { useNetwork } from "wagmi"
+import useTokenDeployedEventsAllChains from "hooks/useTokenDeployedEventsAllChains"
+import { useMemo } from "react"
 
 const Page = (): JSX.Element => {
-  const { data, isValidating } = useAllTokens()
-  const [{ data: networkData, loading }] = useNetwork()
+  const { data, isValidating } = useTokenDeployedEventsAllChains("ALL")
+
+  const mappedTokens: Array<{
+    chainSlug: string
+    tokenAddress: string
+  }> = useMemo(() => {
+    if (!data) return []
+
+    const tokens = []
+
+    Object.keys(data).forEach((chainId) => {
+      const chainSlug = ChainSlugs[chainId]
+      const tokenAddresses =
+        data[chainId]?.map((event) => event.args?.[2]?.toLowerCase()) ?? []
+      tokenAddresses.forEach((tokenAddress) => {
+        tokens.push({
+          chainSlug,
+          tokenAddress,
+        })
+      })
+    })
+
+    return tokens
+  }, [data])
 
   return (
     <Layout title="Home">
@@ -17,17 +39,17 @@ const Page = (): JSX.Element => {
         pt={{ base: 4, md: 9 }}
         pb={{ base: 20, md: 14 }}
       >
-        {isValidating || loading ? (
+        {isValidating ? (
           <Spinner />
-        ) : !data?.length ? (
+        ) : !mappedTokens?.length ? (
           <Text>0 deployed tokens. :(</Text>
         ) : (
-          data.map((token) => (
+          mappedTokens.map((token) => (
             <TokenCard
-              key={token}
+              key={token.tokenAddress}
               // TODO: maybe we shouldn't fallback to 3 here, but we should have a URL query param for the chain?
-              chain={ChainSlugs[networkData?.chain?.id || 3]}
-              address={token}
+              chain={token.chainSlug}
+              address={token.tokenAddress}
             />
           ))
         )}

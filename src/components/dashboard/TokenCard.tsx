@@ -31,6 +31,9 @@ const TokenCard = ({ chain, address }: Props): JSX.Element => {
       >
         <Wrap spacing={1.5}>
           <Tag bgColor="tokenxyz.rosybrown.100" color="tokenxyz.rosybrown.500">
+            {chain}
+          </Tag>
+          <Tag bgColor="tokenxyz.rosybrown.100" color="tokenxyz.rosybrown.500">
             {!tokenDataLoading && tokenData?.symbol ? (
               `$${tokenData.symbol}`
             ) : (
