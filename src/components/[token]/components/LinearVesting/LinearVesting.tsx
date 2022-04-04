@@ -130,7 +130,7 @@ const LinearVesting = (): JSX.Element => {
         )}
 
         <Button
-          colorScheme="tokenxyz.rosybrown"
+          colorScheme={shouldSwitchChain ? "tokenxyz.red" : "tokenxyz.rosybrown"}
           isDisabled={
             vestingEnded ||
             !isEligible ||
