@@ -32,7 +32,7 @@ const handler = nextConnect({
 /**
  * Request params (sent in the req. body):
  *
- * - `chain`: 1 (ethereum), 5 (goerli) (chain id's)
+ * - `chain`: 1 (ethereum), 3 (ropsten), 5 (goerli) (chain id's)
  * - `contractType`: ContractType
  * - `contractAddress`: a valid, 0x-prefixed, 42 characters long address
  * - `constructorArguments`: abi encoded constructor arguments

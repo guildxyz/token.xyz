@@ -1,4 +1,4 @@
-import { useAllocation } from "components/[allocation]/common/AllocationContext"
+import { useAllocation } from "components/[token]/components/common/AllocationContext"
 import { Contract } from "ethers"
 import { useMemo } from "react"
 import MerkleDistributorABI from "static/abis/MerkleDistributorABI.json"
@@ -26,21 +26,28 @@ const useAirdropDataWithIndex = (): SWRResponse<{
   const provider = useProvider()
   const [{ data: accountData, error, loading }] = useAccount()
 
-  const { claims, merkleDistributorContract: contractAddress } = useAllocation()
+  const { merkleDistribution } = useAllocation()
 
   const index = useMemo(
-    () => (accountData && claims ? claims[accountData.address]?.index : null),
-    [accountData, claims]
+    () =>
+      accountData && merkleDistribution?.claims
+        ? merkleDistribution.claims[accountData.address]?.index
+        : null,
+    [accountData, merkleDistribution]
   )
 
   const merkleDistributorContract = useContract({
-    addressOrName: contractAddress,
+    addressOrName: merkleDistribution?.contractAddress,
     contractInterface: MerkleDistributorABI,
     signerOrProvider: provider,
   })
 
   const shouldFetch =
-    contractAddress && index && accountData && merkleDistributorContract && !error
+    merkleDistribution?.contractAddress &&
+    typeof index === "number" &&
+    accountData &&
+    merkleDistributorContract &&
+    !error
 
   const swrResponse = useSWR(
     shouldFetch ? [merkleDistributorContract, index] : null,

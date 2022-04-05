@@ -27,7 +27,6 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
   const {
     control,
     getValues,
-    setValue,
     formState: { errors },
   } = useFormContext<TokenIssuanceFormType>()
 
@@ -51,7 +50,7 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                 left={-2}
                 top={-1}
                 as={Question}
-                color="gray"
+                color="tokenxyz.rosybrown.500"
                 boxSize={5}
               />
             </Tooltip>
@@ -78,22 +77,13 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                   ref={ref}
                   value={value}
                   onChange={(newValue) => {
-                    onChange(newValue)
                     const parsedValue = parseInt(newValue)
-                    if (
-                      parsedValue >=
-                      getValues(`distributionData.${index}.vestingPeriod`)
-                    )
-                      setValue(
-                        `distributionData.${index}.vestingPeriod`,
-                        parsedValue + 1,
-                        { shouldValidate: true }
-                      )
+                    onChange(isNaN(parsedValue) ? "" : parsedValue)
                   }}
                   onBlur={onBlur}
                   min={0}
                 >
-                  <NumberInputField borderRightRadius={0} />
+                  <NumberInputField />
                   <NumberInputStepper>
                     <NumberIncrementStepper />
                     <NumberDecrementStepper />
@@ -101,9 +91,9 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                 </NumberInput>
               )}
             />
-            <InputRightAddon bgColor="whiteAlpha.50">months</InputRightAddon>
+            <InputRightAddon>months</InputRightAddon>
           </InputGroup>
-          <FormErrorMessage>
+          <FormErrorMessage color="tokenxyz.red.500">
             {errors?.distributionData?.[index]?.cliff?.message}
           </FormErrorMessage>
         </FormControl>
@@ -122,7 +112,7 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                 left={-2}
                 top={-1}
                 as={Question}
-                color="gray"
+                color="tokenxyz.rosybrown.500"
                 boxSize={5}
               />
             </Tooltip>
@@ -138,10 +128,10 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                   value: +getValues(`distributionData.${index}.cliff`) + 1,
                   message: "Vesting must be greater than cliff",
                 },
-
                 max: {
-                  value: 120,
-                  message: "Maximum vesting time is 120 months",
+                  value:
+                    getValues(`distributionData.${index}.distributionDuration`) - 1,
+                  message: "Cliff must be less than distribution",
                 },
               }}
               render={({ field: { ref, value, onChange, onBlur } }) => (
@@ -149,24 +139,14 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                   ref={ref}
                   value={value}
                   onChange={(newValue) => {
-                    onChange(newValue)
                     const parsedValue = parseInt(newValue)
-                    if (
-                      parsedValue >=
-                      getValues(`distributionData.${index}.distributionDuration`)
-                    ) {
-                      setValue(
-                        `distributionData.${index}.distributionDuration`,
-                        parsedValue + 1,
-                        { shouldValidate: true }
-                      )
-                    }
+                    onChange(isNaN(parsedValue) ? "" : parsedValue)
                   }}
                   onBlur={onBlur}
-                  min={1}
+                  min={+getValues(`distributionData.${index}.cliff`) + 1}
                   max={120}
                 >
-                  <NumberInputField borderRightRadius={0} />
+                  <NumberInputField />
                   <NumberInputStepper>
                     <NumberIncrementStepper />
                     <NumberDecrementStepper />
@@ -174,9 +154,9 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                 </NumberInput>
               )}
             />
-            <InputRightAddon bgColor="whiteAlpha.50">months</InputRightAddon>
+            <InputRightAddon>months</InputRightAddon>
           </InputGroup>
-          <FormErrorMessage>
+          <FormErrorMessage color="tokenxyz.red.500">
             {errors?.distributionData?.[index]?.vestingPeriod?.message}
           </FormErrorMessage>
         </FormControl>
@@ -196,7 +176,10 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                 required: "This field is required!",
                 min: {
                   value: +getValues(`distributionData.${index}.vestingPeriod`) + 1,
-                  message: "Must be greater than vesting period",
+                  message:
+                    +getValues(`distributionData.${index}.vestingPeriod`) === 0
+                      ? "Must be a positive number"
+                      : "Must be greater than vesting period",
                 },
                 max: {
                   value: 120,
@@ -208,12 +191,15 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                 <NumberInput
                   ref={ref}
                   value={value}
-                  onChange={onChange}
+                  onChange={(newValue) => {
+                    const parsedValue = parseInt(newValue)
+                    onChange(isNaN(parsedValue) ? "" : parsedValue)
+                  }}
                   onBlur={onBlur}
-                  min={0}
+                  min={+getValues(`distributionData.${index}.vestingPeriod`) + 1}
                   max={120}
                 >
-                  <NumberInputField borderRightRadius={0} />
+                  <NumberInputField />
                   <NumberInputStepper>
                     <NumberIncrementStepper />
                     <NumberDecrementStepper />
@@ -221,9 +207,9 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                 </NumberInput>
               )}
             />
-            <InputRightAddon bgColor="whiteAlpha.50">months</InputRightAddon>
+            <InputRightAddon>months</InputRightAddon>
           </InputGroup>
-          <FormErrorMessage>
+          <FormErrorMessage color="tokenxyz.red.500">
             {errors?.distributionData?.[index]?.distributionDuration?.message}
           </FormErrorMessage>
         </FormControl>

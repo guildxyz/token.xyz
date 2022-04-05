@@ -1,7 +1,8 @@
-import { StackDivider, useColorMode, useRadioGroup, VStack } from "@chakra-ui/react"
+import { useRadioGroup, VStack } from "@chakra-ui/react"
 import { useEffect } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
+import Disperse from "./Disperse"
 import LinearVestingForm from "./LinearVestingForm"
 import NoVestingForm from "./NoVestingForm"
 import VestingTypeOption from "./VestingTypeOption"
@@ -18,8 +19,15 @@ const OPTIONS: Array<{
   children?: (props: any) => JSX.Element
 }> = [
   {
+    value: "DISTRIBUTE",
+    title: "Distribute tokens to addresses",
+    description: "Tokens will be available in the recipients addresses immediately.",
+    disabled: false,
+    children: Disperse,
+  },
+  {
     value: "NO_VESTING",
-    title: "No vesting",
+    title: "No vesting (airdrop)",
     description:
       "Tokens will be available to your recipients for claiming right after the minting event.",
     disabled: false,
@@ -33,11 +41,11 @@ const OPTIONS: Array<{
     disabled: false,
     children: LinearVestingForm,
   },
-  {
-    value: "BOND_VESTING",
-    title: "Bond vesting",
-    disabled: "Coming soon",
-  },
+  // {
+  //   value: "BOND_VESTING",
+  //   title: "Bond vesting",
+  //   disabled: "Coming soon",
+  // },
 ]
 
 const VestingTypePicker = ({ index }: Props): JSX.Element => {
@@ -54,22 +62,21 @@ const VestingTypePicker = ({ index }: Props): JSX.Element => {
     control,
     name: `distributionData.${index}.vestingType`,
     rules: { required: "You must pick a realm for your guild" },
-    defaultValue: "NO_VESTING",
+    defaultValue: "DISTRIBUTE",
   })
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: `distributionData.${index}.vestingType`,
     onChange: field.onChange,
     value: field.value,
-    defaultValue: "NO_VESTING",
+    defaultValue: "DISTRIBUTE",
   })
 
   const group = getRootProps()
-  const { colorMode } = useColorMode()
 
   const vestingType = getValues(`distributionData.${index}.vestingType`)
   useEffect(() => {
-    if (vestingType !== "NO_VESTING") {
+    if (vestingType === "LINEAR_VESTING") {
       if (touchedFields.distributionData?.[index]?.vestingPeriod)
         trigger(`distributionData.${index}.vestingPeriod`)
       if (touchedFields.distributionData?.[index]?.cliff)
@@ -88,12 +95,10 @@ const VestingTypePicker = ({ index }: Props): JSX.Element => {
   return (
     <VStack
       {...group}
-      borderRadius="xl"
-      bg={colorMode === "light" ? "white" : "blackAlpha.300"}
+      w="full"
+      bg="tokenxyz.rosybrown.50"
       spacing="0"
-      border="1px"
-      borderColor={colorMode === "light" ? "blackAlpha.300" : "whiteAlpha.300"}
-      divider={<StackDivider />}
+      borderRadius="xl"
     >
       {OPTIONS.map((option) => {
         const radio = getRadioProps({ value: option.value })

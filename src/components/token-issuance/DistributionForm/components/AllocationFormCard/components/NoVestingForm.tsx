@@ -53,12 +53,15 @@ const NoVestingForm = ({ index }: Props): JSX.Element => {
                 <NumberInput
                   ref={ref}
                   value={value}
-                  onChange={onChange}
+                  onChange={(newValue) => {
+                    const parsedValue = parseInt(newValue)
+                    onChange(isNaN(parsedValue) ? "" : parsedValue)
+                  }}
                   onBlur={onBlur}
                   min={0}
                   max={120}
                 >
-                  <NumberInputField borderRightRadius={0} />
+                  <NumberInputField />
                   <NumberInputStepper>
                     <NumberIncrementStepper />
                     <NumberDecrementStepper />
@@ -66,9 +69,9 @@ const NoVestingForm = ({ index }: Props): JSX.Element => {
                 </NumberInput>
               )}
             />
-            <InputRightAddon bgColor="whiteAlpha.50">months</InputRightAddon>
+            <InputRightAddon>months</InputRightAddon>
           </InputGroup>
-          <FormErrorMessage>
+          <FormErrorMessage color="tokenxyz.red.500">
             {errors?.distributionData?.[index]?.distributionDuration?.message}
           </FormErrorMessage>
         </FormControl>

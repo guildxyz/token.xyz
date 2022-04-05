@@ -1,5 +1,6 @@
 import {
   Button,
+  Circle,
   GridItem,
   Heading,
   Img,
@@ -16,17 +17,17 @@ import {
 } from "@chakra-ui/react"
 import { useConfetti } from "components/common/ConfettiContext"
 import Modal from "components/common/Modal"
-import { Web3Connection } from "components/_app/Web3ConnectionManager"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { iconUrls } from "connectors"
 import useToast from "hooks/useToast"
-import { useContext, useEffect } from "react"
+import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
 import { useNetwork } from "wagmi"
 import useDeploy from "../hooks/useDeploy"
 
 const DeployButtons = (): JSX.Element => {
-  const { openNetworkModal, closeNetworkModal } = useContext(Web3Connection)
+  const { openNetworkModal, closeNetworkModal } = useWeb3ConnectionManager()
   const [{ data: networkData }] = useNetwork()
 
   const { control, setValue, handleSubmit } = useFormContext<TokenIssuanceFormType>()
@@ -66,18 +67,18 @@ const DeployButtons = (): JSX.Element => {
   return (
     <>
       <Stack>
-        <Heading as="h3" mb={2} fontFamily="display" fontSize="lg">
-          Deploy
-        </Heading>
         <SimpleGrid columns={3} gap={4}>
           <GridItem colSpan={{ base: 3, sm: 1 }}>
             <Button
+              colorScheme="tokenxyz.blue"
               leftIcon={
-                <Img
-                  src={iconUrls[networkData?.chain?.id]}
-                  boxSize={4}
-                  alt={`${networkData?.chain?.name} logo`}
-                />
+                <Circle bgColor="tokenxyz.white" size={6}>
+                  <Img
+                    src={iconUrls[networkData?.chain?.id]}
+                    boxSize={4}
+                    alt={`${networkData?.chain?.name} logo`}
+                  />
+                </Circle>
               }
               w="full"
               size="lg"
@@ -91,7 +92,7 @@ const DeployButtons = (): JSX.Element => {
             <Button
               w="full"
               size="lg"
-              colorScheme="primary"
+              colorScheme="tokenxyz.red"
               disabled={!correct || isLoading}
               isLoading={isLoading}
               loadingText={loadingText}
@@ -131,7 +132,7 @@ const DeployButtons = (): JSX.Element => {
             </Stack>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="primary">Go to my dashboard</Button>
+            <Button colorScheme="tokenxyz.rosybrown">Go to my dashboard</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

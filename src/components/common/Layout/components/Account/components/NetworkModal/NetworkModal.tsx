@@ -9,15 +9,31 @@ import {
 import { Error } from "components/common/Error"
 import Modal from "components/common/Modal"
 import processConnectionError from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/utils/processConnectionError"
-import { chains } from "connectors"
+import { chains as allSupportedChains, ChainSlugs } from "connectors"
+import usePrevious from "hooks/usePrevious"
 import useToast from "hooks/useToast"
+import { useRouter } from "next/router"
+import { useEffect, useMemo } from "react"
 import { useNetwork } from "wagmi"
 import NetworkButton from "./components/NetworkButton"
 
 const NetworkModal = ({ isOpen, onClose }) => {
-  const [{ error }, switchNetwork] = useNetwork()
-  const toast = useToast()
+  const router = useRouter()
 
+  const [{ data, error }, switchNetwork] = useNetwork()
+
+  // If there's a `chain` parameter in the URL (e.g. on a token page), then display only that chain in the supported chains list, so the user can only switch to the correct network
+  const chains = useMemo(
+    () =>
+      router.query?.chain
+        ? allSupportedChains?.filter(
+            (chain) => chain.id === ChainSlugs[router.query.chain.toString()]
+          )
+        : allSupportedChains,
+    [allSupportedChains, router.query]
+  )
+
+  const toast = useToast()
   const requestManualNetworkChange = (chainName: string) => () =>
     toast({
       title: "Your wallet doesn't support switching chains automatically",
@@ -25,6 +41,13 @@ const NetworkModal = ({ isOpen, onClose }) => {
       status: "error",
       duration: 4000,
     })
+
+  const previousChain = usePrevious(data?.chain?.id)
+
+  useEffect(() => {
+    if (previousChain && data?.chain?.id === previousChain) return
+    onClose()
+  }, [data, previousChain])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -43,7 +66,7 @@ const NetworkModal = ({ isOpen, onClose }) => {
                 chain={chain}
                 requestNetworkChange={
                   switchNetwork
-                    ? () => switchNetwork(chain.id)
+                    ? () => switchNetwork(chain.id).then(() => onClose())
                     : requestManualNetworkChange(chain.name)
                 }
               />

@@ -9,6 +9,23 @@ const styles = {
       bg: mode("white", "gray.700")(props),
       borderRadius: "lg",
     },
+    // TODO: maybe we can do this in number-input.ts?
+    ".chakra-input__group .chakra-numberinput .chakra-numberinput__field": {
+      borderRightRadius: "none",
+    },
+    ".chakra-input__group .chakra-numberinput div div[disabled]": {
+      borderRightWidth: 0,
+    },
+    ".chakra-input__group .chakra-numberinput div div:first-of-type": {
+      marginRight: "0.5px",
+      borderTopRightRadius: 0,
+      borderRightWidth: 0,
+    },
+    ".chakra-input__group .chakra-numberinput div div:last-of-type": {
+      marginRight: "0.5px",
+      borderBottomRightRadius: 0,
+      borderRightWidth: 0,
+    },
   }),
 }
 

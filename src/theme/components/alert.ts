@@ -32,16 +32,33 @@ const styles = {
       }
     },
     toastSubtle: (props: Dict) => {
-      const { theme, colorScheme: c } = props
-      return {
+      const { colorScheme: c } = props
+
+      const style = {
         container: {
-          bg: transparentize(`${c}.200`, 0.16)(theme),
+          bg: `tokenxyz.${c}.200`,
           py: 4,
+          color: `tokenxyz.${c}.500`,
         },
         icon: {
-          color: mode(`${c}.500`, `${c}.400`)(props),
+          color: `tokenxyz.${c}.500`,
         },
       }
+
+      // Edge cases, maybe we'll need to completely replace the green and blue color pallettes
+      if (c === "blue") {
+        style.container.bg = "tokenxyz.blue.100"
+        style.container.color = "tokenxyz.blue.400"
+        style.icon.color = "tokenxyz.blue.400"
+      }
+
+      if (c === "green") {
+        style.container.bg = "tokenxyz.green.500"
+        style.container.color = "tokenxyz.green.700"
+        style.icon.color = "tokenxyz.green.700"
+      }
+
+      return style
     },
     ghost: (props: Dict) => {
       const { colorScheme: c } = props

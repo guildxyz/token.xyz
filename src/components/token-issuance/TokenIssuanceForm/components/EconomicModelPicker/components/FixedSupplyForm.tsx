@@ -25,12 +25,10 @@ const FixedSupplyForm = (): JSX.Element => {
     control,
     getValues,
     setValue,
-    formState: { errors, dirtyFields },
+    formState: { errors },
   } = useFormContext<TokenIssuanceFormType>()
 
   const economyModel = useWatch({ control, name: "economyModel" })
-  const initialSupply = useWatch({ control, name: "initialSupply" })
-  const maxSupply = useWatch({ control, name: "maxSupply" })
 
   return (
     <SimpleGrid columns={2} gap={4} px={5} pb={4}>
@@ -50,13 +48,6 @@ const FixedSupplyForm = (): JSX.Element => {
                 value: 0,
                 message: "Must be positive",
               },
-              max:
-                economyModel !== "UNLIMITED" && dirtyFields.maxSupply
-                  ? {
-                      value: maxSupply,
-                      message: "Must be less than max supply",
-                    }
-                  : undefined,
             }}
             defaultValue={0}
             render={({ field: { ref, value, onChange, onBlur } }) => (
@@ -64,10 +55,10 @@ const FixedSupplyForm = (): JSX.Element => {
                 ref={ref}
                 value={value}
                 onChange={(newValue) => {
-                  onChange(newValue)
                   const parsedValue = parseInt(newValue)
+                  onChange(isNaN(parsedValue) ? "" : parsedValue)
                   if (parsedValue >= getValues("maxSupply"))
-                    setValue("maxSupply", parsedValue + 1)
+                    setValue("maxSupply", parsedValue)
                 }}
                 onBlur={onBlur}
                 min={0}
@@ -80,7 +71,9 @@ const FixedSupplyForm = (): JSX.Element => {
               </NumberInput>
             )}
           />
-          <FormErrorMessage>{errors?.initialSupply?.message}</FormErrorMessage>
+          <FormErrorMessage color="tokenxyz.red.500">
+            {errors?.initialSupply?.message}
+          </FormErrorMessage>
         </FormControl>
       </GridItem>
 
@@ -97,8 +90,8 @@ const FixedSupplyForm = (): JSX.Element => {
             rules={{
               required: economyModel !== "UNLIMITED" && "This field is required!",
               min: {
-                value: initialSupply,
-                message: "Must be greater than initial supply",
+                value: getValues("initialSupply"),
+                message: "Must be greater or equal than initial supply",
               },
             }}
             defaultValue={0}
@@ -106,9 +99,12 @@ const FixedSupplyForm = (): JSX.Element => {
               <NumberInput
                 ref={ref}
                 value={value}
-                onChange={onChange}
+                onChange={(newValue) => {
+                  const parsedValue = parseInt(newValue)
+                  onChange(isNaN(parsedValue) ? "" : parsedValue)
+                }}
                 onBlur={onBlur}
-                min={0}
+                min={getValues("initialSupply")}
               >
                 <NumberInputField />
                 <NumberInputStepper>
@@ -118,15 +114,21 @@ const FixedSupplyForm = (): JSX.Element => {
               </NumberInput>
             )}
           />
-          <FormErrorMessage>{errors?.maxSupply?.message}</FormErrorMessage>
+          <FormErrorMessage color="tokenxyz.red.500">
+            {errors?.maxSupply?.message}
+          </FormErrorMessage>
         </FormControl>
       </GridItem>
 
       <GridItem minW={0} colSpan={2}>
-        <Alert status="info">
+        <Alert
+          status="info"
+          bgColor="tokenxyz.rosybrown.100"
+          color="tokenxyz.rosybrown.500"
+        >
           <Stack>
             <HStack spacing={0.5}>
-              <AlertIcon mt={0} mr={2} />
+              <AlertIcon mt={0} mr={2} color="tokenxyz.rosybrown.500" />
 
               <AlertTitle>Tip</AlertTitle>
             </HStack>

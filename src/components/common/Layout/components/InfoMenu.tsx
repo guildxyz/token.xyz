@@ -14,14 +14,20 @@ import { ArrowSquareOut, Code, Info, Sun } from "phosphor-react"
 const InfoMenu = () => {
   const { toggleColorMode } = useColorMode()
 
+  // TEMP
+  return null
+
   return (
     <Menu>
       <MenuButton
         as={IconButton}
         aria-label="Agora logo"
-        isRound
-        variant="ghost"
-        h="10"
+        bgColor="tokenxyz.mediumtan"
+        borderColor="tokenxyz.tan"
+        borderWidth={2}
+        boxShadow="none"
+        color="tokenxyz.white"
+        h="var(--chakra-space-11)"
         icon={<Icon width="1.2em" height="1.2em" as={Info} />}
       />
       <MenuList border="none" shadow="md">

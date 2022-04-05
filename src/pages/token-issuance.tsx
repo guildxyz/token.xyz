@@ -18,9 +18,10 @@ import DistributionPreview from "components/token-issuance/DistributionPreview"
 import DynamicPageTitle from "components/token-issuance/DynamicPageTitle"
 import TokenIssuanceForm from "components/token-issuance/TokenIssuanceForm"
 import TokenIssuancePreview from "components/token-issuance/TokenIssuancePreview"
-import { Web3Connection } from "components/_app/Web3ConnectionManager"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { ChartLine, Coin, CurrencyEth } from "phosphor-react"
-import { useContext, useEffect } from "react"
+import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { TimelineSteps, TokenIssuanceFormType } from "types"
 import { useAccount } from "wagmi"
@@ -47,7 +48,7 @@ const STEPS: TimelineSteps = [
 
 const Page = (): JSX.Element => {
   const [{ data: accountData, loading }] = useAccount()
-  const { openWalletSelectorModal, triedEager } = useContext(Web3Connection)
+  const { openWalletSelectorModal, triedEager } = useWeb3ConnectionManager()
   const methods = useForm<TokenIssuanceFormType>({ mode: "all" })
 
   useEffect(() => {
@@ -55,23 +56,37 @@ const Page = (): JSX.Element => {
     openWalletSelectorModal()
   }, [loading, accountData, openWalletSelectorModal, triedEager])
 
+  useWarnIfUnsavedChanges(methods?.formState?.isDirty)
+
   return (
     <ConfettiProvider>
-      <Layout>
+      <Layout splitBg={!!accountData?.address}>
         {accountData?.address ? (
           <FormProvider {...methods}>
             <TimelineProvider steps={STEPS}>
-              <DynamicPageTitle />
-
               <SimpleGrid
-                gridTemplateColumns={{ base: "1fr", md: "2fr 1fr" }}
-                gap={8}
+                mt={-20}
+                columns={{ base: 1, md: 7 }}
+                columnGap={8}
+                minH="100vh"
               >
-                <GridItem minW={0}>
+                <GridItem
+                  colSpan={{ base: 1, md: 5 }}
+                  minW={0}
+                  pr={{ base: 0, md: 8 }}
+                  pt={20} // TODO: find a better solution...
+                  pb={8}
+                  bgColor="tokenxyz.rosybrown.100"
+                >
+                  <DynamicPageTitle />
                   <CurrentForm />
                 </GridItem>
 
-                <GridItem minW={0} display={{ base: "none", md: "block" }}>
+                <GridItem
+                  colSpan={{ base: 1, md: 2 }}
+                  minW={0}
+                  display={{ base: "none", md: "block" }}
+                >
                   <Timeline />
                 </GridItem>
               </SimpleGrid>
@@ -80,8 +95,13 @@ const Page = (): JSX.Element => {
             <DynamicDevTool control={methods.control} />
           </FormProvider>
         ) : (
-          <Alert status="error">
-            <AlertIcon />
+          <Alert
+            status="error"
+            bgColor="tokenxyz.red.100"
+            color="tokenxyz.red.500"
+            borderColor="tokenxyz.red.500"
+          >
+            <AlertIcon color="tokenxyz.red.500" />
             <AlertDescription>
               Please connect your wallet in order to continue!
             </AlertDescription>

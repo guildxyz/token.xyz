@@ -1,28 +1,59 @@
-import { Button } from "@chakra-ui/react"
+import { SimpleGrid, Spinner, Text } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
-import useTokenXyzContract from "hooks/useTokenXyzContract"
-import { useEffect } from "react"
-import { useAccount } from "wagmi"
+import TokenCard from "components/dashboard/TokenCard"
+import { ChainSlugs } from "connectors"
+import useTokenDeployedEventsAllChains from "hooks/useTokenDeployedEventsAllChains"
+import { useMemo } from "react"
 
 const Page = (): JSX.Element => {
-  const [{ data: accountData }] = useAccount()
-  const tokenXyzContract = useTokenXyzContract()
+  const { data, isValidating } = useTokenDeployedEventsAllChains("ALL")
 
-  const logDeployedTokens = async () => {
-    const res = await tokenXyzContract.getDeployedTokens("test")
-    console.log(res)
-  }
+  const mappedTokens: Array<{
+    chainSlug: string
+    tokenAddress: string
+  }> = useMemo(() => {
+    if (!data) return []
 
-  useEffect(() => {
-    if (!tokenXyzContract) return
-    console.log(tokenXyzContract)
-  }, [tokenXyzContract])
+    const tokens = []
+
+    Object.keys(data).forEach((chainId) => {
+      const chainSlug = ChainSlugs[chainId]
+      const tokenAddresses =
+        data[chainId]?.map((event) => event.args?.[2]?.toLowerCase()) ?? []
+      tokenAddresses.forEach((tokenAddress) => {
+        tokens.push({
+          chainSlug,
+          tokenAddress,
+        })
+      })
+    })
+
+    return tokens
+  }, [data])
 
   return (
     <Layout title="Home">
-      {accountData?.address && (
-        <Button onClick={logDeployedTokens}>Log deployed tokens</Button>
-      )}
+      <SimpleGrid
+        columns={{ base: 1, sm: 2, lg: 3 }}
+        gap={{ base: 4, md: 6 }}
+        pt={{ base: 4, md: 9 }}
+        pb={{ base: 20, md: 14 }}
+      >
+        {isValidating ? (
+          <Spinner />
+        ) : !mappedTokens?.length ? (
+          <Text>0 deployed tokens. :(</Text>
+        ) : (
+          mappedTokens.map((token) => (
+            <TokenCard
+              key={token.tokenAddress}
+              // TODO: maybe we shouldn't fallback to 3 here, but we should have a URL query param for the chain?
+              chain={token.chainSlug}
+              address={token.tokenAddress}
+            />
+          ))
+        )}
+      </SimpleGrid>
     </Layout>
   )
 }

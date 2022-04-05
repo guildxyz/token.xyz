@@ -2,59 +2,87 @@ import {
   Box,
   Container,
   Flex,
-  Heading,
   HStack,
-  useColorMode,
+  Icon,
+  IconButton,
+  useBreakpointValue,
 } from "@chakra-ui/react"
 import Meta from "components/common/Meta"
-import { PropsWithChildren, ReactNode } from "react"
+import { House } from "phosphor-react"
+import { PropsWithChildren } from "react"
+import Link from "../Link"
 import Account from "./components/Account"
+import CreateTokenButton from "./components/CreateTokenButton"
 import InfoMenu from "./components/InfoMenu"
 
 type Props = {
   title?: string
   description?: string
-  action?: ReactNode | undefined
+  splitBg?: boolean
 }
 
 const Layout = ({
   title,
   description,
+  splitBg,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
-  const { colorMode } = useColorMode()
+  const dynamicBgColor = useBreakpointValue({
+    base: "var(--chakra-colors-tokenxyz-rosybrown-100)",
+    md: "var(--chakra-colors-tokenxyz-rosybrown-50)",
+  })
 
   return (
     <>
       {title && <Meta title={title} description={description} />}
       <Box
-        bgColor={
-          colorMode === "light" ? "gray.100" : "var(--chakra-colors-gray-800)"
-        }
+        bgColor={splitBg ? dynamicBgColor : "tokenxyz.rosybrown.50"}
         minHeight="100vh"
+        color="tokenxyz.black"
+        bgGradient={
+          splitBg
+            ? `linear(to right, var(--chakra-colors-tokenxyz-rosybrown-100) 0%, var(--chakra-colors-tokenxyz-rosybrown-100) 50%, ${dynamicBgColor} 50%, ${dynamicBgColor} 100%)`
+            : undefined
+        }
       >
-        <Flex w="full" justifyContent="space-between" alignItems="center" p="2">
-          <Heading
-            as="h1"
-            fontFamily="display"
-            fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
-            display="flex"
-            alignItems="center"
-            h="var(--chakra-space-11)"
-          >
-            Token.xyz
-          </Heading>
+        <Flex
+          w="full"
+          justifyContent="space-between"
+          alignItems="center"
+          p={4}
+          h={20}
+        >
+          <Link href="/">
+            <IconButton
+              aria-label="Back"
+              isRound
+              position="relative"
+              mt={-1}
+              boxSize={10}
+              minWidth={10}
+              minHeight={10}
+              colorScheme="tokenxyz.blue"
+              icon={<Icon as={House} />}
+              fontSize="sm"
+              _after={{
+                content: "''",
+                position: "absolute",
+                inset: 1,
+                borderRadius: "full",
+                borderWidth: 2,
+                borderColor: "tokenxyz.rosybrown.100",
+              }}
+            />
+          </Link>
+
           <HStack spacing="2">
+            <CreateTokenButton />
             <Account />
             <InfoMenu />
           </HStack>
         </Flex>
-        <Container
-          maxW="container.lg"
-          pt={{ base: 4, md: 9 }}
-          pb={{ base: 20, md: 14 }}
-          px={{ base: 4, sm: 6, md: 8, lg: 10 }}
-        >
+
+        <Container maxW="container.lg" px={{ base: 4, sm: 6, md: 8, lg: 10 }}>
           {children}
         </Container>
       </Box>

@@ -4,10 +4,11 @@ import {
   Collapse,
   Flex,
   Heading,
+  HStack,
   RadioProps,
+  Stack,
   Tag,
   Text,
-  useColorMode,
   useRadio,
 } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
@@ -28,30 +29,26 @@ const EconomyModelOption = ({
   const checkbox = getCheckboxProps()
   const { title, description, disabled, isChecked } = props
 
-  const { colorMode } = useColorMode()
-
   if (disabled)
     return (
       <Button
         as="fieldset"
-        variant="ghost"
+        variant="unstyled"
         w="full"
         h="auto"
         p="0"
         flexDir="column"
         alignItems="strech"
-        borderRadius="none"
-        _first={{ borderTopRadius: "xl" }}
-        _last={{ borderBottomRadius: "xl" }}
         boxShadow="none !important"
         _active={{ bg: null }}
+        _focus={{ bg: null, boxShadow: "none" }}
         disabled
       >
         <Flex as="label" py="4" px="5" alignItems="center">
           <Box whiteSpace="break-spaces" w="full">
-            <Heading size="sm">
+            <Heading size="sm" color="tokenxyz.rosybrown.500">
               {title}
-              <Tag colorScheme="gray" size="sm" ml="3" mt="-1px">
+              <Tag bgColor="tokenxyz.rosybrown.500" size="sm" ml="3" mt="-1px">
                 {disabled}
               </Tag>
             </Heading>
@@ -63,39 +60,48 @@ const EconomyModelOption = ({
   return (
     <Button
       as="fieldset"
-      variant="ghost"
+      variant="unstyled"
       {...checkbox}
       w="full"
-      h="auto"
+      h="full"
       p="0"
+      py={1}
       flexDir="column"
       alignItems="strech"
       borderRadius="none"
       _first={{ borderTopRadius: "xl" }}
       _last={{ borderBottomRadius: "xl" }}
-      boxShadow="none !important"
-      border="2px"
-      bg={colorMode === "light" ? "white" : (isChecked && "gray.700") || null}
-      borderColor={isChecked ? "primary.500" : "transparent"}
+      bg={isChecked ? "tokenxyz.white" : null}
+      borderWidth={isChecked ? 1 : 0}
+      borderColor="tokenxyz.rosybrown.400"
       _hover={{
-        bg: isChecked
-          ? null
-          : colorMode === "light"
-          ? "blackAlpha.50"
-          : "whiteAlpha.50",
+        opacity: 1,
       }}
       _active={{ bg: null }}
+      _focus={{ bg: null, boxShadow: "none" }}
+      boxShadow="none !important"
+      color="tokenxyz.rosybrown.500"
+      opacity={isChecked ? 1 : 0.5}
     >
-      <Flex as="label" py={4} px={5} cursor="pointer" alignItems="center">
+      <Flex
+        as="label"
+        position="relative"
+        py={4}
+        px={5}
+        cursor="pointer"
+        alignItems="center"
+      >
         <input {...input} />
-        <Box whiteSpace="break-spaces" w="full">
-          <Heading size="sm">{title}</Heading>
-          {description && (
-            <Text fontWeight="normal" colorScheme="gray" mt={1} fontSize="sm">
-              {description}
-            </Text>
-          )}
-        </Box>
+        <HStack whiteSpace="break-spaces" w="full" justifyContent="space-between">
+          <Stack>
+            <Heading size="sm">{title}</Heading>
+            {description && (
+              <Text fontWeight="normal" mt={1} fontSize="sm">
+                {description}
+              </Text>
+            )}
+          </Stack>
+        </HStack>
       </Flex>
       {children && <Collapse in={isChecked}>{children}</Collapse>}
     </Button>

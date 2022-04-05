@@ -1,4 +1,4 @@
-import { useAllocation } from "components/[allocation]/common/AllocationContext"
+import { useAllocation } from "components/[token]/components/common/AllocationContext"
 import { BigNumber, Contract } from "ethers"
 import { useMemo } from "react"
 import MerkleVestingABI from "static/abis/MerkleVestingABI.json"
@@ -36,15 +36,22 @@ const getCohortDetails = (
       }
     })
 
-const useCohort = (): SWRResponse<ResponseType> => {
+const useCohort = (merkleRoot: string): SWRResponse<ResponseType> => {
   const [{ data: accountData, error }] = useAccount()
   const [{ data: signerData }] = useSigner()
-  const { merkleRoot, claims, vestingContract } = useAllocation()
+  const { merkleVesting } = useAllocation()
   const contract = useContract({
-    addressOrName: vestingContract,
+    addressOrName: merkleVesting?.contractAddress,
     contractInterface: MerkleVestingABI,
     signerOrProvider: signerData,
   })
+
+  const claims = useMemo(
+    () =>
+      merkleVesting?.cohorts?.find((cohort) => cohort.merkleRoot === merkleRoot)
+        ?.claims || {},
+    [merkleRoot, merkleVesting]
+  )
 
   const userVestingData = useMemo(
     () => (accountData && claims ? claims[accountData?.address] : null),

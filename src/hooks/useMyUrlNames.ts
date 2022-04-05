@@ -1,3 +1,4 @@
+import unique from "utils/unique"
 import useTokenDeployedEvents from "./useTokenDeployedEvents"
 
 const useMyUrlNames = (): {
@@ -14,7 +15,7 @@ const useMyUrlNames = (): {
   } = useTokenDeployedEvents()
 
   const data: Array<string> =
-    tokenDeployedEvents?.map((event) => event.args?.[1]) ?? []
+    tokenDeployedEvents?.map((event) => event.args?.[1])?.filter(unique) ?? []
 
   return {
     ...swrResponse,

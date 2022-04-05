@@ -5,6 +5,7 @@ import Link from "./link"
 import Menu from "./menu"
 import Modal from "./modal"
 import NumberInput from "./number-input"
+import Radio from "./radio"
 import Select from "./select"
 import Switch from "./switch"
 import Tag from "./tag"
@@ -20,6 +21,7 @@ const components = {
   Menu,
   Modal,
   NumberInput,
+  Radio,
   Select,
   Switch,
   Tag,

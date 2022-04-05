@@ -1,7 +1,12 @@
-import { HStack, Text, useBreakpointValue, useDisclosure } from "@chakra-ui/react"
-import { Web3Connection } from "components/_app/Web3ConnectionManager"
+import {
+  HStack,
+  Icon,
+  Text,
+  useBreakpointValue,
+  useDisclosure,
+} from "@chakra-ui/react"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { LinkBreak, SignIn } from "phosphor-react"
-import { useContext } from "react"
 import shortenHex from "utils/shortenHex"
 import { useAccount, useConnect, useNetwork } from "wagmi"
 import AccountButton from "./components/AccountButton"
@@ -15,7 +20,7 @@ const Account = (): JSX.Element => {
     fetchEns: true,
   })
   const { openWalletSelectorModal, triedEager, openNetworkModal } =
-    useContext(Web3Connection)
+    useWeb3ConnectionManager()
   const {
     isOpen: isAccountModalOpen,
     onOpen: onAccountModalOpen,
@@ -46,7 +51,7 @@ const Account = (): JSX.Element => {
   if (!accountData?.address) {
     return (
       <AccountButton
-        leftIcon={<SignIn />}
+        leftIcon={<Icon position="relative" top={0.5} as={SignIn} />}
         isLoading={!triedEager}
         onClick={openWalletSelectorModal}
       >
@@ -59,7 +64,12 @@ const Account = (): JSX.Element => {
     <>
       <AccountButton onClick={onAccountModalOpen}>
         <HStack spacing={3}>
-          <Text as="span" fontSize="md" fontWeight="semibold">
+          <Text
+            as="span"
+            fontSize="md"
+            fontWeight="extrabold"
+            color="tokenxyz.blue.500"
+          >
             {accountData?.ens?.name || `${shortenHex(accountData?.address, 3)}`}
           </Text>
           <Identicon address={accountData?.address} size={28} />

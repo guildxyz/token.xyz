@@ -1,4 +1,4 @@
-import { useAllocation } from "components/[allocation]/common/AllocationContext"
+import { useAllocation } from "components/[token]/components/common/AllocationContext"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useMemo } from "react"
@@ -6,17 +6,24 @@ import MerkleVestingABI from "static/abis/MerkleVestingABI.json"
 import processContractInteractionError from "utils/processContractInteractionError"
 import { useAccount, useContract, useSigner } from "wagmi"
 
-const useClaim = () => {
+const useClaim = (merkleRoot: string) => {
   const [{ data: accountData }] = useAccount()
   const [{ data: signerData }] = useSigner()
-  const { merkleRoot, claims, vestingContract } = useAllocation()
+  const { merkleVesting } = useAllocation()
   const toast = useToast()
 
   const merkleVestingContract = useContract({
-    addressOrName: vestingContract,
+    addressOrName: merkleVesting?.contractAddress,
     contractInterface: MerkleVestingABI,
     signerOrProvider: signerData,
   })
+
+  const claims = useMemo(
+    () =>
+      merkleVesting?.cohorts?.find((cohort) => cohort.merkleRoot === merkleRoot)
+        ?.claims || {},
+    [merkleRoot, merkleVesting]
+  )
 
   const userVestingData = useMemo(
     () => (accountData && claims ? claims[accountData.address] : null),

@@ -1,6 +1,5 @@
 import { inputAnatomy as parts } from "@chakra-ui/anatomy"
 import {
-  mode,
   PartsStyleFunction,
   PartsStyleObject,
   SystemStyleObject,
@@ -43,16 +42,30 @@ const sizes: Record<string, PartsStyleObject<typeof parts>> = {
   },
 }
 
-const variantOutline: PartsStyleFunction<typeof parts> = (props) => {
-  return {
-    field: {
-      bg: mode("white", "blackAlpha.300")(props),
+const variantOutline: PartsStyleFunction<typeof parts> = () => ({
+  field: {
+    overflow: "hidden",
+    bg: "tokenxyz.white",
+    borderWidth: 1,
+    borderColor: "tokenxyz.rosybrown.500",
+    color: "tokenxyz.black",
+    _placeholder: {
+      color: "tokenxyz.rosybrown.500",
     },
-    addon: {
-      bg: mode("gray.100", "gray.700")(props),
+    _hover: {
+      borderColor: "tokenxyz.rosybrown.500",
+      bg: "tokenxyz.rosybrown.50",
     },
-  }
-}
+    _focus: {},
+    _invalid: {
+      borderColor: "tokenxyz.red.500",
+    },
+  },
+  addon: {
+    bg: "tokenxyz.rosybrown.200",
+    borderColor: "tokenxyz.rosybrown.500",
+  },
+})
 
 const variants = {
   outline: variantOutline,
@@ -61,7 +74,7 @@ const variants = {
 const styles = {
   parts: ["field"],
   defaultProps: {
-    focusBorderColor: "primary.500",
+    focusBorderColor: "tokenxyz.rosybrown.500",
   },
   sizes,
   variants,

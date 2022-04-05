@@ -39,7 +39,10 @@ const UnlimitedSupplyForm = (): JSX.Element => {
               <NumberInput
                 ref={ref}
                 value={value}
-                onChange={onChange}
+                onChange={(newValue) => {
+                  const parsedValue = parseInt(newValue)
+                  onChange(isNaN(parsedValue) ? "" : parsedValue)
+                }}
                 onBlur={onBlur}
                 min={0}
               >
@@ -51,7 +54,9 @@ const UnlimitedSupplyForm = (): JSX.Element => {
               </NumberInput>
             )}
           />
-          <FormErrorMessage>{errors?.initialSupply?.message}</FormErrorMessage>
+          <FormErrorMessage color="tokenxyz.red.500">
+            {errors?.initialSupply?.message}
+          </FormErrorMessage>
         </FormControl>
       </GridItem>
     </SimpleGrid>

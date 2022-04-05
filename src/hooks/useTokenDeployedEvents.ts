@@ -12,13 +12,22 @@ const getTokenDeployedEvents = (
     tokenXyzContract.filters.TokenDeployed(walletAddress)
   )
 
-const useTokenDeployedEvents = (): SWRResponse<Array<Event>> => {
+const useTokenDeployedEvents = (
+  mode: "ALL" | "MY" = "MY"
+): SWRResponse<Array<Event>> => {
   const [{ data: accountData, loading: accountDataLoading }] = useAccount()
   const tokenXyzContract = useTokenXyzContract()
 
+  const shouldFetch =
+    mode === "MY" ? accountData?.address && !!tokenXyzContract : !!tokenXyzContract
+
   const swrResponse = useSWR<Array<Event>>(
-    accountData?.address && tokenXyzContract
-      ? ["tokenDeployedEvents", accountData.address, tokenXyzContract]
+    shouldFetch
+      ? [
+          "tokenDeployedEvents",
+          mode === "MY" ? accountData.address : null,
+          tokenXyzContract,
+        ]
       : null,
     getTokenDeployedEvents,
     {

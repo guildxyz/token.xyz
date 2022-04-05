@@ -10,7 +10,7 @@ type Props = {
 const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
   const [{ data }] = useNetwork()
 
-  const isCurrentChain = chain.id === data.chain.id
+  const isCurrentChain = chain.id === data?.chain?.id
 
   return (
     <Tooltip
@@ -19,16 +19,18 @@ const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
     >
       <Box>
         <Button
+          variant="outline"
+          colorScheme="tokenxyz.rosybrown"
+          display="flex"
+          justifyContent="space-between"
+          px="1rem!important"
+          isFullWidth
+          size="xl"
           rightIcon={
             <Img src={iconUrls[chain.id]} boxSize="6" alt={`${chain.name} logo`} />
           }
-          border={isCurrentChain && "2px"}
-          borderColor="primary.500"
           disabled={isCurrentChain}
           onClick={requestNetworkChange}
-          isFullWidth
-          size="xl"
-          justifyContent="space-between"
         >
           {chain.name}
         </Button>

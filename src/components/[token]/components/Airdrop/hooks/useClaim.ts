@@ -1,4 +1,4 @@
-import { useAllocation } from "components/[allocation]/common/AllocationContext"
+import { useAllocation } from "components/[token]/components/common/AllocationContext"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useMemo } from "react"
@@ -9,18 +9,21 @@ import { useAccount, useContract, useSigner } from "wagmi"
 const useClaim = () => {
   const [{ data: accountData }] = useAccount()
   const [{ data: signerData }] = useSigner()
-  const { claims, merkleDistributorContract: contractAddress } = useAllocation()
+  const { merkleDistribution } = useAllocation()
   const toast = useToast()
 
   const merkleDistributorContract = useContract({
-    addressOrName: contractAddress,
+    addressOrName: merkleDistribution?.contractAddress,
     contractInterface: MerkleDistributorABI,
     signerOrProvider: signerData,
   })
 
   const userMerkleDistributorData = useMemo(
-    () => (accountData && claims ? claims[accountData.address] : null),
-    [accountData, claims]
+    () =>
+      accountData && merkleDistribution?.claims
+        ? merkleDistribution.claims[accountData.address]
+        : null,
+    [accountData, merkleDistribution]
   )
 
   const claim = async () =>

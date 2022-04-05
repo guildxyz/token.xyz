@@ -55,13 +55,25 @@ const variantSolidStatic = (props: Dict) => {
 const variantOutline = (props: Dict) => {
   const { theme, colorScheme: c } = props
 
-  return {
-    border: "2px solid",
+  const style: Record<string, any> = {
+    border: "1px solid",
     borderColor:
       c !== "gray"
         ? mode(`${c}.500`, transparentize(`${c}.300`, 0.8)(theme))(props)
         : undefined,
   }
+
+  const extendedStyle =
+    c === "tokenxyz.rosybrown"
+      ? {
+          bgColor: "tokenxyz.white",
+          _focus: {
+            bgColor: "tokenxyz.white",
+          },
+        }
+      : {}
+
+  return { ...style, ...extendedStyle }
 }
 
 const styles = {

@@ -15,10 +15,14 @@ const FormSection = ({
 }: PropsWithChildren<Props>): JSX.Element => (
   <Stack width="full" spacing={5} {...rest}>
     <Stack spacing={2}>
-      <Heading fontSize="md" as="h3">
+      <Heading as="h3" fontSize="xl" fontWeight="extrabold">
         {title}
       </Heading>
-      {description && <Text colorScheme="gray">{description}</Text>}
+      {description && (
+        <Text color="tokenxyz.black" fontWeight="medium">
+          {description}
+        </Text>
+      )}
     </Stack>
 
     {children}
