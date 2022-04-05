@@ -1,4 +1,5 @@
 import { BigNumber } from "ethers"
+import { MerkleDistributorInfo } from "utils/merkle/parseBalanceMap"
 
 type WalletError = { code: number; message: string }
 
@@ -57,21 +58,26 @@ type TokenInfoJSON = {
   vestings: Array<{ fileName: string; prettyUrl: string }>
 }
 
-type AllocationJSON = {
-  merkleRoot: string
-  tokenTotal: string
-  claims: Record<string, { index: number; amount: string; proof: Array<string> }>
-  vestingType: VestingTypes
-  distributionEnd: number
-  vestingEnd?: number
-  vestingPeriod?: number
-  cliffPeriod?: number
-  createdBy: string
-  createdAt: number
-  tokenAddress: string
-  merkleDistributorContract?: string
-  vestingContract?: string
+type Cohort = MerkleDistributorInfo & {
   name: string
+  cliffPeriod: number // in seconds
+  vestingPeriod: number // in seconds
+  distributionEnd: number // in seconds
+}
+
+type AllocationJSON = {
+  vestingType: VestingTypes
+  name: string
+  createdAt: number // in seconds
+  createdBy: string
+  merkleDistribution?: MerkleDistributorInfo & {
+    contractAddress: string
+    distributionEnd: number // in seconds
+  }
+  merkleVesting?: {
+    contractAddress: string
+    cohorts: Array<Cohort>
+  }
 }
 
 type ContractType =
@@ -111,6 +117,7 @@ export type {
   TokenIssuanceFormType,
   TokenInfoJSON,
   AllocationFormType,
+  Cohort,
   AllocationJSON,
   ContractType,
   TokenData,

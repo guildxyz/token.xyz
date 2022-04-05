@@ -26,21 +26,24 @@ const useAirdropDataWithIndex = (): SWRResponse<{
   const provider = useProvider()
   const [{ data: accountData, error, loading }] = useAccount()
 
-  const { claims, merkleDistributorContract: contractAddress } = useAllocation()
+  const { merkleDistribution } = useAllocation()
 
   const index = useMemo(
-    () => (accountData && claims ? claims[accountData.address]?.index : null),
-    [accountData, claims]
+    () =>
+      accountData && merkleDistribution?.claims
+        ? merkleDistribution.claims[accountData.address]?.index
+        : null,
+    [accountData, merkleDistribution]
   )
 
   const merkleDistributorContract = useContract({
-    addressOrName: contractAddress,
+    addressOrName: merkleDistribution?.contractAddress,
     contractInterface: MerkleDistributorABI,
     signerOrProvider: provider,
   })
 
   const shouldFetch =
-    contractAddress &&
+    merkleDistribution?.contractAddress &&
     typeof index === "number" &&
     accountData &&
     merkleDistributorContract &&

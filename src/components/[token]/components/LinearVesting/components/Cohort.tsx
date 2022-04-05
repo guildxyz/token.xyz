@@ -1,20 +1,31 @@
 import { Button, Flex, Heading, Skeleton, Stack, Text } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { ChainSlugs } from "connectors"
+import { BigNumber, utils } from "ethers"
 import useTokenData from "hooks/useTokenData"
 import { useRouter } from "next/router"
 import { useEffect, useMemo } from "react"
+import { Cohort as CohortType } from "types"
 import { useAccount, useNetwork } from "wagmi"
-import { useAllocation } from "../common/AllocationContext"
-import Countdown from "../common/Countdown"
-import useAirdropDataWithIndex from "./hooks/useAirdropDataWithIndex"
-import useClaim from "./hooks/useClaim"
+import Countdown from "../../common/Countdown"
+import useClaim from "../hooks/useClaim"
+import useCohort from "../hooks/useCohort"
 
-const Airdrop = (): JSX.Element => {
+const formatAmount = (amount: BigNumber, decimals: number): string =>
+  parseFloat(utils.formatUnits(amount ?? 0, decimals ?? 18)).toFixed(2)
+
+type Props = {
+  cohortIpfsData?: CohortType
+}
+
+const Cohort = ({ cohortIpfsData }: Props): JSX.Element => {
   const router = useRouter()
   const [{ data: networkData }] = useNetwork()
+  const [{ data: accountData, error: accountError, loading: accountLoading }] =
+    useAccount()
 
-  const { name, merkleDistribution } = useAllocation()
+  const { name, merkleRoot, claims, distributionEnd } = cohortIpfsData || {}
+
   const {
     data: tokenData,
     error: tokenError,
@@ -24,36 +35,35 @@ const Airdrop = (): JSX.Element => {
     router.query.token?.toString()?.toLowerCase()
   )
 
-  const [{ data: accountData, error: accountError, loading: accountLoading }] =
-    useAccount()
+  const {
+    data: cohortData,
+    isValidating: cohortDataLoading,
+    mutate: mutateCohortData,
+  } = useCohort(merkleRoot)
 
   const isEligible = useMemo(
     () =>
-      !merkleDistribution?.claims || !accountData
+      !claims || !accountData
         ? false
-        : Object.keys(merkleDistribution?.claims)?.includes(accountData.address),
-    [merkleDistribution, accountData]
+        : Object.keys(claims)?.includes(accountData.address),
+    [claims, accountData]
   )
 
-  const airdropEnded = useMemo(
+  const vestingEnded = useMemo(
     () =>
-      merkleDistribution?.distributionEnd &&
-      merkleDistribution.distributionEnd < Math.round(new Date().getTime() / 1000),
-    [merkleDistribution]
+      distributionEnd && distributionEnd < Math.round(new Date().getTime() / 1000),
+    [distributionEnd]
   )
 
   const {
-    data: { isClaimed, owner },
-    error: airdropDataWithIndexError,
-    isValidating: isAirdropDataWithIndexLoading,
-    mutate: mutateAirdropData,
-  } = useAirdropDataWithIndex()
-
-  const { onSubmit, isLoading: isClaimLoading, response: claimResponse } = useClaim()
+    onSubmit,
+    isLoading: isClaimLoading,
+    response: claimResponse,
+  } = useClaim(merkleRoot)
 
   useEffect(() => {
     if (!claimResponse) return
-    mutateAirdropData()
+    mutateCohortData()
   }, [claimResponse])
 
   const shouldSwitchChain = useMemo(
@@ -97,24 +107,34 @@ const Airdrop = (): JSX.Element => {
           </Skeleton>
         </Stack>
 
-        {airdropEnded ? (
+        {vestingEnded ? (
           <Text colorScheme="gray" textAlign="center">
-            Sorry, this airdrop has ended!
+            Sorry, this vesting has ended!
           </Text>
         ) : (
           <>
             <Stack mb={8}>
-              <Countdown
-                expiryTimestamp={(merkleDistribution?.distributionEnd || 0) * 1000}
-              />
+              <Countdown expiryTimestamp={distributionEnd * 1000} />
             </Stack>
 
-            <Stack mb={8}>
+            <Stack mb={8} alignItems="start">
               <Text colorScheme="gray" textAlign="center">
-                This is the airdrop's description. Lorem ipsum dolor sit amet,
-                consectetur adipiscing elit. Vivamus et bibendum massa, eu porta
-                sapien. Pellentesque leo ex, interdum vel ultrices sit amet,
-                tincidunt sed nisl.
+                {`Total claimable amount: ${formatAmount(
+                  BigNumber.from(claims?.[accountData?.address]?.amount || "0"),
+                  tokenData?.decimals
+                )}`}
+              </Text>
+              <Text colorScheme="gray" textAlign="center">
+                {`Claimable now: ${formatAmount(
+                  cohortData?.claimableAmount,
+                  tokenData?.decimals
+                )}`}
+              </Text>
+              <Text colorScheme="gray" textAlign="center">
+                {`Already claimed: ${formatAmount(
+                  cohortData?.claimed,
+                  tokenData?.decimals
+                )}`}
               </Text>
             </Stack>
           </>
@@ -122,18 +142,20 @@ const Airdrop = (): JSX.Element => {
 
         <Button
           colorScheme={shouldSwitchChain ? "tokenxyz.red" : "tokenxyz.rosybrown"}
-          isDisabled={airdropEnded || isClaimed || !isEligible || shouldSwitchChain}
-          isLoading={
-            isAirdropDataWithIndexLoading || accountLoading || isClaimLoading
+          isDisabled={
+            vestingEnded ||
+            !isEligible ||
+            parseFloat(
+              formatAmount(cohortData?.claimableAmount, tokenData?.decimals)
+            ) < 0.01
           }
+          isLoading={cohortDataLoading || accountLoading || isClaimLoading}
           loadingText={isClaimLoading ? "Claiming tokens" : "Loading"}
           mt="auto"
           maxW="max-content"
           onClick={onSubmit}
         >
-          {isClaimed
-            ? "Already claimed"
-            : airdropEnded
+          {vestingEnded
             ? "Ended"
             : !accountData?.address
             ? "Connect your wallet"
@@ -148,4 +170,4 @@ const Airdrop = (): JSX.Element => {
   )
 }
 
-export default Airdrop
+export default Cohort

@@ -824,59 +824,110 @@ const useDeploy = () => {
           vestings: [],
         }
 
+        const allocationJSONs: Array<AllocationJSON> = []
+
+        const currentDateInSeconds = Math.floor(Date.now() / 1000) + 60 // Adding 1 minute, because the deployment could take some time
+
         const airdrops = distributionData?.filter(
           (allocation) => allocation.vestingType === "NO_VESTING"
         )
 
-        distributionData.forEach((allocation, index) => {
-          const currentDateInSeconds = Math.floor(Date.now() / 1000) + 60 // Adding 1 minute, because the deployment could take some time
-          const distributionDurationInSeconds = monthsToSecond(
-            allocation.distributionDuration
-          )
-          const cliffInSeconds = monthsToSecond(allocation.cliff)
-          const vestingPeriodInSeconds = monthsToSecond(allocation.vestingPeriod)
+        if (
+          airdrops?.length &&
+          _context.merkleDistributorContractAddresses?.length
+        ) {
+          airdrops.forEach((airdrop, index) => {
+            const originalIndex = distributionData.findIndex(
+              (allocation) =>
+                allocation.allocationName.toLowerCase() ===
+                airdrop.allocationName.toLowerCase()
+            )
 
-          const merkleData: AllocationJSON = {
-            ..._context.merkleTrees?.[index],
-            vestingType: allocation.vestingType,
-            distributionEnd: Math.round(
+            const distributionDurationInSeconds = monthsToSecond(
+              airdrop.distributionDuration
+            )
+            const distributionEnd = Math.round(
               currentDateInSeconds + distributionDurationInSeconds
-            ),
-            vestingEnd: Math.round(currentDateInSeconds + vestingPeriodInSeconds),
-            vestingPeriod: vestingPeriodInSeconds,
-            cliffPeriod: cliffInSeconds,
+            )
+
+            const allocationData: AllocationJSON = {
+              vestingType: "NO_VESTING",
+              name: airdrop.allocationName,
+              createdBy: accountData?.address,
+              createdAt: currentDateInSeconds,
+              merkleDistribution: {
+                contractAddress:
+                  _context.merkleDistributorContractAddresses?.[index],
+                distributionEnd,
+                ..._context.merkleTrees?.[originalIndex],
+              },
+            }
+
+            allocationJSONs.push(allocationData)
+          })
+        }
+
+        const linearVestings = distributionData?.filter(
+          (allocation) => allocation.vestingType === "LINEAR_VESTING"
+        )
+
+        if (linearVestings?.length && _context.merkleVestingContractAddress) {
+          const allocationData: AllocationJSON = {
+            vestingType: "LINEAR_VESTING",
+            name: "Vesting",
             createdBy: accountData?.address,
             createdAt: currentDateInSeconds,
-            tokenAddress: _context.tokenAddress,
-            vestingContract: _context.merkleVestingContractAddress,
-            name: allocation.allocationName,
+            merkleVesting: {
+              contractAddress: _context.merkleVestingContractAddress,
+              cohorts: [],
+            },
           }
 
-          if (allocation.vestingType === "NO_VESTING") {
-            const i = airdrops?.findIndex(
-              (airdrop) => airdrop.allocationName === allocation.allocationName
+          // Populating the "cohorts" field
+          linearVestings.forEach((vesting) => {
+            const originalIndex = distributionData.findIndex(
+              (allocation) =>
+                allocation.allocationName.toLowerCase() ===
+                vesting.allocationName.toLowerCase()
             )
-            merkleData.merkleDistributorContract =
-              _context.merkleDistributorContractAddresses?.[i]
-          }
 
-          // Only save fileName if the airdrop/vesting creation was successful and we know the contract address
-          if (merkleData?.vestingContract || merkleData?.merkleDistributorContract) {
-            ipfsData.append(`allocation${index}.json`, JSON.stringify(merkleData))
+            const distributionDurationInSeconds = monthsToSecond(
+              vesting.distributionDuration
+            )
+            const cliffPeriod = monthsToSecond(vesting.cliff)
+            const vestingPeriod = monthsToSecond(vesting.vestingPeriod)
+            const distributionEnd = Math.round(
+              currentDateInSeconds + distributionDurationInSeconds
+            )
 
-            const metadataAttribute =
-              allocation.vestingType === "NO_VESTING"
-                ? "airdrops"
-                : allocation.vestingType === "LINEAR_VESTING"
-                ? "vestings"
-                : null
+            allocationData.merkleVesting.cohorts.push({
+              name: vesting.allocationName,
+              cliffPeriod,
+              vestingPeriod,
+              distributionEnd,
+              ..._context.merkleTrees?.[originalIndex],
+            })
+          })
 
-            if (metadataAttribute) {
-              info[metadataAttribute].push({
-                fileName: `allocation${index}.json`,
-                prettyUrl: slugify(allocation.allocationName),
-              })
-            }
+          allocationJSONs.push(allocationData)
+        }
+
+        allocationJSONs.forEach((json, index) => {
+          const fileName = `allocation${index}.json`
+          ipfsData.append(fileName, JSON.stringify(json))
+
+          const metadataAttribute =
+            json.vestingType === "NO_VESTING"
+              ? "airdrops"
+              : json.vestingType === "LINEAR_VESTING"
+              ? "vestings"
+              : null
+
+          if (metadataAttribute) {
+            info[metadataAttribute].push({
+              fileName,
+              prettyUrl: slugify(json.name),
+            })
           }
         })
 
