@@ -25,7 +25,7 @@ const chains = defaultChains.filter((c) => supportedChainIds.includes(c.id))
 const TOKEN_XYZ_CONTRACT = {
   1: NULL_ADDRESS,
   3: "0x32298Fe854FBf50e377be09533F5eFe42659f8FF",
-  5: "0x7cedb7C3532589b7b622676c49759ee87929878B",
+  5: "0xc59540bC4242B33d0C0977b8a9E65044F6472946",
 }
 
 const injected = new InjectedConnector({
