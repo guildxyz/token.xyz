@@ -24,7 +24,7 @@ const chains = defaultChains.filter((c) => supportedChainIds.includes(c.id))
 
 const TOKEN_XYZ_CONTRACT = {
   1: NULL_ADDRESS,
-  3: "0x32298Fe854FBf50e377be09533F5eFe42659f8FF",
+  3: "0x94a5e2490A5d6cf7fDC4D8825df33d2ba482f7ad",
   5: "0xc59540bC4242B33d0C0977b8a9E65044F6472946",
 }
 
