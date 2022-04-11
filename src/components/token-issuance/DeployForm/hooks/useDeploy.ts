@@ -818,7 +818,6 @@ const useDeploy = () => {
 
         const info: TokenInfoJSON = {
           icon: null,
-          chain: chain,
           displayInExplorer: true,
           airdrops: [],
           vestings: [],

@@ -52,7 +52,6 @@ type AllocationFormType = {
 
 type TokenInfoJSON = {
   icon?: string
-  chain?: number
   displayInExplorer?: boolean
   airdrops: Array<{ fileName: string; prettyUrl: string }>
   vestings: Array<{ fileName: string; prettyUrl: string }>
