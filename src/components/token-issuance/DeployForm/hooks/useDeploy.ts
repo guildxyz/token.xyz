@@ -642,7 +642,6 @@ const useDeploy = () => {
 
           let contractType: ContractType
 
-          console.log("initialSupply: ", initialSupply, ", maxSupply: ", maxSupply)
           if (initialSupply === 0 || maxSupply === 0 || initialSupply < maxSupply) {
             if (maxSupply > 0)
               contractType =
@@ -657,8 +656,6 @@ const useDeploy = () => {
           } else if (initialSupply === maxSupply) {
             contractType = "erc20initialsupply"
           }
-
-          console.log("contract type should be", contractType)
 
           let argTypes = []
           let args = []
@@ -967,6 +964,7 @@ const useDeploy = () => {
     else if (state.matches("creatingCohorts")) return "Creating cohorts"
     else if (state.matches("fundingContracts"))
       return "Funding airdrop/vesting contracts"
+    else if (state.matches("verifyingContracts")) return "Verifying contracts"
     else if (state.matches("ipfs")) return "Uploading data to IPFS"
     else return "Loading"
   }, [state])
