@@ -67,6 +67,12 @@
         "internalType": "address",
         "name": "instance",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint96",
+        "name": "factoryVersion",
+        "type": "uint96"
       }
     ],
     "name": "MerkleDistributorDeployed",
@@ -92,6 +98,43 @@
         "internalType": "address",
         "name": "instance",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint96",
+        "name": "factoryVersion",
+        "type": "uint96"
+      }
+    ],
+    "name": "MerkleNFTMinterDeployed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "deployer",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "urlName",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "instance",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint96",
+        "name": "factoryVersion",
+        "type": "uint96"
       }
     ],
     "name": "MerkleVestingDeployed",
@@ -186,6 +229,12 @@
         "internalType": "address",
         "name": "token",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint96",
+        "name": "factoryVersion",
+        "type": "uint96"
       }
     ],
     "name": "TokenDeployed",
@@ -220,6 +269,66 @@
       }
     ],
     "name": "createAirdrop",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "urlName",
+        "type": "string"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "merkleRoot",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "distributionDuration",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "ipfsHash",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxSupply",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IMerkleNFTMinter.NftMetadata",
+        "name": "nftMetadata",
+        "type": "tuple"
+      },
+      {
+        "internalType": "bool",
+        "name": "specificIds",
+        "type": "bool"
+      },
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "name": "createNFTMinter",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -362,9 +471,52 @@
     "name": "getDeployedAirdrops",
     "outputs": [
       {
-        "internalType": "address[]",
+        "components": [
+          {
+            "internalType": "uint96",
+            "name": "factoryVersion",
+            "type": "uint96"
+          },
+          {
+            "internalType": "address",
+            "name": "contractAddress",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct IFactoryFeature.DeployData[]",
         "name": "airdropAddresses",
-        "type": "address[]"
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "urlName",
+        "type": "string"
+      }
+    ],
+    "name": "getDeployedNFTMinters",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint96",
+            "name": "factoryVersion",
+            "type": "uint96"
+          },
+          {
+            "internalType": "address",
+            "name": "contractAddress",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct IFactoryFeature.DeployData[]",
+        "name": "minterAddresses",
+        "type": "tuple[]"
       }
     ],
     "stateMutability": "view",
@@ -381,9 +533,21 @@
     "name": "getDeployedTokens",
     "outputs": [
       {
-        "internalType": "address[]",
+        "components": [
+          {
+            "internalType": "uint96",
+            "name": "factoryVersion",
+            "type": "uint96"
+          },
+          {
+            "internalType": "address",
+            "name": "contractAddress",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct IFactoryFeature.DeployData[]",
         "name": "tokenAddresses",
-        "type": "address[]"
+        "type": "tuple[]"
       }
     ],
     "stateMutability": "view",
@@ -400,9 +564,21 @@
     "name": "getDeployedVestings",
     "outputs": [
       {
-        "internalType": "address[]",
+        "components": [
+          {
+            "internalType": "uint96",
+            "name": "factoryVersion",
+            "type": "uint96"
+          },
+          {
+            "internalType": "address",
+            "name": "contractAddress",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct IFactoryFeature.DeployData[]",
         "name": "vestingAddresses",
-        "type": "address[]"
+        "type": "tuple[]"
       }
     ],
     "stateMutability": "view",
