@@ -27,6 +27,7 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
   const {
     control,
     getValues,
+    trigger,
     formState: { errors },
   } = useFormContext<TokenIssuanceFormType>()
 
@@ -131,7 +132,7 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                 max: {
                   value:
                     getValues(`distributionData.${index}.distributionDuration`) - 1,
-                  message: "Cliff must be less than distribution",
+                  message: "Vesting must be less than distribution",
                 },
               }}
               render={({ field: { ref, value, onChange, onBlur } }) => (
@@ -141,6 +142,7 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
                   onChange={(newValue) => {
                     const parsedValue = parseInt(newValue)
                     onChange(isNaN(parsedValue) ? "" : parsedValue)
+                    trigger(`distributionData.${index}.cliff`)
                   }}
                   onBlur={onBlur}
                   min={+getValues(`distributionData.${index}.cliff`) + 1}
