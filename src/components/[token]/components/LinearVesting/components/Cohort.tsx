@@ -66,6 +66,16 @@ const Cohort = ({ cohortIpfsData }: Props): JSX.Element => {
     mutateCohortData()
   }, [claimResponse])
 
+  const claimableNow = useMemo(
+    () => formatAmount(cohortData?.claimableAmount, tokenData?.decimals),
+    [tokenData, cohortData]
+  )
+
+  const alreadyClaimed = useMemo(
+    () => formatAmount(cohortData?.claimed, tokenData?.decimals),
+    [tokenData, cohortData]
+  )
+
   const shouldSwitchChain = useMemo(
     () => ChainSlugs[router.query.chain?.toString()] !== networkData?.chain?.id,
     [router.query, networkData]
@@ -125,16 +135,10 @@ const Cohort = ({ cohortIpfsData }: Props): JSX.Element => {
                 )}`}
               </Text>
               <Text colorScheme="gray" textAlign="center">
-                {`Claimable now: ${formatAmount(
-                  cohortData?.claimableAmount,
-                  tokenData?.decimals
-                )}`}
+                {`Claimable now: ${claimableNow}`}
               </Text>
               <Text colorScheme="gray" textAlign="center">
-                {`Already claimed: ${formatAmount(
-                  cohortData?.claimed,
-                  tokenData?.decimals
-                )}`}
+                {`Already claimed: ${alreadyClaimed}`}
               </Text>
             </Stack>
           </>
