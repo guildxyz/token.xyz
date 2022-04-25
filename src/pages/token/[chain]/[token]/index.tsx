@@ -1,15 +1,18 @@
 import {
   Heading,
   HStack,
+  Icon,
   Img,
   Stack,
-  Tab,
+  Tab as ChakraTab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
+  Text,
 } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
+import AddAllocations from "components/[token]/AddAllocations"
 import Allocation from "components/[token]/Allocation"
 import { ChainSlugs, supportedChainIds, TOKEN_XYZ_CONTRACT } from "connectors"
 import { Contract, providers } from "ethers"
@@ -17,10 +20,30 @@ import useHash from "hooks/useHash"
 import useTokenData from "hooks/useTokenData"
 import { GetStaticPaths, GetStaticProps } from "next"
 import { useRouter } from "next/router"
-import { useMemo } from "react"
+import { Plus } from "phosphor-react"
+import { PropsWithChildren, useMemo } from "react"
 import TokenXyzABI from "static/abis/TokenXyzABI.json"
 import { SWRConfig } from "swr"
-import { TokenData } from "types"
+import { Rest, TokenData } from "types"
+import { useAccount } from "wagmi"
+
+const Tab = ({ children, ...rest }: PropsWithChildren<Rest>): JSX.Element => (
+  <ChakraTab
+    fontWeight="bold"
+    fontSize="xl"
+    fontFamily="display"
+    color="tokenxyz.blue.500"
+    textShadow="0 1px 0 var(--chakra-colors-tokenxyz-black)"
+    letterSpacing="wider"
+    _selected={{
+      color: "tokenxyz.blue.500",
+      borderBottomColor: "tokenxyz.blue.500",
+    }}
+    {...rest}
+  >
+    {children}
+  </ChakraTab>
+)
 
 const TokenPage = (): JSX.Element => {
   const router = useRouter()
@@ -30,7 +53,15 @@ const TokenPage = (): JSX.Element => {
 
   const [hash, setHash] = useHash()
 
+  const [{ data: accountData }] = useAccount()
   const { data } = useTokenData(chain, tokenAddress)
+
+  const isOwner = useMemo(
+    () =>
+      accountData?.address &&
+      accountData.address?.toLowerCase() === data?.owner?.toLowerCase(),
+    [accountData, data]
+  )
 
   const allocations = useMemo(
     () =>
@@ -44,12 +75,14 @@ const TokenPage = (): JSX.Element => {
   )
 
   const currentIndex = useMemo(() => {
+    if (!hash) return 0
+
     const indexByHash = allocations?.findIndex(
       (allocation) => allocation.prettyUrl === hash?.replace("#", "")
     )
 
-    return indexByHash > -1 ? indexByHash : 0
-  }, [allocations, hash])
+    return indexByHash > -1 ? indexByHash : isOwner ? allocations?.length : 0
+  }, [allocations, hash, isOwner])
 
   return (
     <Layout title={`${data?.name} ($${data?.symbol})`}>
@@ -78,26 +111,22 @@ const TokenPage = (): JSX.Element => {
         <Tabs
           colorScheme="tokenxyz.rosybrown"
           index={currentIndex}
-          onChange={(index) => setHash(`#${allocations?.[index]?.prettyUrl}`)}
+          onChange={(index) =>
+            setHash(`#${allocations?.[index]?.prettyUrl ?? "new"}`)
+          }
         >
           <TabList borderBottomWidth={0}>
             {allocations?.map((allocation) => (
-              <Tab
-                key={allocation.prettyUrl}
-                fontWeight="bold"
-                fontSize="xl"
-                fontFamily="display"
-                color="tokenxyz.blue.500"
-                textShadow="0 1px 0 var(--chakra-colors-tokenxyz-black)"
-                letterSpacing="wider"
-                _selected={{
-                  color: "tokenxyz.blue.500",
-                  borderBottomColor: "tokenxyz.blue.500",
-                }}
-              >
-                {allocation.prettyUrl}
-              </Tab>
+              <Tab key={allocation.prettyUrl}>{allocation.prettyUrl}</Tab>
             ))}
+            {isOwner && (
+              <Tab>
+                <HStack>
+                  <Icon as={Plus} />
+                  <Text>Add more</Text>
+                </HStack>
+              </Tab>
+            )}
           </TabList>
 
           <TabPanels>
@@ -106,6 +135,11 @@ const TokenPage = (): JSX.Element => {
                 <Allocation allocationPrettyUrl={allocation.prettyUrl} />
               </TabPanel>
             ))}
+            {isOwner && (
+              <TabPanel px={0} pt={8}>
+                <AddAllocations />
+              </TabPanel>
+            )}
           </TabPanels>
         </Tabs>
       </Stack>

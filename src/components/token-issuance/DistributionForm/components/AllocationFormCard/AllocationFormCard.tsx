@@ -43,7 +43,6 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
   } = useFormContext<TokenIssuanceFormType>()
 
   const initialSupply = useWatch({ name: "initialSupply", control })
-  const economyModel = useWatch({ name: "economyModel", control })
   const distributionData = useWatch({ name: "distributionData", control })
   const allocationAddressesAmounts = useWatch({
     name: `distributionData.${index}.allocationAddressesAmounts`,
