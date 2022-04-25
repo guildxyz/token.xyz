@@ -63,11 +63,11 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
               rules={{
                 required:
                   vestingType === "LINEAR_VESTING" && "This field is required!",
-                min: {
+                min: vestingType === "LINEAR_VESTING" && {
                   value: 0,
                   message: "Cliff must be positive",
                 },
-                max: {
+                max: vestingType === "LINEAR_VESTING" && {
                   value: getValues(`distributionData.${index}.vestingPeriod`) - 1,
                   message: "Cliff must be less than vesting",
                 },
@@ -125,11 +125,11 @@ const LinearVestingForm = ({ index }: Props): JSX.Element => {
               rules={{
                 required:
                   vestingType === "LINEAR_VESTING" && "This field is required!",
-                min: {
+                min: vestingType === "LINEAR_VESTING" && {
                   value: +getValues(`distributionData.${index}.cliff`) + 1,
                   message: "Vesting must be greater than cliff",
                 },
-                max: {
+                max: vestingType === "LINEAR_VESTING" && {
                   value:
                     getValues(`distributionData.${index}.distributionDuration`) - 1,
                   message: "Vesting must be less than distribution",

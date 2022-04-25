@@ -1,15 +1,13 @@
 import { useMachine } from "@xstate/react"
 import { ChainSlugs } from "connectors"
-import { Contract, ContractInterface, Event, utils } from "ethers"
+import { Contract, Event, utils } from "ethers"
 import useToast from "hooks/useToast"
 import useTokenXyzContract from "hooks/useTokenXyzContract"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useEffect, useMemo, useRef } from "react"
 import { useFormContext } from "react-hook-form"
-import DisperseABI from "static/abis/DisperseABI.json"
 import MerkleVestingABI from "static/abis/MerkleVestingABI.json"
 import {
-  AllocationFormType,
   AllocationJSON,
   ContractType,
   TokenInfoJSON,
@@ -18,19 +16,10 @@ import {
 import generateMerkleTree from "utils/merkle/generateMerkleTree"
 import { MerkleDistributorInfo, parseBalanceMap } from "utils/merkle/parseBalanceMap"
 import slugify from "utils/slugify"
-import { erc20ABI, useAccount, useContract, useSigner } from "wagmi"
+import { erc20ABI, useAccount, useSigner } from "wagmi"
 import { assign, createMachine } from "xstate"
-
-// Converter function which returns the amount of tokens needed to be sent to each vesting/distributor contract
-const converter = (input: Array<AllocationFormType>): number => {
-  if (!input) return 0
-  return input
-    .map((allocation) => allocation.allocationAddressesAmounts)
-    ?.reduce((arr1, arr2) => arr1.concat(arr2), [])
-    ?.filter((item) => !!item)
-    ?.map((data) => parseInt(data.amount))
-    ?.reduce((amount1, amount2) => amount1 + amount2, 0)
-}
+import converter from "../utils/converter"
+import sendTokensWithDisperse from "../utils/sendTokensWithDisperse"
 
 const monthsToSecond = (months: number): number =>
   months ? Math.floor(months * 2629743.83) : 0
@@ -40,11 +29,6 @@ const useDeploy = () => {
   const [{ data: signerData }] = useSigner()
 
   const tokenXyzContract = useTokenXyzContract()
-  const disperseContract = useContract({
-    addressOrName: process.env.NEXT_PUBLIC_DISPERSE_CONTRACT_ADDRESS,
-    contractInterface: DisperseABI as ContractInterface,
-    signerOrProvider: signerData,
-  })
 
   const { getValues } = useFormContext<TokenIssuanceFormType>()
 
@@ -156,7 +140,7 @@ const useDeploy = () => {
                 actions: ["assignResponseToContext", "logResponse"], // Debug...
               },
               onError: {
-                target: "verifyingContracts",
+                target: "verifyingContracts", // TODO: the target should be "fundingContracts" maybe?...
                 actions: ["assignErrorToContext", "onMerkleContractsError"],
               },
             },
@@ -308,6 +292,7 @@ const useDeploy = () => {
 
   const [state, send] = useMachine(deployMachine.current, {
     services: {
+      // Testing if the user can actually deploy a token with the provided params
       testContractCall: () => {
         const createType: "createToken" | "createTokenWithRoles" =
           tokenType === "OWNABLE" ? "createToken" : "createTokenWithRoles"
@@ -343,6 +328,7 @@ const useDeploy = () => {
         ).then((res) => res.wait())
       },
       sendTokensWithDisperse: async (_context) => {
+        // Filtering the events of the createToken call, so we can find out who was the token deployer, what's the token url name, and what's the token andress
         const tokenDeployedEvent = _context?.response?.events?.find(
           (event) => event.event === "TokenDeployed"
         )
@@ -358,40 +344,18 @@ const useDeploy = () => {
           },
         })
 
+        // If the user hasn't selected a "DISTRIBUTE" type for an allocation, we can skip this step
         const disperseDistribution = distributionData?.find(
           (allocation) => allocation.vestingType === "DISTRIBUTE"
         )
         if (!disperseDistribution) return send("SKIP")
 
-        // Allow the Disperse contract to spend tokens from user's wallet
-        const disperseAmount = converter(
-          distributionData?.filter(
-            (allocation) => allocation.vestingType === "DISTRIBUTE"
-          )
+        return sendTokensWithDisperse(
+          signerData,
+          tokenAddress,
+          decimals,
+          distributionData
         )
-
-        const erc20Contract = new Contract(tokenAddress, erc20ABI, signerData)
-        const fullAmount = utils.parseUnits(disperseAmount.toString(), decimals)
-        const approve = await erc20Contract.approve(
-          process.env.NEXT_PUBLIC_DISPERSE_CONTRACT_ADDRESS,
-          fullAmount
-        )
-        const approved = await approve?.wait()
-
-        if (approved) {
-          const recipients = disperseDistribution.allocationAddressesAmounts?.map(
-            ({ address }) => address
-          )
-
-          // TODO: idk if we need parseUnits here...
-          const values = disperseDistribution.allocationAddressesAmounts?.map(
-            ({ amount }) => utils.parseUnits(amount.toString(), decimals)
-          )
-
-          return disperseContract
-            .disperseTokenSimple(tokenAddress, recipients, values)
-            .then((res) => res.wait())
-        }
       },
       createMerkleContracts: async (_context) => {
         // If there's no airdrop/vesting data, we can skip this step
@@ -409,6 +373,7 @@ const useDeploy = () => {
           parseBalanceMap(generateMerkleTree(allocation.allocationAddressesAmounts))
         )
 
+        // Savind the merkle trees to the context, so we can use them later
         send("UPDATE_CONTEXT", { data: { merkleTrees } })
 
         // Preparing the contract calls
@@ -438,7 +403,7 @@ const useDeploy = () => {
             ?.replace("0x", "")
         }
 
-        // Preparing the "createAirdrop" call(s)
+        // Preparing the "createAirdrop" call(s) - 1 airdrop = 1 new createAirdrop call
         distributionData?.forEach((allocation, index) => {
           if (allocation.vestingType !== "NO_VESTING") return
 
