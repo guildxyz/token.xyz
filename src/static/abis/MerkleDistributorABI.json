@@ -1,29 +1,8 @@
 [
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "token_",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "merkleRoot_",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "distributionDuration",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
+    "inputs": [],
+    "name": "AlreadyClaimed",
+    "type": "error"
   },
   {
     "inputs": [],
@@ -64,7 +43,7 @@
   },
   {
     "inputs": [],
-    "name": "DropClaimed",
+    "name": "InvalidParameters",
     "type": "error"
   },
   {
@@ -122,19 +101,13 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "previousOwner",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newDistributionEnd",
+        "type": "uint256"
       }
     ],
-    "name": "OwnershipTransferred",
+    "name": "DistributionProlonged",
     "type": "event"
   },
   {
@@ -158,12 +131,12 @@
   },
   {
     "inputs": [],
-    "name": "distributionEnd",
+    "name": "token",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "address",
         "name": "",
-        "type": "uint256"
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -184,48 +157,15 @@
   },
   {
     "inputs": [],
-    "name": "owner",
+    "name": "distributionEnd",
     "outputs": [
       {
-        "internalType": "address",
+        "internalType": "uint256",
         "name": "",
-        "type": "address"
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "token",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
-    ],
-    "name": "transferOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -271,6 +211,19 @@
       }
     ],
     "name": "claim",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "additionalSeconds",
+        "type": "uint256"
+      }
+    ],
+    "name": "prolongDistributionPeriod",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
