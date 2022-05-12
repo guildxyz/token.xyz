@@ -15,7 +15,6 @@ const CopyableAddress = ({ address, decimals = 3, ...rest }: Props): JSX.Element
       placement="top"
       label={hasCopied ? "Copied" : "Click to copy address"}
       closeOnClick={false}
-      // hasArrow // TODO: try to find a solution for the arrow styling
     >
       <Button
         onClick={onCopy}

@@ -4,29 +4,40 @@ import { AllocationFormType } from "types"
 import { erc20ABI } from "wagmi"
 import converter from "./converter"
 
-const sendTokensWithDisperse = async (
-  signer: Signer,
-  tokenAddress: string,
-  decimals: number,
+const sendTokensWithDisperse = async (config: {
+  signerData: Signer
+  tokenData: {
+    address: string
+    decimals: number
+  }
   distributionData: Array<AllocationFormType>
-) => {
+}) => {
   const disperseContract = new Contract(
     process.env.NEXT_PUBLIC_DISPERSE_CONTRACT_ADDRESS,
     DisperseABI,
-    signer
+    config.signerData
   )
 
-  const disperseDistribution = distributionData?.find(
+  const disperseDistribution = config.distributionData?.find(
     (allocation) => allocation.vestingType === "DISTRIBUTE"
   )
 
   // Allow the Disperse contract to spend tokens from user's wallet
   const disperseAmount = converter(
-    distributionData?.filter((allocation) => allocation.vestingType === "DISTRIBUTE")
+    config.distributionData?.filter(
+      (allocation) => allocation.vestingType === "DISTRIBUTE"
+    )
   )
 
-  const erc20Contract = new Contract(tokenAddress, erc20ABI, signer)
-  const fullAmount = utils.parseUnits(disperseAmount.toString(), decimals)
+  const erc20Contract = new Contract(
+    config.tokenData.address,
+    erc20ABI,
+    config.signerData
+  )
+  const fullAmount = utils.parseUnits(
+    disperseAmount.toString(),
+    config.tokenData.decimals
+  )
 
   const approve = await erc20Contract.approve(
     process.env.NEXT_PUBLIC_DISPERSE_CONTRACT_ADDRESS,
@@ -40,11 +51,11 @@ const sendTokensWithDisperse = async (
     )
 
     const values = disperseDistribution.allocationAddressesAmounts?.map(
-      ({ amount }) => utils.parseUnits(amount.toString(), decimals)
+      ({ amount }) => utils.parseUnits(amount.toString(), config.tokenData.decimals)
     )
 
     return disperseContract
-      .disperseTokenSimple(tokenAddress, recipients, values)
+      .disperseTokenSimple(config.tokenData.address, recipients, values)
       .then((res) => res.wait())
   }
 

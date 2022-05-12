@@ -54,7 +54,7 @@ const TokenPage = (): JSX.Element => {
   const [hash, setHash] = useHash()
 
   const [{ data: accountData }] = useAccount()
-  const { data } = useTokenData(chain, tokenAddress)
+  const { data } = useTokenData()
 
   const isOwner = useMemo(
     () =>
@@ -85,7 +85,7 @@ const TokenPage = (): JSX.Element => {
   }, [allocations, hash, isOwner])
 
   return (
-    <Layout title={`${data?.name} ($${data?.symbol})`}>
+    <Layout title={data?.name ? `${data?.name} ($${data?.symbol})` : "Token page"}>
       <Stack spacing={8}>
         <HStack spacing={4}>
           {data?.infoJSON?.icon && (

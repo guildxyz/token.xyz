@@ -9,7 +9,6 @@ const styles = {
       bg: mode("white", "gray.700")(props),
       borderRadius: "lg",
     },
-    // TODO: maybe we can do this in number-input.ts?
     ".chakra-input__group .chakra-numberinput .chakra-numberinput__field": {
       borderRightRadius: "none",
     },

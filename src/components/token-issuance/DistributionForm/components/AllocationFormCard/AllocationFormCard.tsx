@@ -12,12 +12,16 @@ import {
   Tag,
   Text,
 } from "@chakra-ui/react"
+import { NULL_ADDRESS } from "connectors"
+import { utils } from "ethers"
+import useTokenData from "hooks/useTokenData"
 import { parse } from "papaparse"
 import { TrashSimple } from "phosphor-react"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { TokenIssuanceFormType } from "types"
 import unique from "utils/unique"
+import { erc20ABI, useAccount, useContract, useProvider } from "wagmi"
 import FormCard from "../FormCard"
 import VestingTypePicker from "./components/VestingTypePicker"
 import useEstimateGas from "./hooks/useEstimateGas"
@@ -30,6 +34,15 @@ type Props = {
 }
 
 const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
+  const [{ data: accountData }] = useAccount()
+  const { data: tokenData } = useTokenData()
+  const provider = useProvider()
+  const tokenContract = useContract({
+    addressOrName: tokenData?.address ?? NULL_ADDRESS,
+    signerOrProvider: provider,
+    contractInterface: erc20ABI,
+  })
+
   const fileInputRef = useRef(null)
 
   const {
@@ -43,6 +56,20 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
   } = useFormContext<TokenIssuanceFormType>()
 
   const initialSupply = useWatch({ name: "initialSupply", control })
+  const [ownerBalance, setOwnerBalance] = useState(0)
+  useEffect(() => {
+    if (!tokenContract || !accountData?.address || !tokenData?.decimals) return
+    ;(async () => {
+      const balance = await tokenContract
+        .balanceOf(accountData.address)
+        .catch((_) => 0)
+
+      setOwnerBalance(
+        parseFloat(utils.formatUnits(balance.toString(), tokenData.decimals))
+      )
+    })()
+  }, [accountData, tokenData])
+
   const distributionData = useWatch({ name: "distributionData", control })
   const allocationAddressesAmounts = useWatch({
     name: `distributionData.${index}.allocationAddressesAmounts`,
@@ -154,10 +181,10 @@ const AllocationFormCard = ({ index, onRemove }: Props): JSX.Element => {
           ?.map((item) => parseFloat(item.amount))
           ?.reduce((amount1, amount2) => amount1 + amount2, 0)
 
-        if (sum > initialSupply) {
+        if (sum > (initialSupply ?? ownerBalance)) {
           setError(`distributionData.${index}.allocationCsv`, {
             message:
-              "You're trying to allocate more tokens than your initial supply!",
+              "You're trying to allocate more tokens than the available supply!",
             type: "validate",
           })
           return

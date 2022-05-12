@@ -19,10 +19,7 @@ const Airdrop = (): JSX.Element => {
     data: tokenData,
     error: tokenError,
     isValidating: tokenLoading,
-  } = useTokenData(
-    router.query.chain?.toString(),
-    router.query.token?.toString()?.toLowerCase()
-  )
+  } = useTokenData()
 
   const [{ data: accountData, error: accountError, loading: accountLoading }] =
     useAccount()

@@ -30,10 +30,7 @@ const Cohort = ({ cohortIpfsData }: Props): JSX.Element => {
     data: tokenData,
     error: tokenError,
     isValidating: tokenLoading,
-  } = useTokenData(
-    router.query.chain?.toString(),
-    router.query.token?.toString()?.toLowerCase()
-  )
+  } = useTokenData()
 
   const {
     data: cohortData,

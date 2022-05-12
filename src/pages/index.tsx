@@ -47,7 +47,6 @@ const Page = (): JSX.Element => {
           mappedTokens.map((token) => (
             <TokenCard
               key={token.tokenAddress}
-              // TODO: maybe we shouldn't fallback to 3 here, but we should have a URL query param for the chain?
               chain={token.chainSlug}
               address={token.tokenAddress}
             />

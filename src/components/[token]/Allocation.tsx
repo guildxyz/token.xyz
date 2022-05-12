@@ -34,7 +34,7 @@ const Allocation = ({ allocationPrettyUrl }: Props): JSX.Element => {
   const [{ data: networkData }, switchNetwork] = useNetwork()
   const [{ data: accountData }] = useAccount()
 
-  const { data: tokenData } = useTokenData(chain, tokenAddress)
+  const { data: tokenData } = useTokenData()
 
   const vestingTypesComponents: Record<
     Exclude<VestingTypes, "DISTRIBUTE">,
