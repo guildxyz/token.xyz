@@ -27,7 +27,7 @@ const addCohorts = (config: {
 
     // For now...
     // TODO: user should pick the start date!
-    const distributionStart = (Date.now() / 1000).toFixed(0)
+    const distributionStart = 0
 
     const cliff = monthsToSecond(allocation.cliff)
     const vestingPeriod = monthsToSecond(allocation.vestingPeriod)
