@@ -127,8 +127,7 @@ const useAddAllocations = () => {
                 actions: ["assignResponseToContext", "logResponse"], // Debug...
               },
               onError: {
-                // target: "verifyingContracts",
-                target: "ipfs", // TODO: the target should be "fundingContracts" maybe?...
+                target: "idle",
                 actions: ["assignErrorToContext", "onMerkleContractsError"],
               },
             },
@@ -255,8 +254,6 @@ const useAddAllocations = () => {
           onMerkleContractsError: () =>
             toast({
               title: "Could not deploy airdrop/vesting contracts",
-              description:
-                "Do not worry, you'll be able to create airdrops and vestings later on your dashboard!",
             }),
           onCreateCohortsError: () =>
             toast({
