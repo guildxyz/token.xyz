@@ -25,6 +25,9 @@ const styles = {
       borderBottomRightRadius: 0,
       borderRightWidth: 0,
     },
+    ".chakra-form__error-message": {
+      whiteSpace: "break-spaces",
+    },
   }),
 }
 
