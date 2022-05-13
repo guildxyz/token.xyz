@@ -43,7 +43,7 @@ const AddAllocations = (): JSX.Element => {
   })
 
   const isSubmitDisabled = useMemo(() => {
-    if (!distributionData) return false
+    if (!distributionData?.length) return true
     return !distributionData.every(
       (allocationData) =>
         !!(allocationData.allocationAddressesAmounts?.length > 0) &&
