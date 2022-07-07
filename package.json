@@ -30,7 +30,7 @@
     "ethers": "^5.5.4",
     "focus-visible": "^5.2.0",
     "framer-motion": "^6.2.8",
-    "moment": "^2.29.2",
+    "moment": "^2.29.4",
     "multer": "^1.4.4",
     "next": "^12.1.0",
     "next-connect": "^0.12.2",
