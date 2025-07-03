@@ -8,6 +8,7 @@ import { SWRConfig } from "swr"
 import "theme/custom-scrollbar.css"
 import fetcher from "utils/fetcher"
 import { WagmiProvider } from "wagmi"
+import "../styles/globals.css"
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => (
   <Chakra cookies={pageProps.cookies}>

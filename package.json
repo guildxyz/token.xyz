@@ -55,14 +55,17 @@
     "@types/papaparse": "^5.3.2",
     "@types/react": "^17.0.39",
     "@typescript-eslint/eslint-plugin": "^5.12.1",
+    "autoprefixer": "^10.4.21",
     "eslint": "^8.9.0",
     "eslint-config-airbnb-typescript": "^16.1.0",
     "eslint-config-next": "^12.1.0",
     "eslint-config-prettier": "^8.4.0",
     "husky": "^7.0.4",
     "lint-staged": "^12.3.4",
+    "postcss": "^8.5.6",
     "prettier": "^2.5.1",
     "prettier-plugin-jsdoc": "^0.3.30",
+    "tailwindcss": "^4.1.11",
     "typescript": "^4.5.5"
   },
   "lint-staged": {
