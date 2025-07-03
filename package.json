@@ -50,12 +50,12 @@
   },
   "devDependencies": {
     "@hookform/devtools": "^4.0.2",
+    "@tailwindcss/postcss": "^4.1.11",
     "@types/multer": "^1.4.7",
     "@types/node": "^17.0.21",
     "@types/papaparse": "^5.3.2",
     "@types/react": "^17.0.39",
     "@typescript-eslint/eslint-plugin": "^5.12.1",
-    "autoprefixer": "^10.4.21",
     "eslint": "^8.9.0",
     "eslint-config-airbnb-typescript": "^16.1.0",
     "eslint-config-next": "^12.1.0",
